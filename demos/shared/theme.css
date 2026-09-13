@@ -1,0 +1,44 @@
+@import "./site-navigation.css";
+
+:root, .calcite-mode-light {
+  font-family: var(--calcite-font-family);
+  color: var(--calcite-color-text-1);
+  background: var(--calcite-color-background);
+}
+
+* { box-sizing: border-box; }
+html, body, .flight-shell { width: 100%; height: 100%; margin: 0; }
+body { overflow: hidden; }
+[hidden] { display: none !important; }
+.flight-stage { position: relative; width: 100%; height: 100%; min-width: 0; overflow: hidden; }
+arcgis-scene { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+.keyboard-help {
+  --calcite-dialog-size-x: 420px;
+  --calcite-dialog-max-size-x: calc(100vw - 24px);
+  --calcite-dialog-content-space: 0;
+}
+.keyboard-help calcite-list { --calcite-list-border-color: var(--calcite-color-border-3); }
+.demo-flight-controls {
+  position: absolute;
+  z-index: 3;
+  pointer-events: auto;
+  inset-inline: 12px;
+  bottom: max(40px, env(safe-area-inset-bottom));
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  margin-inline: auto;
+  --calcite-card-corner-radius: 6px;
+  --calcite-card-shadow: var(--calcite-shadow-md);
+}
+.flight-toolbar { display: flex; align-items: center; gap: 16px; padding: 0; }
+.flight-speed { min-width: 92px; font-variant-numeric: tabular-nums; }
+.flight-actions { display: flex; gap: 4px; border-inline-start: 1px solid var(--calcite-color-border-3); padding-inline-start: 12px; }
+.flight-power { min-width: 210px; }
+@media (max-width: 720px) {
+  .demo-flight-controls { bottom: max(40px, env(safe-area-inset-bottom)); }
+  .flight-toolbar { width: calc(100vw - 50px); max-width: 100%; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+  .flight-speed { min-width: 80px; }
+  .flight-power { flex: 1; min-width: 190px; }
+  .flight-actions { min-width: 0; max-width: 100%; flex: 1 0 100%; justify-content: space-between; padding: 10px 0 0; border-inline-start: 0; border-block-start: 1px solid var(--calcite-color-border-3); }
+  .flight-actions calcite-button { flex: 1 1 0; min-width: 0; }
+}

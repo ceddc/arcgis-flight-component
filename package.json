@@ -1,0 +1,91 @@
+{
+  "name": "@ceddc/arcgis-flight-component",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run docs:build && vite --host 0.0.0.0 --port 3116",
+    "docs:build": "node scripts/build-docs-site.mjs",
+    "docs:preview": "npm run docs:build && vite preview --config vite.docs.config.ts",
+    "test": "vitest run",
+    "test:ab": "vitest run src/ab/parity.test.ts",
+    "test:browser": "playwright test",
+    "typecheck": "tsc --noEmit",
+    "build:demo": "vite build",
+    "build:pages": "vite build --outDir dist/pages && npm run build:component && npm run docs:build && node scripts/assemble-pages.mjs",
+    "deploy:pages": "npm run build:pages && node scripts/publish-pages.mjs",
+    "build:types": "tsc -p tsconfig.lib.json",
+    "build:lib": "vite build --config vite.lib.config.ts",
+    "build": "npm run typecheck && npm run build:demo && npm run build:component && npm run docs:build",
+    "verify": "npm run test && npm run build",
+    "prepare": "npm run build:component",
+    "build:component": "npm run build:types && npm run build:lib && node scripts/build-component-distributions.mjs",
+    "bench:sdk": "node scripts/benchmark-sdk.mjs",
+    "test:sdk": "node scripts/test-sdk-compatibility.mjs"
+  },
+  "devDependencies": {
+    "@arcgis/core": "5.1.24",
+    "@arcgis/map-components": "5.1.24",
+    "@esri/calcite-components": "5.1.2",
+    "@playwright/test": "1.61.1",
+    "@types/node": "24.0.0",
+    "marked": "18.0.9",
+    "rollup": "4.62.4",
+    "typescript": "5.8.3",
+    "vite": "6.4.3",
+    "vitest": "4.1.10"
+  },
+  "description": "Standalone aircraft, camera, and navigation web component for caller-owned ArcGIS 3D scenes.",
+  "keywords": [
+    "arcgis",
+    "web-component",
+    "webscene",
+    "3d",
+    "flight"
+  ],
+  "sideEffects": true,
+  "main": "./dist/component/arcgis-flight-component.sdk-5.1.js",
+  "module": "./dist/component/arcgis-flight-component.sdk-5.1.js",
+  "types": "./dist/lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/types/index.d.ts",
+      "import": "./dist/component/arcgis-flight-component.sdk-5.1.js"
+    },
+    "./sdk-4.30": {
+      "types": "./dist/lib/types/index.d.ts",
+      "import": "./dist/component/arcgis-flight-component.sdk-4.30.js"
+    },
+    "./sdk-4.32": {
+      "types": "./dist/lib/types/index.d.ts",
+      "import": "./dist/component/arcgis-flight-component.sdk-4.32.js"
+    },
+    "./sdk-5.1": {
+      "types": "./dist/lib/types/index.d.ts",
+      "import": "./dist/component/arcgis-flight-component.sdk-5.1.js"
+    }
+  },
+  "files": [
+    "dist/lib",
+    "dist/component",
+    "LICENSE",
+    "README.md",
+    "CONTRIBUTING.md",
+    "docs"
+  ],
+  "peerDependencies": {
+    "@arcgis/core": ">=4.30 <5.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ceddc/arcgis-flight-component.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ceddc/arcgis-flight-component/issues"
+  },
+  "homepage": "https://ceddc.github.io/arcgis-flight-component/",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

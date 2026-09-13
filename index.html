@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Runnable examples for the ArcGIS Flight Component."
+    />
+    <title>Samples | ArcGIS Flight Component</title>
+  </head>
+  <body class="calcite-mode-light">
+    <calcite-shell>
+      <calcite-navigation class="app-header" scale="s" slot="header" aria-label="ArcGIS Flight Component samples">
+        <calcite-navigation-logo
+          slot="logo"
+          icon="plane"
+          heading="ArcGIS Flight Component"
+          description="Samples"
+        ></calcite-navigation-logo>
+      <!-- site-navigation -->
+      </calcite-navigation>
+
+      <main class="sample-index">
+        <header class="sample-intro">
+          <p class="eyebrow">ArcGIS Maps SDK for JavaScript</p>
+          <h1>Take flight with ArcGIS.</h1>
+          <p>
+            Explore a 3D scene, try the flight controls, or choose your own destination.
+          </p>
+        </header>
+
+        <section class="sample-grid" aria-label="Available samples">
+          <calcite-card>
+            <div slot="thumbnail" class="sample-number">01</div>
+            <span slot="heading">Basic flight demo</span>
+            <span slot="description">Start with the essentials</span>
+            <p>
+              Fly above the Grand Canyon. Use your keyboard to steer and explore a full 3D landscape.
+            </p>
+            <calcite-button
+              slot="footer-end"
+              href="./demos/simple/"
+              icon-end="arrow-right"
+              width="full"
+            >Open basic flight</calcite-button>
+          </calcite-card>
+
+          <calcite-card>
+            <div slot="thumbnail" class="sample-number">02</div>
+            <span slot="heading">Flight controls demo</span>
+            <span slot="description">Take control of the flight</span>
+            <p>
+              Adjust your speed, pause the flight, and switch between exterior and cockpit views.
+            </p>
+            <calcite-button
+              slot="footer-end"
+              href="./demos/simple-controls/"
+              icon-end="arrow-right"
+              width="full"
+            >Open flight controls</calcite-button>
+          </calcite-card>
+
+          <calcite-card>
+            <div slot="thumbnail" class="sample-number">03</div>
+            <span slot="heading">Scene explorer demo</span>
+            <span slot="description">Choose where to fly</span>
+            <p>
+              Explore curated places, search for an address, or fly through a public ArcGIS WebScene.
+            </p>
+            <calcite-button
+              slot="footer-end"
+              href="./demos/webscene-selector/"
+              icon-end="arrow-right"
+              width="full"
+            >Open scene explorer</calcite-button>
+          </calcite-card>
+        </section>
+
+      </main>
+    </calcite-shell>
+    <script type="module" src="./demos/landing.ts"></script>
+  </body>
+</html>

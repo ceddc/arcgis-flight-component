@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Grand Canyon flight with blue Calcite controls for speed, power, pause, camera, and recovery."
+    />
+    <title>Flight controls demo | ArcGIS Flight Component</title>
+  </head>
+  <body class="calcite-mode-light">
+    <calcite-shell class="flight-shell">
+      <calcite-navigation slot="header" class="app-header" scale="s" aria-label="ArcGIS Flight">
+        <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Grand Canyon"></calcite-navigation-logo>
+        <div slot="content-end" class="header-actions">
+        </div>
+        <!-- site-navigation -->
+      </calcite-navigation>
+      <main class="flight-stage">
+        <arcgis-scene
+          id="scene"
+          basemap="satellite"
+          ground="world-elevation"
+          camera-position="-112.112, 36.099, 3200"
+          camera-heading="95"
+          camera-tilt="78"
+          viewing-mode="global"
+          popup-disabled
+          aria-label="Grand Canyon 3D scene"
+        ></arcgis-scene>
+
+        <arcgis-plane-navigation
+          reference-element="scene"
+          start-longitude="-112.112"
+          start-latitude="36.099"
+          start-altitude-m="2600"
+          start-heading-deg="95"
+        ></arcgis-plane-navigation>
+
+      </main>
+    </calcite-shell>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

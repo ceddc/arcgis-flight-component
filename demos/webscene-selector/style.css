@@ -1,0 +1,40 @@
+@import "../shared/theme.css";
+
+.status-chip { margin-inline: 12px; max-width: min(320px, 30vw); }
+.settings-shell-panel { position: relative; z-index: 4; --calcite-shell-panel-width: 320px; }
+.settings-shell-panel calcite-panel { height: 100%; }
+.settings-content { padding: 0 20px 20px; }
+.settings-content > calcite-label { margin-block: 20px; }
+.switch-label { gap: 16px; padding-block-start: 20px; border-block-start: 1px solid var(--calcite-color-border-3); }
+.setting-copy { display: grid; gap: 4px; }
+.setting-copy strong { font-weight: 500; }
+.setting-copy span { color: var(--calcite-color-text-3); font-size: var(--calcite-font-size--2); }
+.scene-picker {
+  --calcite-dialog-size-x: 500px;
+  --calcite-dialog-min-size-x: 0;
+  --calcite-dialog-max-size-x: calc(100vw - 32px);
+  --calcite-dialog-max-size-y: calc(100dvh - 48px);
+  --calcite-dialog-content-space: 0;
+  --calcite-dialog-content-bottom-space: 0 20px 20px;
+  --calcite-dialog-corner-radius: 6px;
+  --calcite-dialog-scrim-background-color: rgb(16 34 48 / 35%);
+}
+.scene-picker calcite-tabs { display: block; }
+.scene-picker calcite-tab { padding: 16px 20px 20px; }
+.scene-list { display: block; --calcite-list-icon-color: var(--calcite-color-brand); --calcite-list-border-color: var(--calcite-color-border-3); }
+.scene-list:not(.search-results) { max-height: min(450px, calc(100dvh - 280px)); overflow-y: auto; }
+.search-results { max-height: 300px; overflow-y: auto; }
+.search-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.search-summary, .item-id-help, .empty-results { color: var(--calcite-color-text-3); font-size: var(--calcite-font-size--1); line-height: 1.5; }
+.search-summary { margin: 12px 0 16px; }
+.empty-results { padding: 32px 16px; text-align: center; }
+.item-id-form { display: grid; gap: 16px; }
+.item-id-form calcite-label { margin: 0; }
+.item-id-help { margin: 16px 0 0; }
+@media (max-width: 720px) {
+  .status-chip { display: none; }
+  .settings-shell-panel { --calcite-shell-panel-width: min(320px, 100vw); }
+  .scene-picker { --calcite-dialog-max-size-x: calc(100vw - 24px); --calcite-dialog-max-size-y: calc(100dvh - 24px); }
+  .scene-picker calcite-tab { padding-inline: 16px; }
+  .search-form { grid-template-columns: 1fr; }
+}

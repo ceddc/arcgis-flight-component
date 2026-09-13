@@ -1,0 +1,12 @@
+html, body, calcite-shell { min-width: 320px; min-height: 100%; margin: 0; }
+.sample-index { width: min(1120px, calc(100% - 48px)); margin-inline: auto; padding-block: clamp(32px, 6vw, 72px); }
+.sample-intro { max-width: 720px; }
+.eyebrow { color: var(--calcite-color-brand); font-size: var(--calcite-font-size--1); font-weight: 600; margin: 0 0 12px; }
+h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 500; line-height: 1.15; margin: 0; }
+.sample-intro > p:last-child { color: var(--calcite-color-text-2); font-size: var(--calcite-font-size-1); line-height: 1.6; margin: 20px 0 0; }
+.sample-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-block-start: 36px; }
+calcite-card { --calcite-card-corner-radius: 4px; }
+calcite-card p { color: var(--calcite-color-text-2); line-height: 1.6; margin: 0; }
+.sample-number { color: var(--calcite-color-brand); padding: 20px 16px 8px; font-size: var(--calcite-font-size--1); font-weight: 600; }
+@media (max-width: 860px) { .sample-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .sample-index { width: calc(100% - 32px); } }
