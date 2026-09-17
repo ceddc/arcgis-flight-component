@@ -42,6 +42,14 @@ test("manual flight, power modes and cockpit roll", async ({ page }, testInfo) =
 
   await page.getByRole("button", { name: "Pause", exact: true }).click();
   await expect(navigation).toHaveAttribute("status", "paused");
+  await page.getByRole("button", { name: "Switch to cockpit view" }).click();
+  await expect.poll(async () => (await snapshot())?.camera?.aircraftVisible).toBe(false);
+  await expect.poll(async () => (await snapshot())?.camera?.transitionBlend).toBeGreaterThan(0.999);
+  await expect(navigation).toHaveAttribute("status", "paused");
+  await page.getByRole("button", { name: "Switch to exterior view" }).click();
+  await expect.poll(async () => (await snapshot())?.camera?.aircraftVisible).toBe(true);
+  await expect.poll(async () => (await snapshot())?.camera?.transitionBlend).toBeLessThan(0.001);
+  await expect(navigation).toHaveAttribute("status", "paused");
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.getByRole("button", { name: "Continue flying", exact: true })).toBeVisible();
   const actionBounds = await page.locator(".flight-actions calcite-button").evaluateAll(buttons =>
@@ -73,7 +81,7 @@ test("switching imagery and elevation presets restores cruise and keeps one airc
       speed: controller.snapshot()?.vehicle.speed,
       viewingMode: view.viewingMode,
       layerCount: controller.debugSnapshot()?.planeLayerCount,
-      contentLayerTypes: view.map!.layers.map(layer => layer.type),
+      contentLayerTypes: view.map!.layers.map(layer => layer.type).toArray(),
     };
   });
   expect(first).toMatchObject({ powerMode: "slow", viewingMode: "global", layerCount: 1, contentLayerTypes: ["graphics"] });
@@ -94,7 +102,7 @@ test("switching imagery and elevation presets restores cruise and keeps one airc
       viewingMode: view.viewingMode,
       webMercator: view.spatialReference.isWebMercator,
       layerCount: controller.debugSnapshot()?.planeLayerCount,
-      contentLayerTypes: view.map!.layers.map(layer => layer.type),
+      contentLayerTypes: view.map!.layers.map(layer => layer.type).toArray(),
     };
   });
   expect(global).toEqual({ powerMode: "normal", viewingMode: "global", webMercator: true, layerCount: 1, contentLayerTypes: ["graphics"] });
