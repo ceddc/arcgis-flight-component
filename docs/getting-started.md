@@ -40,15 +40,23 @@ not require ArcGIS Map Components.
 
 ## Load a compiled component file
 
-Run `npm run build:component` and serve the matching self-contained file from
-`dist/component/`. Component-only files keep ArcGIS external and include the
-aircraft assets and controls styles. Use the universal AMD file in
+From a repository checkout, run `npm ci` and `npm run build:component`.
+Choose the matching file from `dist/component/`. These files keep ArcGIS
+external and include the aircraft assets and controls styles. Use the universal AMD file in
 an existing ArcGIS AMD host; use a family ESM file with a bundler. See
 [SDK integration](sdk-compatibility.md).
 
 ## Use an arcgis-scene element
 
-Register both custom elements, size the scene, and connect by ID:
+For a new SDK 5.1 host, install matching packages:
+
+```bash
+npm install github:ceddc/arcgis-flight-component @arcgis/core@~5.1.24 @arcgis/map-components@~5.1.24
+```
+
+For an existing application, keep its SDK version and select the matching
+component entry from [SDK integration](sdk-compatibility.md). Register both
+custom elements, size the scene, and connect by ID:
 
 ```ts
 import "@arcgis/map-components/components/arcgis-scene";
@@ -66,6 +74,41 @@ import "@ceddc/arcgis-flight-component";
 
 The element waits for `viewOnReady()`, adds its private aircraft layer, and
 starts automatically. The host owns the WebScene and its layers.
+
+## How to use ArcGIS Enterprise
+
+Load your Enterprise WebScene in the host application, then connect the flight
+component to its view. Set the portal URL on the WebScene's portal item:
+
+```ts
+import WebScene from "@arcgis/core/WebScene.js";
+import "@ceddc/arcgis-flight-component";
+
+const webScene = new WebScene({
+  portalItem: {
+    id: "YOUR_WEBSCENE_ITEM_ID",
+    portal: { url: "https://your-organization.example.com/portal" },
+  },
+});
+await webScene.load();
+existingSceneView.map = webScene;
+
+const flight = document.createElement("arcgis-plane-navigation");
+flight.view = existingSceneView;
+document.body.append(flight);
+```
+
+Use a view with a [supported coordinate system](troubleshooting.md#supported-scene-coordinate-systems).
+For secured content, configure ArcGIS authentication in your host application
+before loading the scene. The component uses the host's authenticated SDK;
+it does not manage sign-in. Services must allow your application's origin
+through CORS.
+
+You can also build the host map directly from service URLs with `SceneLayer`,
+`TileLayer`, and `ElevationLayer`. Try the [SITG demo](../demos/enterprise/)
+at `http://127.0.0.1:3116/demos/enterprise/` after running `npm run dev`.
+Its [source](../demos/enterprise/main.ts) shows this approach with public
+Enterprise imagery and terrain, plus SITG buildings hosted on ArcGIS Online.
 
 ## Choose the start pose
 

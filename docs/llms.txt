@@ -2,7 +2,7 @@
 
 A browser-only custom element that adds aircraft flight and chase/cockpit cameras to a caller-owned ArcGIS SceneView or arcgis-scene.
 
-Install: npm install github:ceddc/arcgis-flight-component @arcgis/core @arcgis/map-components
+Install: npm install github:ceddc/arcgis-flight-component @arcgis/core@~5.1.24 @arcgis/map-components@~5.1.24
 Import: @ceddc/arcgis-flight-component. ArcGIS Map Components is optional for an existing SceneView. SDK range: >=4.30 <5.2; the default entry targets SDK 5.1. See SDK integration for older hosts.
 
 The host owns its view, map, layers, authentication, and application UI. The component removes only its own resources and restores borrowed camera/navigation state when stopped or disconnected.

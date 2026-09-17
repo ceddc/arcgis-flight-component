@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Fly over Geneva using public SITG ArcGIS Enterprise imagery and terrain with SITG 3D buildings." />
+    <title>SITG Enterprise demo | ArcGIS Flight Component</title>
+  </head>
+  <body class="calcite-mode-light">
+    <calcite-shell class="flight-shell">
+      <calcite-navigation slot="header" class="app-header" scale="s" aria-label="ArcGIS Flight">
+        <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Geneva / SITG"></calcite-navigation-logo>
+        <div slot="content-end" class="header-actions"></div>
+        <!-- site-navigation -->
+      </calcite-navigation>
+      <main class="flight-stage">
+        <arcgis-scene id="scene" viewing-mode="global" popup-disabled aria-label="Geneva 3D scene with SITG services"></arcgis-scene>
+        <arcgis-plane-navigation></arcgis-plane-navigation>
+        <aside class="enterprise-info" aria-label="About this flight">
+          <h1>Geneva, in 3D</h1>
+          <p id="load-status" role="status" aria-live="polite">Loading SITG imagery, terrain, and buildings...</p>
+          <button id="retry" type="button" hidden>Reload scene</button>
+          <details>
+            <summary>About the data</summary>
+            <p>Public SITG imagery and terrain from ArcGIS Enterprise, with 3D buildings hosted by SITG on ArcGIS Online.</p>
+            <p>Coverage is limited to Geneva. Ground clearance does not detect buildings.</p>
+            <a href="../../getting-started.html#how-to-use-arcgis-enterprise">How to use ArcGIS Enterprise</a>
+            <a href="https://sitg.maps.arcgis.com/apps/webappviewer3d/index.html?id=091fef0b3c9346188f63a72e960bdf0d" target="_blank" rel="noopener noreferrer">Original SITG 3D map</a>
+            <a href="https://sitg.ge.ch/ressources/conditions-utilisation-donnees" target="_blank" rel="noopener noreferrer">SITG data terms</a>
+          </details>
+        </aside>
+      </main>
+    </calcite-shell>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

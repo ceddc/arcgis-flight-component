@@ -33,8 +33,11 @@ The view must be a 3D `SceneView` with a visible HTML container. A 2D
 replacement to `flight.view` when the active view changes.
 
 For a local compiled file, run `npm run build:component` and copy the matching
-file from `dist/component/`. Each generated ESM or AMD file is self-contained;
-the host supplies ArcGIS and its global stylesheet.
+file from `dist/component/`. Each generated ESM or AMD file embeds the
+component code, aircraft assets, and controls styles, but excludes ArcGIS.
+The host supplies ArcGIS and any stylesheet required by its SDK version.
+Family ESM files use package imports and need a bundler or a suitable import
+map; they cannot be loaded by a bare browser script tag alone.
 
 ## Existing AMD host
 

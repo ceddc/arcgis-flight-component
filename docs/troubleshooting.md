@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Start with `arcgisPlaneNavigationError` and the host's ArcGIS load errors. Component initialization failures set `status` to `error` and provide `event.detail.error` as an `Error`. Capture it with `flight.debugSnapshot()` before retrying.
+Start with `arcgisPlaneNavigationError` and the host's ArcGIS load errors. Component initialization failures set `status` to `error` and provide `event.detail.error` as an `Error`. Capture `event.detail.error` in the error listener before retrying. `flight.debugSnapshot()` only reports an active session and may be `null` after initialization fails.
 
 ## Aircraft is missing in a large local scene
 

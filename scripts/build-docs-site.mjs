@@ -103,6 +103,9 @@ function resolveInternalLinks(html, page) {
     const suffix = fragment ? `#${fragment}` : "";
     if (targetPage) return `href="${targetPage.output}${suffix}"`;
     const relativeSource = path.relative(repositoryRoot, target).replaceAll(path.sep, "/");
+    if (/^demos\/[a-z-]+$/.test(relativeSource)) {
+      return `href="${relativeSource}/${suffix}"`;
+    }
     if (!relativeSource.startsWith("..")) {
       return `href="${githubSourceRoot}${relativeSource}${suffix}"`;
     }

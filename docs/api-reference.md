@@ -99,7 +99,7 @@ Invalid camera or power modes throw `TypeError` before mutation. If a live camer
 | `pitch`, `bank`, `yaw` | Clamped to `-1` through `1` |
 | `accelerate`, `brake` | Clamped to `0` through `1` |
 | `turboBoost`, `airbrake` | Boolean |
-| `respawn` | `true` requests recovery for one frame |
+| `respawn` | `true` recovers immediately, including while paused; it is not a persistent override |
 
 For example: `flight.setControlPatch({ pitch: 0.25, bank: -0.4, accelerate: 1 })`.
 

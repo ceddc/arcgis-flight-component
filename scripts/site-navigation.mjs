@@ -2,6 +2,7 @@ const destinations = [
   { id: "docs", label: "Docs", title: "Documentation", path: "index.html" },
   { id: "simple", label: "Basic flight", title: "Basic flight demo", path: "demos/simple/" },
   { id: "simple-controls", label: "Flight controls", title: "Flight controls demo", path: "demos/simple-controls/" },
+  { id: "enterprise", label: "SITG Enterprise", title: "SITG Enterprise demo", path: "demos/enterprise/" },
   { id: "webscene-selector", label: "Scene explorer", title: "Scene explorer demo", path: "demos/webscene-selector/" },
 ];
 

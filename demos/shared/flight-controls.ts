@@ -62,7 +62,12 @@ export function mountFlightControls(navigation: ArcgisPlaneNavigationElement, st
     else navigation.pause();
   });
   camera.addEventListener("click", () => {
-    navigation.setCameraMode(navigation.snapshot()?.cameraMode === "cockpit" ? "chase" : "cockpit");
+    const snapshot = navigation.snapshot();
+    // A ready or paused session has no animation steps to finish a transition.
+    navigation.setCameraMode(
+      snapshot?.cameraMode === "cockpit" ? "chase" : "cockpit",
+      snapshot?.phase !== "running",
+    );
   });
   recover.addEventListener("click", () => navigation.recover());
   toolbar.append(speed, power, actions);

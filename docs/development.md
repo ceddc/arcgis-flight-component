@@ -13,7 +13,7 @@ npm ci
 npm run dev
 ```
 
-Documentation and the three samples share a top menu and run at [127.0.0.1:3116](http://127.0.0.1:3116/). Reuse an existing server for this checkout. WebGL and access to the demos' ArcGIS services are required.
+Documentation and the four samples share a top menu and run at [127.0.0.1:3116](http://127.0.0.1:3116/). Reuse an existing server for this checkout. WebGL and access to the demos' ArcGIS services are required.
 
 ## Commands
 
@@ -42,7 +42,7 @@ Use `git diff --check` before handing off changes. Mocked tests cover contracts;
 
 ## Implementation rules
 
-- Use direct TypeScript and public SDK APIs. Keep scene selection, authentication, search, and page layout in the host application.
+- Use direct TypeScript and public SDK APIs, except for the guarded aircraft-origin adapter documented below. Keep scene selection, authentication, search, and page layout in the host application.
 - Preserve the [ownership and lifecycle contract](architecture.md). Cleanup must cover cancellation, repeated connection, host callbacks, and map/view replacement; never destroy caller-owned resources.
 - Keep the SDK external in component-only builds. Follow [SDK integration](sdk-compatibility.md) for API-family boundaries; runtime version checks alone do not stop bundlers resolving unsupported imports.
 - Keep configuration typed. Document public changes in [Configuration](configuration.md) and the [API reference](api-reference.md). README examples should explain usage.

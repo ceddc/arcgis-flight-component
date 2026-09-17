@@ -1,6 +1,6 @@
 # Samples
 
-The repository has three runnable examples, from a minimal integration to a
+The repository has four runnable examples, from a minimal integration to a
 host application that selects and loads scenes.
 
 | Sample | Local URL | Purpose |
@@ -8,6 +8,7 @@ host application that selects and loads scenes.
 | [Basic flight demo](../demos/simple/) | `http://127.0.0.1:3116/demos/simple/` | Scene and aircraft with no component controls |
 | [Flight controls demo](../demos/simple-controls/) | `http://127.0.0.1:3116/demos/simple-controls/` | Host-owned Calcite controls using public methods and events |
 | [Scene explorer demo](../demos/webscene-selector/) | `http://127.0.0.1:3116/demos/webscene-selector/` | Scene selection, address search, and public WebScene loading |
+| [SITG Enterprise demo](../demos/enterprise/) | `http://127.0.0.1:3116/demos/enterprise/` | Direct SITG imagery, elevation, and 3D services |
 
 ## Run the samples
 
@@ -78,4 +79,4 @@ Open **Settings** to adjust sensitivity, field of view, pitch input, and camera 
 
 For the reusable lifecycle and ownership contract, see [Getting started](getting-started.md)
 and [Architecture](architecture.md). For a full host implementation, inspect
-the [selector source](../demos/webscene-selector/).
+the [selector source](../demos/webscene-selector/main.ts).

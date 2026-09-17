@@ -77,6 +77,7 @@ export default defineConfig({
         samples: projectFile("./index.html"),
         simple: projectFile("./demos/simple/index.html"),
         simpleControls: projectFile("./demos/simple-controls/index.html"),
+        enterprise: projectFile("./demos/enterprise/index.html"),
         websceneSelector: projectFile("./demos/webscene-selector/index.html"),
       },
     },

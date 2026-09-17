@@ -1,0 +1,29 @@
+@import "../shared/theme.css";
+
+.enterprise-info {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  left: 16px;
+  width: min(330px, calc(100% - 80px));
+  max-height: calc(100% - 190px);
+  overflow: auto;
+  padding: 16px 18px;
+  border: 1px solid var(--calcite-color-border-3);
+  border-radius: 6px;
+  background: var(--calcite-color-foreground-1);
+  box-shadow: var(--calcite-shadow-md);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.enterprise-info h1 { margin: 0 0 6px; font-size: 20px; }
+.enterprise-info p { margin: 0 0 10px; }
+.enterprise-info summary { cursor: pointer; color: var(--calcite-color-brand); }
+.enterprise-info details p:first-of-type { margin-top: 10px; }
+.enterprise-info a { display: block; margin-top: 6px; color: var(--calcite-color-brand); }
+.enterprise-info button { padding: 8px 12px; margin-bottom: 10px; cursor: pointer; }
+.enterprise-info[data-error] { border-color: var(--calcite-color-status-danger); }
+@media (max-width: 720px) {
+  .enterprise-info { top: 8px; left: 8px; padding: 10px 12px; max-height: calc(100% - 200px); }
+  .enterprise-info h1 { font-size: 17px; }
+}
