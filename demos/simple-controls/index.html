@@ -1,0 +1,103 @@
+<!--
+  Flight-controls demo page. It hosts SITG's Geneva imagery, terrain, and 3D
+  building layers; main.ts connects flight after the layers are ready.
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Fly over Geneva's 3D buildings with controls for speed, power, pause, camera, and recovery."
+    />
+    <title>Flight controls demo | ArcGIS Flight Component</title>
+    <script type="module" crossorigin src="../../assets/simpleControls-B5g2xl79.js"></script>
+    <link rel="modulepreload" crossorigin href="../../assets/arcgis-scene-C3i20sGt.js">
+    <link rel="modulepreload" crossorigin href="../../assets/theme-e1Yn4xgW.js">
+    <link rel="modulepreload" crossorigin href="../../assets/TileInfoTilemapCache-BP9URHoB.js">
+    <link rel="modulepreload" crossorigin href="../../assets/ArcGISCachedService-Brj356lh.js">
+    <link rel="modulepreload" crossorigin href="../../assets/executeForIds-WUutqJ22.js">
+    <link rel="modulepreload" crossorigin href="../../assets/pbfFeatureSetUtils-CdMn7V23.js">
+    <link rel="modulepreload" crossorigin href="../../assets/QueryTask-DgG7mc5n.js">
+    <link rel="modulepreload" crossorigin href="../../assets/sublayerUtils-CLrdRyiA.js">
+    <link rel="modulepreload" crossorigin href="../../assets/SublayersOwner-CCctG4Ne.js">
+    <link rel="modulepreload" crossorigin href="../../assets/imageBitmapUtils-B3EeRedU.js">
+    <link rel="modulepreload" crossorigin href="../../assets/TileLayer-Dyr71oar.js">
+    <link rel="modulepreload" crossorigin href="../../assets/ElevationLayer-DX65qAiG.js">
+    <link rel="modulepreload" crossorigin href="../../assets/MeshTransform-CeeLvaRN.js">
+    <link rel="modulepreload" crossorigin href="../../assets/meshSpatialReferenceScaleUtils-CHfSV7Q5.js">
+    <link rel="modulepreload" crossorigin href="../../assets/I3SIndexInfo-DuDdS00s.js">
+    <link rel="modulepreload" crossorigin href="../../assets/SceneService-BsFeZxw_.js">
+    <link rel="modulepreload" crossorigin href="../../assets/associatedFeatureServiceUtils-CTmECKuQ.js">
+    <link rel="modulepreload" crossorigin href="../../assets/capabilities-Dc4mBkuN.js">
+    <link rel="modulepreload" crossorigin href="../../assets/I3SLayerDefinitions-C45x7_Z2.js">
+    <link rel="modulepreload" crossorigin href="../../assets/layersLoader-Cj663v3j.js">
+    <link rel="modulepreload" crossorigin href="../../assets/featurePopupQueryUtils-HEiwDKEt.js">
+    <link rel="modulepreload" crossorigin href="../../assets/I3SBinaryReader-D53tART0.js">
+    <link rel="modulepreload" crossorigin href="../../assets/I3SUtil-CFtTYtJV.js">
+    <link rel="modulepreload" crossorigin href="../../assets/popupUtils-DsX_TV9q.js">
+    <link rel="modulepreload" crossorigin href="../../assets/SceneLayer-D1Ub_uWL.js">
+    <link rel="modulepreload" crossorigin href="../../assets/GraphicsLayer-FOZzvcRN.js">
+    <link rel="modulepreload" crossorigin href="../../assets/browser-Dj_nFuLM.js">
+    <link rel="modulepreload" crossorigin href="../../assets/index-OzCpDdwT.js">
+    <link rel="modulepreload" crossorigin href="../../assets/demo-ui-BG4kZWTj.js">
+    <link rel="modulepreload" crossorigin href="../../assets/flight-controls-M8O9yN8W.js">
+    <link rel="stylesheet" crossorigin href="../../assets/arcgis-scene-T13P7v5O.css">
+    <link rel="stylesheet" crossorigin href="../../assets/simple-C_RIg4xW.css">
+    <link rel="stylesheet" crossorigin href="../../assets/simpleControls-BJDEmdYv.css">
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <calcite-shell class="flight-shell">
+      <calcite-navigation slot="header" class="app-header" scale="s" aria-label="ArcGIS Flight">
+        <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Flight controls"></calcite-navigation-logo>
+        <div slot="content-end" class="header-actions">
+        </div>
+        <calcite-dropdown slot="content-end" class="sample-menu" placement="bottom-end" width="m" scale="l"><calcite-action slot="trigger" icon="hamburger" text="Samples and documentation"></calcite-action><calcite-dropdown-group selection-mode="none"><calcite-dropdown-item href="../../index.html">Docs</calcite-dropdown-item><calcite-dropdown-item href="../../demos/simple/">Basic flight</calcite-dropdown-item><calcite-dropdown-item href="../../demos/simple-controls/" aria-current="page" icon-start="check">Flight controls</calcite-dropdown-item><calcite-dropdown-item href="../../demos/webscene-selector/">Scene explorer</calcite-dropdown-item><calcite-dropdown-item href="../../demos/aircraft/">Other aircraft</calcite-dropdown-item><calcite-dropdown-item href="../../demos/zurich/">Zurich local scene</calcite-dropdown-item><calcite-dropdown-item href="https://github.com/ceddc/arcgis-flight-component">GitHub</calcite-dropdown-item></calcite-dropdown-group></calcite-dropdown><calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="../../index.html" appearance="transparent" kind="neutral" scale="s" label="Documentation">Docs</calcite-button><calcite-button href="../../demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="../../demos/simple-controls/" appearance="transparent" kind="brand" scale="s" label="Flight controls demo" aria-current="page"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="../../demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="../../demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="../../demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+      </calcite-navigation>
+      <main class="flight-stage">
+        <!-- main.ts builds this caller-owned scene from public SITG services. -->
+        <arcgis-scene
+          id="scene"
+          viewing-mode="global"
+          popup-disabled
+          aria-label="Geneva 3D scene with SITG services"
+        ></arcgis-scene>
+
+        <arcgis-plane-navigation></arcgis-plane-navigation>
+        <aside class="scene-info" aria-label="About this flight">
+          <p id="load-status" role="status" aria-live="polite">Loading Geneva imagery, terrain, and buildings...</p>
+          <button id="retry" type="button" hidden>Reload scene</button>
+          <details>
+            <summary>About the Geneva scene</summary>
+            <p>Public SITG imagery and terrain from ArcGIS Enterprise, with 3D buildings hosted by SITG on ArcGIS Online.</p>
+            <p>Coverage is limited to Geneva. Ground clearance does not detect buildings.</p>
+            <a href="https://sitg.maps.arcgis.com/apps/webappviewer3d/index.html?id=091fef0b3c9346188f63a72e960bdf0d" target="_blank" rel="noopener noreferrer">Original SITG 3D map</a>
+            <a href="https://sitg.ge.ch/ressources/conditions-utilisation-donnees" target="_blank" rel="noopener noreferrer">SITG data terms</a>
+          </details>
+        </aside>
+      </main>
+    </calcite-shell>
+
+  </body>
+</html>

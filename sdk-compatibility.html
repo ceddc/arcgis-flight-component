@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ArcGIS Flight Component documentation: SDK integration.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>SDK integration | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=e65ce19d883e">
+    <script type="module" src="doc-assets/docs-ui.js?v=e65ce19d883e"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Getting started</a></li><li><a href="demo.html">Demos</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Common changes</a></li><li><a href="flight-concepts.html">Flight concepts</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="codebase-guide.html">Codebase guide</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="sdk-compatibility.html" aria-current="page">SDK integration</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#choose-a-loading-option">Choose a loading option</a></li><li class="section-link level-2"><a href="#existing-application-with-a-bundler">Existing application with a bundler</a></li><li class="section-link level-2"><a href="#existing-amd-host">Existing AMD host</a></li><li class="section-link level-2"><a href="#standalone-html-page">Standalone HTML page</a></li><li class="section-link level-2"><a href="#scene-ownership">Scene ownership</a></li></ul></section></li><li><a href="configuration.html">Configuration</a></li><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>SDK integration</span></nav>
+        <article><h1 id="sdk-integration">SDK integration<a class="heading-anchor" href="#sdk-integration" aria-label="Link to this section">#</a></h1>
+<p>Use the component with ArcGIS Maps SDK for JavaScript 4.30 through 5.1.
+Choose the import below to match the SDK your app already uses. You only
+need ArcGIS Map Components if your app uses <code>&lt;arcgis-scene&gt;</code>.</p>
+<h2 id="choose-a-loading-option">Choose a loading option<a class="heading-anchor" href="#choose-a-loading-option" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Host</th>
+<th>Import or file</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bundler with SDK 5.1</td>
+<td><code>@ceddc/arcgis-flight-component</code></td>
+</tr>
+<tr>
+<td>Bundler with SDK 4.30-4.31</td>
+<td><code>@ceddc/arcgis-flight-component/sdk-4.30</code></td>
+</tr>
+<tr>
+<td>Bundler with SDK 4.32-5.0</td>
+<td><code>@ceddc/arcgis-flight-component/sdk-4.32</code></td>
+</tr>
+<tr>
+<td>Existing ArcGIS AMD loader</td>
+<td>Universal <code>arcgis-flight-component.amd.js</code></td>
+</tr>
+<tr>
+<td>Standalone HTML</td>
+<td>Full browser build and stylesheet from a self-hosted <code>dist/pages/</code></td>
+</tr>
+</tbody></table>
+<h2 id="existing-application-with-a-bundler">Existing application with a bundler<a class="heading-anchor" href="#existing-application-with-a-bundler" aria-label="Link to this section">#</a></h2>
+<p>Install from GitHub:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-bash">npm install github:ceddc/arcgis-flight-component
+</code></pre></div>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">import &quot;@ceddc/arcgis-flight-component&quot;;
+
+const flight = document.createElement(&quot;arcgis-plane-navigation&quot;);
+flight.view = existingSceneView;
+document.body.append(flight);
+</code></pre></div>
+<p>The view must be a 3D <code>SceneView</code> with a visible HTML container. A 2D
+<code>MapView</code> is rejected. Remove the element before destroying the view; assign a
+replacement to <code>flight.view</code> when the active view changes.</p>
+<p>For a local compiled file, run <code>npm run build:component</code> and copy the matching
+file from <code>dist/component/</code>. Each generated ESM or AMD file embeds the
+component code, aircraft assets, and controls styles, but excludes ArcGIS.
+Your app supplies ArcGIS and any stylesheet its SDK version needs.
+Family ESM files use package imports and need a bundler or a suitable import
+map; they cannot be loaded by a bare browser script tag alone.</p>
+<h2 id="existing-amd-host">Existing AMD host<a class="heading-anchor" href="#existing-amd-host" aria-label="Link to this section">#</a></h2>
+<p>Load the universal AMD file through the existing ArcGIS loader. It resolves
+<code>esri/*</code> modules from that host. Create the element and assign its existing
+3D view as in the bundler example.</p>
+<h2 id="standalone-html-page">Standalone HTML page<a class="heading-anchor" href="#standalone-html-page" aria-label="Link to this section">#</a></h2>
+<p>Run <code>npm run build:pages</code>, then serve the complete <code>dist/pages/</code> directory over
+HTTP or HTTPS. The <code>browser/</code> entry includes SDK 5.1.24, registers
+<code>arcgis-scene</code>, and needs its companion stylesheet. Keep <code>browser/</code>,
+<code>component/</code>, and <code>assets/</code> in their generated locations; copying one entry
+file is insufficient.</p>
+<p>Your HTML only needs the stylesheet and module below. The module loads its
+dependencies automatically; the generated demo preload links are not part of
+the setup you need to copy.</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;./browser/arcgis-flight-component.css&quot; /&gt;
+&lt;script type=&quot;module&quot; src=&quot;./browser/arcgis-flight-component.js&quot;&gt;&lt;/script&gt;
+&lt;style&gt;html, body, arcgis-scene { width: 100%; height: 100%; margin: 0; } arcgis-scene { display: block; }&lt;/style&gt;
+&lt;arcgis-scene id=&quot;scene&quot; item-id=&quot;YOUR_PUBLIC_WEBSCENE_ITEM_ID&quot;&gt;&lt;/arcgis-scene&gt;
+&lt;arcgis-plane-navigation reference-element=&quot;scene&quot;&gt;&lt;/arcgis-plane-navigation&gt;
+</code></pre></div>
+<h2 id="scene-ownership">Scene ownership<a class="heading-anchor" href="#scene-ownership" aria-label="Link to this section">#</a></h2>
+<p>Your app keeps its scene, map, view, sign-in, data layers, and surrounding UI.
+The flight component cleans up only the aircraft layer, graphics, listeners,
+animation state, and optional controls it adds. When flight ends, it restores
+the previous camera and navigation settings when appropriate. Your view and
+map remain available.</p>
+<p>See <a href="getting-started.html">Getting started</a> for start positions and lifecycle,
+and <a href="configuration.html">Configuration</a> for the typed API.</p>
+</article>
+        <footer class="page-footer">
+          <span>Source: <code>docs/sdk-compatibility.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/sdk-compatibility.md">View on GitHub</a>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ArcGIS Flight Component documentation: Configuration.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Configuration | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=e65ce19d883e">
+    <script type="module" src="doc-assets/docs-ui.js?v=e65ce19d883e"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Getting started</a></li><li><a href="demo.html">Demos</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Common changes</a></li><li><a href="flight-concepts.html">Flight concepts</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="codebase-guide.html">Codebase guide</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="sdk-compatibility.html">SDK integration</a></li><li><a href="configuration.html" aria-current="page">Configuration</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#typed-configuration">Typed configuration</a></li><li class="section-link level-2"><a href="#defaults-and-accepted-values">Defaults and accepted values</a></li><li class="section-link level-3"><a href="#aircraft-assets">Aircraft assets</a></li><li class="section-link level-3"><a href="#start-pose">Start pose</a></li><li class="section-link level-3"><a href="#camera">Camera</a></li><li class="section-link level-3"><a href="#controls">Controls</a></li><li class="section-link level-3"><a href="#terrain">Terrain</a></li><li class="section-link level-3"><a href="#optional-ui">Optional UI</a></li><li class="section-link level-3"><a href="#session-behavior">Session behavior</a></li><li class="section-link level-3"><a href="#scene-distance-semantics">Scene distance semantics</a></li><li class="section-link level-2"><a href="#html-attributes">HTML attributes</a></li><li class="section-link level-2"><a href="#boolean-attribute-semantics">Boolean attribute semantics</a></li><li class="section-link level-2"><a href="#live-updates-and-session-restarts">Live updates and session restarts</a></li><li class="section-link level-3"><a href="#applied-live">Applied live</a></li><li class="section-link level-3"><a href="#restart-the-session">Restart the session</a></li><li class="section-link level-2"><a href="#normalization-and-errors">Normalization and errors</a></li><li class="section-link level-2"><a href="#aircraft-profiles">Aircraft profiles</a></li></ul></section></li><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Configuration</span></nav>
+        <article><h1 id="configuration">Configuration<a class="heading-anchor" href="#configuration" aria-label="Link to this section">#</a></h1>
+<p>You can set options with HTML attributes or the typed <code>config</code> property.
+Both produce the same normalized configuration. HTML attributes reject
+unsupported values during initialization; some invalid programmatic UI values
+instead retain the previous setting.</p>
+<p>For examples to copy, start with <a href="configuration-recipes.html">Common changes</a>.
+This page is the full reference for fields, defaults, and limits.
+<a href="flight-concepts.html">Flight concepts</a> explains what the settings feel like
+when you fly.</p>
+<h2 id="typed-configuration">Typed configuration<a class="heading-anchor" href="#typed-configuration" aria-label="Link to this section">#</a></h2>
+<p>Set <code>flight.config</code> or call <code>flight.updateConfig()</code> with a partial configuration. Settings merge with the current configuration, except <code>flight</code>, which replaces the selected profile and its tuning. Reading <code>flight.config</code> returns the full configuration with defaults applied.</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">interface PlaneNavigationConfigInput {
+  flight?: AircraftFlightConfigInput | null;
+  assets?: Partial&lt;AircraftAssetConfig&gt;;
+  start?: PlaneNavigationStartConfig;
+  camera?: Partial&lt;PlaneNavigationCameraConfig&gt;;
+  controls?: Partial&lt;PlaneNavigationControlsConfig&gt;;
+  terrain?: Partial&lt;PlaneNavigationTerrainConfig&gt;;
+  ui?: Partial&lt;PlaneNavigationUiConfig&gt;;
+  powerMode?: FlightPowerMode;
+  autoStart?: boolean;
+}
+</code></pre></div>
+<h2 id="defaults-and-accepted-values">Defaults and accepted values<a class="heading-anchor" href="#defaults-and-accepted-values" aria-label="Link to this section">#</a></h2>
+<h3 id="aircraft-assets">Aircraft assets<a class="heading-anchor" href="#aircraft-assets" aria-label="Link to this section">#</a></h3>
+<p>These files define the plane&#39;s appearance. The body follows flight movement; the optional propeller spins and the boost appears in turbo mode. Replacing a model preserves the flight rules. Use <a href="api-reference.html#setaircraft"><code>setAircraft()</code></a> to swap models in an active session without restarting it. See <a href="custom-aircraft.html">Custom aircraft</a> for model preparation.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>Rules</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>assets.bodyUrl</code></td>
+<td>Bundled <code>classic.glb</code></td>
+<td>Required non-empty URL</td>
+</tr>
+<tr>
+<td><code>assets.propellerUrl</code></td>
+<td>Bundled propeller GLB</td>
+<td>URL or <code>null</code></td>
+</tr>
+<tr>
+<td><code>assets.boostUrl</code></td>
+<td>Bundled boost GLB</td>
+<td>URL or <code>null</code></td>
+</tr>
+</tbody></table>
+<p>The production library embeds the three default GLBs as data URLs. External URLs must be browser-accessible and need CORS permission when loaded from another origin.</p>
+<h3 id="start-pose">Start pose<a class="heading-anchor" href="#start-pose" aria-label="Link to this section">#</a></h3>
+<p>The start pose is the aircraft&#39;s initial location, altitude, direction, and speed. <code>altitudeM</code> uses the scene&#39;s absolute vertical reference, while AGL measures height above the ground underneath. Heading 0 faces north and 90 faces east.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>Rules</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>start.longitude</code></td>
+<td>Loaded view center</td>
+<td>Must be supplied with latitude</td>
+</tr>
+<tr>
+<td><code>start.latitude</code></td>
+<td>Loaded view center</td>
+<td>Must be supplied with longitude, range <code>-90</code> to <code>90</code></td>
+</tr>
+<tr>
+<td><code>start.altitudeM</code></td>
+<td>Sampled ground plus 300 m</td>
+<td>Finite absolute altitude in metres</td>
+</tr>
+<tr>
+<td><code>start.headingDeg</code></td>
+<td>Host camera heading</td>
+<td>Finite heading in degrees</td>
+</tr>
+<tr>
+<td><code>start.speedMps</code></td>
+<td><code>100</code>, or the selected profile&#39;s cruise speed</td>
+<td>Clamped to the profile&#39;s minimum/turbo limits; without a profile, <code>48</code> through <code>333.333...</code>. Metres per second in local scenes; the global scene retains its Web Mercator motion convention.</td>
+</tr>
+</tbody></table>
+<p>Omitted altitude requires valid ground elevation and starts 300 m above it. Explicit altitude is used if elevation is unavailable; when terrain is disabled, it skips the initial query. A valid ground sample raises the starting altitude if needed to clear <code>minimumClearanceM</code> plus 1 m.</p>
+<h3 id="camera">Camera<a class="heading-anchor" href="#camera" aria-label="Link to this section">#</a></h3>
+<p>Chase follows behind the plane; cockpit moves the viewpoint near its origin and hides the model. <code>fovDeg</code> sets the base viewing angle. <code>bankedViewport</code> tilts the horizon during turns, while <code>submissionHz</code> limits camera writes rather than flight simulation.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>Accepted values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>camera.mode</code></td>
+<td><code>&quot;chase&quot;</code></td>
+<td><code>&quot;chase&quot;</code> or <code>&quot;cockpit&quot;</code></td>
+</tr>
+<tr>
+<td><code>camera.fovDeg</code></td>
+<td><code>65</code></td>
+<td>Clamped to <code>58</code> through <code>76</code> degrees</td>
+</tr>
+<tr>
+<td><code>camera.bankedViewport</code></td>
+<td><code>true</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>camera.submissionHz</code></td>
+<td><code>60</code></td>
+<td>Clamped to <code>30</code> through <code>60</code> Hz</td>
+</tr>
+</tbody></table>
+<p><code>submissionHz</code> is an upper bound. Camera updates can temporarily drop to 30 Hz under rendering pressure.</p>
+<p><code>bankedViewport</code> enables experimental viewport roll through ArcGIS <code>RenderNode</code>. Disabled or unavailable roll leaves the viewport level and flight continues.</p>
+<h3 id="controls">Controls<a class="heading-anchor" href="#controls" aria-label="Link to this section">#</a></h3>
+<p>Keyboard and gamepad settings enable those input sources. Sensitivity changes keyboard response and gamepad pitch/bank strength. With inverted pitch enabled, W/Up lowers the nose and S/Down raises it.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>Accepted values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>controls.keyboard</code></td>
+<td><code>true</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>controls.gamepad</code></td>
+<td><code>true</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>controls.sensitivity</code></td>
+<td><code>0.8</code></td>
+<td>Clamped to <code>0.5</code> through <code>2</code></td>
+</tr>
+<tr>
+<td><code>controls.invertPitch</code></td>
+<td><code>true</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>controls.captureSceneNavigation</code></td>
+<td><code>true</code></td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+<p>Click or focus the scene to use flight controls. Editable fields keep their
+normal input. With <code>captureSceneNavigation</code> enabled, the component takes
+over ArcGIS navigation, including touch pinch zoom. In chase view, drag
+with the left mouse button or one finger to look around; release to return
+behind the aircraft. Cleanup restores previous settings if your application
+has not changed them in the meantime.</p>
+<h3 id="terrain">Terrain<a class="heading-anchor" href="#terrain" aria-label="Link to this section">#</a></h3>
+<p>These settings control how the aircraft responds to the ground. Your Map or
+WebScene still supplies the imagery and elevation, including terrain loading,
+resolution, and visibility.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>What it does</th>
+<th>Accepted values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>terrain.enabled</code></td>
+<td><code>true</code></td>
+<td>Enables ground sampling and the clearance/ceiling checks during flight.</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>terrain.minimumClearanceM</code></td>
+<td><code>2.8</code> m</td>
+<td>Below this height above ground, lifts the aircraft and nudges its nose upward.</td>
+<td>Clamped to 0.5 through 100 m</td>
+</tr>
+<tr>
+<td><code>terrain.maximumAglM</code></td>
+<td><code>50000</code> m</td>
+<td>Caps aircraft altitude at ground elevation plus this height.</td>
+<td>Clamped to 100 through 200000 m</td>
+</tr>
+</tbody></table>
+<p><strong>AGL means above ground level:</strong> aircraft altitude minus ground elevation. Over ground at 1000 m, the default ceiling is altitude 51000 m; at aircraft altitude 1300 m, AGL is 300 m. Clearance uses the aircraft&#39;s position, not the full model&#39;s dimensions.</p>
+<p><code>enabled: false</code> disables these ongoing flight checks while the scene keeps rendering its terrain. An omitted start altitude still needs an initial ground query; provide <code>start.altitudeM</code> to avoid that query too.</p>
+<p>During terrain updates, a <a href="troubleshooting.html#terrain-clearance-is-temporarily-unavailable">recent nearby ground sample</a> can bridge a brief gap. Without a valid sample, ground limits are not applied. Buildings, trees, bridges, and integrated meshes are not detected as obstacles.</p>
+<p>See <a href="configuration-recipes.html#set-ground-clearance">Set ground clearance</a> for a working configuration example. Changing terrain settings through <code>config</code> or <code>updateConfig()</code> restarts the flight session. <code>setAircraft()</code> can change the clearance and ceiling in place, but <code>terrain.enabled</code> still requires a restart through <code>config</code> or <code>updateConfig()</code>.</p>
+<h3 id="optional-ui">Optional UI<a class="heading-anchor" href="#optional-ui" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>Accepted values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ui.enabled</code></td>
+<td><code>false</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>ui.joystick</code></td>
+<td><code>&quot;auto&quot;</code></td>
+<td><code>&quot;auto&quot;</code> on touch devices, <code>&quot;always&quot;</code>, or <code>&quot;never&quot;</code>; independent of <code>ui.enabled</code></td>
+</tr>
+<tr>
+<td><code>ui.joystickPosition</code></td>
+<td><code>&quot;bottom-left&quot;</code></td>
+<td>Any supported ArcGIS scene slot listed below</td>
+</tr>
+<tr>
+<td><code>ui.position</code></td>
+<td><code>&quot;bottom-end&quot;</code></td>
+<td>Any supported ArcGIS scene slot listed below</td>
+</tr>
+<tr>
+<td><code>ui.controls</code></td>
+<td>All four controls</td>
+<td>Any unique subset of <code>power</code>, <code>pause</code>, <code>camera</code>, <code>recover</code></td>
+</tr>
+<tr>
+<td><code>ui.showSpeed</code></td>
+<td><code>false</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>ui.locale</code></td>
+<td><code>&quot;auto&quot;</code></td>
+<td><code>auto</code>, <code>en</code>, <code>de</code>, <code>fr</code>, <code>it</code>, or <code>es</code></td>
+</tr>
+</tbody></table>
+<p>Supported positions are:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-text">top-left      top-right
+bottom-left   bottom-right
+top-start     top-end
+bottom-start  bottom-end
+</code></pre></div>
+<p>The toolbar goes in the selected <code>&lt;arcgis-scene&gt;</code> slot or the direct view&#39;s
+<code>view.ui</code> position. Cleanup removes only the controls added by the component.</p>
+<p>The joystick appears automatically when the browser reports a coarse pointer
+(phones, tablets, and touch laptops). It works without <code>show-controls</code>.
+Move it or override automatic visibility with HTML:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-html">&lt;arcgis-plane-navigation reference-element=&quot;scene&quot;
+  joystick=&quot;always&quot; joystick-position=&quot;bottom-right&quot;&gt;
+&lt;/arcgis-plane-navigation&gt;
+</code></pre></div>
+<p>Use <code>joystick=&quot;never&quot;</code> for your own controls. You can also change it live with
+<code>flight.updateConfig({ ui: { joystick: &quot;auto&quot;, joystickPosition: &quot;bottom-left&quot; } })</code>.
+It follows the same sensitivity and pitch inversion as the gamepad. Releasing
+the stick, pausing, or leaving the page clears its input. A second finger can
+look around the scene while the first continues steering.</p>
+<p><code>auto</code> follows ArcGIS locale changes, then falls back through document and browser locales to English. Regional tags retain regional number formatting with the matching supported language.</p>
+<h3 id="session-behavior">Session behavior<a class="heading-anchor" href="#session-behavior" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>Accepted values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>powerMode</code></td>
+<td><code>&quot;normal&quot;</code></td>
+<td><code>&quot;slow&quot;</code>, <code>&quot;normal&quot;</code>, or <code>&quot;turbo&quot;</code></td>
+</tr>
+<tr>
+<td><code>autoStart</code></td>
+<td><code>true</code></td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+<p><code>powerMode</code> controls ongoing speed; <code>start.speedMps</code> sets initial speed only. Without a flight profile, slow brakes toward the minimum, normal approaches <code>100</code>, and turbo approaches <code>333.333...</code> (displayed as <code>1200</code> km/h). With a profile, these modes use its speed and handling rules. The paraglider ignores turbo thrust.</p>
+<p>When <code>autoStart</code> is <code>false</code>, initialization stops in the <code>ready</code> state until <code>start()</code> is called.</p>
+<h3 id="scene-distance-semantics">Scene distance semantics<a class="heading-anchor" href="#scene-distance-semantics" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Measurement</th>
+<th>Units</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Horizontal position, speed, and distance in a supported local scene</td>
+<td>Metres, with speed in metres per second; the view&#39;s projected linear units are converted using its finite, positive metres-per-unit scale</td>
+</tr>
+<tr>
+<td>Horizontal position, speed, and distance in a global scene</td>
+<td>Projected Web Mercator units, with speed in units per second</td>
+</tr>
+<tr>
+<td>Vertical position, terrain elevation, and clearance</td>
+<td>Metres</td>
+</tr>
+</tbody></table>
+<p>Global ground distance varies with latitude. <code>speedMps</code> and the km/h display describe arcade flight, not geodesic telemetry. Derive geodesic speed or route timing from geographic positions in the host application. The last-safe terrain radius uses the same horizontal scene units.</p>
+<h2 id="html-attributes">HTML attributes<a class="heading-anchor" href="#html-attributes" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>HTML value type</th>
+<th>Configuration field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>reference-element</code></td>
+<td>Element ID string</td>
+<td>Host element reference</td>
+<td>ID of the caller-owned <code>&lt;arcgis-scene&gt;</code></td>
+</tr>
+<tr>
+<td><code>start-longitude</code></td>
+<td>Number</td>
+<td><code>start.longitude</code></td>
+<td>Degrees; must be paired with <code>start-latitude</code></td>
+</tr>
+<tr>
+<td><code>start-latitude</code></td>
+<td>Number</td>
+<td><code>start.latitude</code></td>
+<td>Degrees; range <code>-90</code> to <code>90</code></td>
+</tr>
+<tr>
+<td><code>start-altitude-m</code></td>
+<td>Number</td>
+<td><code>start.altitudeM</code></td>
+<td>Absolute metres</td>
+</tr>
+<tr>
+<td><code>start-heading-deg</code></td>
+<td>Number</td>
+<td><code>start.headingDeg</code></td>
+<td>Degrees clockwise from north</td>
+</tr>
+<tr>
+<td><code>start-speed-mps</code></td>
+<td>Number</td>
+<td><code>start.speedMps</code></td>
+<td>Metres per second in supported local scenes; projected units per second in global Web Mercator</td>
+</tr>
+<tr>
+<td><code>camera-mode</code></td>
+<td><code>chase</code> | <code>cockpit</code></td>
+<td><code>camera.mode</code></td>
+<td>Camera view</td>
+</tr>
+<tr>
+<td><code>power-mode</code></td>
+<td><code>slow</code> | <code>normal</code> | <code>turbo</code></td>
+<td><code>powerMode</code></td>
+<td>Flight power</td>
+</tr>
+<tr>
+<td><code>sensitivity</code></td>
+<td>Number</td>
+<td><code>controls.sensitivity</code></td>
+<td><code>0.5</code> through <code>2</code></td>
+</tr>
+<tr>
+<td><code>fov-deg</code></td>
+<td>Number</td>
+<td><code>camera.fovDeg</code></td>
+<td>Degrees; <code>58</code> through <code>76</code></td>
+</tr>
+<tr>
+<td><code>invert-pitch-disabled</code></td>
+<td>Boolean presence</td>
+<td><code>controls.invertPitch</code></td>
+<td>Presence sets the field to <code>false</code></td>
+</tr>
+<tr>
+<td><code>camera-roll-disabled</code></td>
+<td>Boolean presence</td>
+<td><code>camera.bankedViewport</code></td>
+<td>Presence sets the field to <code>false</code></td>
+</tr>
+<tr>
+<td><code>keyboard-disabled</code></td>
+<td>Boolean presence</td>
+<td><code>controls.keyboard</code></td>
+<td>Presence sets the field to <code>false</code></td>
+</tr>
+<tr>
+<td><code>gamepad-disabled</code></td>
+<td>Boolean presence</td>
+<td><code>controls.gamepad</code></td>
+<td>Presence sets the field to <code>false</code></td>
+</tr>
+<tr>
+<td><code>capture-scene-navigation-disabled</code></td>
+<td>Boolean presence</td>
+<td><code>controls.captureSceneNavigation</code></td>
+<td>Presence sets the field to <code>false</code></td>
+</tr>
+<tr>
+<td><code>auto-start-disabled</code></td>
+<td>Boolean presence</td>
+<td><code>autoStart</code></td>
+<td>Presence sets the field to <code>false</code></td>
+</tr>
+<tr>
+<td><code>show-controls</code></td>
+<td>Boolean presence</td>
+<td><code>ui.enabled</code></td>
+<td>Presence sets the field to <code>true</code></td>
+</tr>
+<tr>
+<td><code>joystick</code></td>
+<td><code>auto</code> | <code>always</code> | <code>never</code></td>
+<td><code>ui.joystick</code></td>
+<td>Touch joystick visibility</td>
+</tr>
+<tr>
+<td><code>joystick-position</code></td>
+<td>ArcGIS scene slot</td>
+<td><code>ui.joystickPosition</code></td>
+<td>Default <code>bottom-left</code></td>
+</tr>
+<tr>
+<td><code>show-speed</code></td>
+<td>Boolean presence</td>
+<td><code>ui.showSpeed</code></td>
+<td>Presence sets the field to <code>true</code></td>
+</tr>
+<tr>
+<td><code>ui-position</code></td>
+<td>ArcGIS scene slot</td>
+<td><code>ui.position</code></td>
+<td>Built-in toolbar position</td>
+</tr>
+<tr>
+<td><code>ui-controls</code></td>
+<td>Control name list</td>
+<td><code>ui.controls</code></td>
+<td>Space- or comma-separated <code>power</code>, <code>pause</code>, <code>camera</code>, <code>recover</code></td>
+</tr>
+<tr>
+<td><code>locale</code></td>
+<td><code>auto</code> | <code>en</code> | <code>de</code> | <code>fr</code> | <code>it</code> | <code>es</code></td>
+<td><code>ui.locale</code></td>
+<td>Built-in controls language</td>
+</tr>
+</tbody></table>
+<p>There are no HTML attributes for aircraft URLs, terrain settings, or camera submission rate. Configure those through <code>config</code> or <code>updateConfig()</code>; use <code>setAircraft()</code> for an in-place aircraft swap.</p>
+<h2 id="boolean-attribute-semantics">Boolean attribute semantics<a class="heading-anchor" href="#boolean-attribute-semantics" aria-label="Link to this section">#</a></h2>
+<p>Boolean attributes depend on presence: <code>keyboard-disabled=&quot;false&quot;</code> still disables the keyboard. Remove it with <code>flight.removeAttribute(&quot;keyboard-disabled&quot;)</code> to restore the default. True-by-default options use <code>-disabled</code>; false-by-default UI options use <code>show-*</code>.</p>
+<h2 id="live-updates-and-session-restarts">Live updates and session restarts<a class="heading-anchor" href="#live-updates-and-session-restarts" aria-label="Link to this section">#</a></h2>
+<h3 id="applied-live">Applied live<a class="heading-anchor" href="#applied-live" aria-label="Link to this section">#</a></h3>
+<p><code>camera.mode</code>, <code>camera.fovDeg</code>, <code>camera.bankedViewport</code>, <code>controls.keyboard</code>, <code>controls.gamepad</code>, <code>controls.sensitivity</code>, <code>controls.invertPitch</code>, all <code>ui</code> fields, and <code>powerMode</code>.</p>
+<p>You can change the camera while paused. The view updates immediately, and
+flight stays paused.</p>
+<h3 id="restart-the-session">Restart the session<a class="heading-anchor" href="#restart-the-session" aria-label="Link to this section">#</a></h3>
+<p>With <code>config</code> or <code>updateConfig()</code>, any <code>assets</code>, <code>flight</code>, <code>start</code>, or <code>terrain</code>
+field restarts the session, as do <code>controls.captureSceneNavigation</code>,
+<code>camera.submissionHz</code>, and <code>autoStart</code>.</p>
+<p>A restart cleans up the current flight and restores the scene settings it
+borrowed. The component then enters <code>loading</code> and emits
+<code>arcgisPlaneNavigationReady</code> when the new session is ready.</p>
+<p>For an active session, <a href="api-reference.html#setaircraft"><code>setAircraft()</code></a> instead
+applies aircraft assets and flight profiles without replacing the scene or
+session. A model/profile change keeps the current position but resets attitude,
+speed to the new profile&#39;s cruise speed, and power to normal. Changing only the
+mesh keeps the current flight motion. It can also update
+<code>terrain.minimumClearanceM</code> and <code>terrain.maximumAglM</code> in place;
+<code>terrain.enabled</code> must be changed through <code>config</code> or <code>updateConfig()</code>.</p>
+<p>The latest field change wins. Attributes update only their mapped fields; removing an attribute restores that field&#39;s default. Configuration is retained while awaiting a host. See <a href="api-reference.html#properties">host properties</a> for reference precedence and binding errors.</p>
+<h2 id="normalization-and-errors">Normalization and errors<a class="heading-anchor" href="#normalization-and-errors" aria-label="Link to this section">#</a></h2>
+<ul>
+<li><code>start.speedMps</code> clamps to its range, including <code>0</code>. Non-finite programmatic start values are treated as omitted.</li>
+<li>For FOV, submission rate, sensitivity, and terrain distances, <code>0</code> falls back to the default before clamping. Other finite out-of-range values clamp.</li>
+<li>Non-finite numeric HTML attributes fail initialization; blank numeric attributes act as omitted values.</li>
+<li>Longitude and latitude must be supplied together; latitude outside <code>-90</code> to <code>90</code> and a blank body URL throw errors.</li>
+<li>Invalid HTML modes, UI positions, control names, or locales set <code>status</code> to <code>error</code> and emit <code>arcgisPlaneNavigationError</code>. Correct or remove the attribute to retry.</li>
+<li>Invalid camera or power modes passed to the element&#39;s configuration or mode methods throw <code>TypeError</code> before state changes.</li>
+<li>Programmatic UI configuration removes unknown controls and duplicates. Invalid programmatic UI positions or locales retain the previous value; declarative values are validated strictly.</li>
+</ul>
+<p>Initialization failures emit <code>arcgisPlaneNavigationError</code> with an <code>Error</code> object. Awaited <code>start()</code> rejects with the initialization error.</p>
+<h2 id="aircraft-profiles">Aircraft profiles<a class="heading-anchor" href="#aircraft-profiles" aria-label="Link to this section">#</a></h2>
+<p><code>flight</code> defaults to <code>null</code> (existing simulation). Set <code>{ model: &quot;classic&quot; | &quot;super-jet&quot; | &quot;space-jet&quot; | &quot;paraglider&quot;, tuning?: Partial&lt;AircraftTuning&gt; }</code>
+to opt into one of the component&#39;s built-in aircraft profiles. Profile or
+asset changes through <code>config</code> or <code>updateConfig()</code> restart the session;
+<code>setAircraft()</code> changes them in place.
+Powered profiles support ongoing speed and handling overrides; the paraglider uses
+its fixed glide model. See <a href="custom-aircraft.html#choose-speed-and-handling">Custom aircraft</a>.</p>
+<p>Optional asset settings: <code>propellerAnchorM</code> is a metre XYZ offset (default 0, 2.68, 0),
+<code>visualPitchDeg</code> is a visual body tilt (default 0), and <code>preserveFinish</code> retains
+authored material roughness (default false). These restart the session through
+<code>config</code> or <code>updateConfig()</code> and apply in place through <code>setAircraft()</code>.</p>
+</article>
+        <footer class="page-footer">
+          <span>Source: <code>docs/configuration.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/configuration.md">View on GitHub</a>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

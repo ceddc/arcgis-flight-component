@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ArcGIS Flight Component documentation: Codebase guide.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Codebase guide | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=e65ce19d883e">
+    <script type="module" src="doc-assets/docs-ui.js?v=e65ce19d883e"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Getting started</a></li><li><a href="demo.html">Demos</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Common changes</a></li><li><a href="flight-concepts.html">Flight concepts</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="codebase-guide.html" aria-current="page">Codebase guide</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#how-a-flight-moves-through-the-code">How a flight moves through the code</a></li><li class="section-link level-2"><a href="#source-and-test-inventory">Source and test inventory</a></li><li class="section-link level-3"><a href="#src-entry-points-and-configuration">src/ entry points and configuration</a></li><li class="section-link level-3"><a href="#src-ab-deterministic-reference-comparison">src/ab/ - deterministic reference comparison</a></li><li class="section-link level-3"><a href="#src-arcgis-arcgis-scene-integration-and-rendering">src/arcgis/ - ArcGIS scene integration and rendering</a></li><li class="section-link level-3"><a href="#src-components-custom-element-and-built-in-ui">src/components/ - custom element and built-in UI</a></li><li class="section-link level-3"><a href="#src-controller-flight-lifecycle-and-frame-timing">src/controller/ - flight lifecycle and frame timing</a></li><li class="section-link level-3"><a href="#src-core-sdk-independent-flight-and-camera-behavior">src/core/ - SDK-independent flight and camera behavior</a></li><li class="section-link level-3"><a href="#src-i18n-translated-component-labels-and-messages">src/i18n/ - translated component labels and messages</a></li><li class="section-link level-3"><a href="#src-input-keyboard-gamepad-and-touch-input">src/input/ - keyboard, gamepad, and touch input</a></li><li class="section-link level-3"><a href="#demos-runnable-host-applications">demos/ - runnable host applications</a></li><li class="section-link level-3"><a href="#tests-real-browser-and-sdk-integration-harnesses">tests/ - real-browser and SDK integration harnesses</a></li><li class="section-link level-3"><a href="#scripts-site-bundle-reference-and-release-tooling">scripts/ - site, bundle, reference, and release tooling</a></li><li class="section-link level-3"><a href="#root-and-documentation-site-code-configuration">Root and documentation-site code/configuration</a></li><li class="section-link level-2"><a href="#non-code-files-that-support-the-implementation">Non-code files that support the implementation</a></li><li class="section-link level-2"><a href="#common-changes-where-to-start">Common changes: where to start</a></li></ul></section></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="sdk-compatibility.html">SDK integration</a></li><li><a href="configuration.html">Configuration</a></li><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Codebase guide</span></nav>
+        <article><h1 id="codebase-guide">Codebase guide<a class="heading-anchor" href="#codebase-guide" aria-label="Link to this section">#</a></h1>
+<p>Use this page to find the implementation behind a behavior, example, build
+step, or public API. It indexes first-party code under <code>src/</code>, <code>demos/</code>,
+<code>scripts/</code>, and <code>tests/</code>, plus root build/test configuration;
+paired tests are listed with the source they protect. Generated output,
+dependencies, media, and presentation-only styles are omitted. For the public
+configuration and lifecycle contracts, see <a href="configuration.html">Configuration</a>,
+<a href="api-reference.html">API reference</a>, and <a href="architecture.html">Architecture</a>. For
+local commands and build output, see <a href="development.html">Development</a>.</p>
+<h2 id="how-a-flight-moves-through-the-code">How a flight moves through the code<a class="heading-anchor" href="#how-a-flight-moves-through-the-code" aria-label="Link to this section">#</a></h2>
+<ol>
+<li>A host imports the component entry point and places
+<code>&lt;arcgis-plane-navigation&gt;</code> alongside its existing <code>SceneView</code> or
+<code>&lt;arcgis-scene&gt;</code>.</li>
+<li><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/arcgis-plane-navigation.ts"><code>src/components/arcgis-plane-navigation.ts</code></a> resolves the host, reads
+attributes and configuration, waits for the scene, and coordinates start,
+stop, and status events.</li>
+<li><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/controller/flight-session.ts"><code>src/controller/flight-session.ts</code></a> owns the session lifecycle. It combines
+normalized input with the deterministic simulation in <code>src/core/</code>, then
+sends each frame to the hosted scene.</li>
+<li><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/hosted-flight-scene.ts"><code>src/arcgis/hosted-flight-scene.ts</code></a> creates and updates the component&#39;s
+aircraft layer, samples terrain, presents the aircraft and camera, and
+tears down the resources it owns. The host keeps ownership of its view, map,
+and other resources.</li>
+</ol>
+<p>In short: <strong>component and config -&gt; session and input -&gt; core simulation -&gt;
+ArcGIS presentation</strong>. <code>src/core/</code> is the best starting point for flight or
+camera math; <code>src/arcgis/</code> is the place for ArcGIS rendering, SDK integration,
+and scene lifecycle changes.</p>
+<h2 id="source-and-test-inventory">Source and test inventory<a class="heading-anchor" href="#source-and-test-inventory" aria-label="Link to this section">#</a></h2>
+<h3 id="src-entry-points-and-configuration"><code>src/</code> entry points and configuration<a class="heading-anchor" href="#src-entry-points-and-configuration" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/index.ts"><code>src/index.ts</code></a></td>
+<td>Package entry: exports the custom element, public config and types, profiles, localization, and snapshots.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/browser.ts"><code>src/browser.ts</code></a></td>
+<td>Standalone browser entry: loads the ArcGIS Scene component, then re-exports the package entry.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/config.ts"><code>src/config.ts</code></a></td>
+<td>Public configuration types, defaults, validation, normalization, and merge behavior.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/config.test.ts"><code>src/config.test.ts</code></a></td>
+<td>Checks documented defaults, immutable config, and normalization bounds.</td>
+</tr>
+</tbody></table>
+<h3 id="src-ab-deterministic-reference-comparison"><code>src/ab/</code> - deterministic reference comparison<a class="heading-anchor" href="#src-ab-deterministic-reference-comparison" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/ab/parity.ts"><code>src/ab/parity.ts</code></a></td>
+<td>Replays fixed controls and compares simulated flight and camera frames with stored references.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/ab/parity.test.ts"><code>src/ab/parity.test.ts</code></a></td>
+<td>Checks both 720-frame references and rejects incompatible reference metadata.</td>
+</tr>
+</tbody></table>
+<h3 id="src-arcgis-arcgis-scene-integration-and-rendering"><code>src/arcgis/</code> - ArcGIS scene integration and rendering<a class="heading-anchor" href="#src-arcgis-arcgis-scene-integration-and-rendering" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-exhaust.ts"><code>src/arcgis/aircraft-exhaust.ts</code></a></td>
+<td>Computes the classic aircraft&#39;s boost exhaust animation and anchor offset.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-exhaust.test.ts"><code>src/arcgis/aircraft-exhaust.test.ts</code></a></td>
+<td>Checks exhaust animation, reset behavior, and attachment placement.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-finish.ts"><code>src/arcgis/aircraft-finish.ts</code></a></td>
+<td>Applies the aircraft&#39;s authored shading and material finish while preserving glazing.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-finish.test.ts"><code>src/arcgis/aircraft-finish.test.ts</code></a></td>
+<td>Checks material finish rules, including translucent windows.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-presenter.ts"><code>src/arcgis/aircraft-presenter.ts</code></a></td>
+<td>Builds and updates aircraft meshes, propeller, and exhaust from render poses.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-presenter.test.ts"><code>src/arcgis/aircraft-presenter.test.ts</code></a></td>
+<td>Checks mesh visibility, orientation, scale, and attached propeller/exhaust behavior.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-render-origin.ts"><code>src/arcgis/aircraft-render-origin.ts</code></a></td>
+<td>Guarded private SDK adapter that reduces aircraft mesh precision error in supported global Web Mercator scenes.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-render-origin.test.ts"><code>src/arcgis/aircraft-render-origin.test.ts</code></a></td>
+<td>Checks adapter version/API guards, origin updates, bounds, and restoration.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/borrowed-state.ts"><code>src/arcgis/borrowed-state.ts</code></a></td>
+<td>Saves and restores host camera and navigation state temporarily borrowed during flight.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/borrowed-state.test.ts"><code>src/arcgis/borrowed-state.test.ts</code></a></td>
+<td>Checks borrowed-state restoration and ownership boundaries.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/camera-cadence.ts"><code>src/arcgis/camera-cadence.ts</code></a></td>
+<td>Selects camera submission cadence from observed frame pacing and configured limits.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/camera-cadence.test.ts"><code>src/arcgis/camera-cadence.test.ts</code></a></td>
+<td>Checks cadence selection, sampling, and recovery behavior.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/camera-drag-input.ts"><code>src/arcgis/camera-drag-input.ts</code></a></td>
+<td>Binds a captured mouse or touch gesture on the scene to chase-camera orbit input.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/camera-drag-input.test.ts"><code>src/arcgis/camera-drag-input.test.ts</code></a></td>
+<td>Checks gesture capture/release and that UI controls keep their own input.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/camera-submission.ts"><code>src/arcgis/camera-submission.ts</code></a></td>
+<td>Schedules complete camera submissions and cancels pending updates when superseded.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/camera-submission.test.ts"><code>src/arcgis/camera-submission.test.ts</code></a></td>
+<td>Checks camera scheduling, coalescing, cancellation, and cadence changes.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/disposer.ts"><code>src/arcgis/disposer.ts</code></a></td>
+<td>Registers resources for ordered, idempotent teardown.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/disposer.test.ts"><code>src/arcgis/disposer.test.ts</code></a></td>
+<td>Checks disposal order and cleanup despite individual disposal errors.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/elevation-sampling.ts"><code>src/arcgis/elevation-sampling.ts</code></a></td>
+<td>Queries initial elevation and samples live ground, accounting for units and no-data values.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/elevation-sampling.test.ts"><code>src/arcgis/elevation-sampling.test.ts</code></a></td>
+<td>Checks elevation conversion, invalid samples, and fallback behavior.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/flight-camera.ts"><code>src/arcgis/flight-camera.ts</code></a></td>
+<td>Connects camera-rig math to ArcGIS camera frames and camera drag state.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/flight-camera.test.ts"><code>src/arcgis/flight-camera.test.ts</code></a></td>
+<td>Checks camera transitions, chase orbit, cockpit entry, and camera framing.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/flight-clip-distance.ts"><code>src/arcgis/flight-clip-distance.ts</code></a></td>
+<td>Keeps near/far clip distances suited to flight on the globe, so high altitude never clips the chase aircraft, and restores the host&#39;s settings.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/flight-clip-distance.test.ts"><code>src/arcgis/flight-clip-distance.test.ts</code></a></td>
+<td>Checks near/far distances by altitude, stable far bands, and restoration of host clip settings.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/flight-host.ts"><code>src/arcgis/flight-host.ts</code></a></td>
+<td>Adapts an existing <code>SceneView</code> or <code>&lt;arcgis-scene&gt;</code> into the common host interface.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/flight-scene-coordinate-system.ts"><code>src/arcgis/flight-scene-coordinate-system.ts</code></a></td>
+<td>Determines scene coordinate units and converts flight distances and positions.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/flight-scene-coordinate-system.test.ts"><code>src/arcgis/flight-scene-coordinate-system.test.ts</code></a></td>
+<td>Checks projected, geographic, and local scene coordinate handling.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/hosted-flight-scene.ts"><code>src/arcgis/hosted-flight-scene.ts</code></a></td>
+<td>Initializes the ArcGIS-backed flight, updates terrain, aircraft and camera, and coordinates teardown.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/hosted-flight-scene.cleanup.test.ts"><code>src/arcgis/hosted-flight-scene.cleanup.test.ts</code></a></td>
+<td>Checks resource ownership and cleanup for scene-element and direct-view hosts.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/initialization-resources.ts"><code>src/arcgis/initialization-resources.ts</code></a></td>
+<td>Tracks abortable initialization work and resources created before startup completes.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/initialization-resources.test.ts"><code>src/arcgis/initialization-resources.test.ts</code></a></td>
+<td>Checks cancellation and disposal during partial initialization.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/mesh-motion.ts"><code>src/arcgis/mesh-motion.ts</code></a></td>
+<td>Applies render-pose rotations and translations to ArcGIS mesh transforms.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/navigation-action-map.ts"><code>src/arcgis/navigation-action-map.ts</code></a></td>
+<td>Snapshots, modifies, and restores the host view&#39;s navigation action map.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/navigation-action-map.test.ts"><code>src/arcgis/navigation-action-map.test.ts</code></a></td>
+<td>Checks that navigation overrides are scoped and restored.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/render-target-size.ts"><code>src/arcgis/render-target-size.ts</code></a></td>
+<td>Resolves valid framebuffer dimensions with viewport fallbacks.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/scene-roll.ts"><code>src/arcgis/scene-roll.ts</code></a></td>
+<td>Implements optional viewport roll through ArcGIS <code>RenderNode</code> and managed framebuffers.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/scene-roll-framebuffer.ts"><code>src/arcgis/scene-roll-framebuffer.ts</code></a></td>
+<td>Preserves framebuffer depth/stencil attachments needed by the roll effect.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/scene-roll-framebuffer.test.ts"><code>src/arcgis/scene-roll-framebuffer.test.ts</code></a></td>
+<td>Checks framebuffer attachment preservation and cleanup.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/scene-roll.integration.test.ts"><code>src/arcgis/scene-roll.integration.test.ts</code></a></td>
+<td>Checks production wiring of the roll render node and framebuffer.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/sdk-compatibility.ts"><code>src/arcgis/sdk-compatibility.ts</code></a></td>
+<td>Selects compatible public ArcGIS APIs and GLTF/projection loaders for each SDK family.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/sdk-compatibility.test.ts"><code>src/arcgis/sdk-compatibility.test.ts</code></a></td>
+<td>Checks SDK-family API selection and supported public API behavior.</td>
+</tr>
+</tbody></table>
+<h3 id="src-components-custom-element-and-built-in-ui"><code>src/components/</code> - custom element and built-in UI<a class="heading-anchor" href="#src-components-custom-element-and-built-in-ui" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/arcgis-plane-navigation.ts"><code>src/components/arcgis-plane-navigation.ts</code></a></td>
+<td>Defines the public custom element, observes configuration, starts/stops flight, and emits lifecycle events.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/arcgis-plane-navigation.integration.test.ts"><code>src/components/arcgis-plane-navigation.integration.test.ts</code></a></td>
+<td>Exercises custom-element behavior with ArcGIS scene and direct-view hosts.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/browser-support.ts"><code>src/components/browser-support.ts</code></a></td>
+<td>Checks browser APIs required to initialize flight.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/browser-support.test.ts"><code>src/components/browser-support.test.ts</code></a></td>
+<td>Checks browser capability errors and accepted environments.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/flight-controls.ts"><code>src/components/flight-controls.ts</code></a></td>
+<td>Renders the optional power, pause, camera, recovery, and speed controls.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/flight-joystick.ts"><code>src/components/flight-joystick.ts</code></a></td>
+<td>Renders and positions the built-in touch joystick overlay.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/plane-navigation-config.ts"><code>src/components/plane-navigation-config.ts</code></a></td>
+<td>Maps HTML attributes to config updates and decides when a change requires restart.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/plane-navigation-config.test.ts"><code>src/components/plane-navigation-config.test.ts</code></a></td>
+<td>Checks observed-attribute parsing and restart decisions.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/scene-ready-transition.ts"><code>src/components/scene-ready-transition.ts</code></a></td>
+<td>Resolves ready, loading, and failure transitions for ArcGIS scene initialization.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/scene-ready-transition.test.ts"><code>src/components/scene-ready-transition.test.ts</code></a></td>
+<td>Checks scene-ready transition and error resolution.</td>
+</tr>
+</tbody></table>
+<h3 id="src-controller-flight-lifecycle-and-frame-timing"><code>src/controller/</code> - flight lifecycle and frame timing<a class="heading-anchor" href="#src-controller-flight-lifecycle-and-frame-timing" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/controller/flight-session.ts"><code>src/controller/flight-session.ts</code></a></td>
+<td>Coordinates input, simulation, hosted presentation, pause/recovery, status, and session cleanup.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/controller/flight-session.test.ts"><code>src/controller/flight-session.test.ts</code></a></td>
+<td>Checks session lifecycle, state transitions, and frame processing.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/controller/frame-pacing.ts"><code>src/controller/frame-pacing.ts</code></a></td>
+<td>Samples render frame times for camera cadence decisions.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/controller/frame-pacing.test.ts"><code>src/controller/frame-pacing.test.ts</code></a></td>
+<td>Checks frame-time sampling, invalid intervals, and sample windows.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/controller/gamepad-pause.test.ts"><code>src/controller/gamepad-pause.test.ts</code></a></td>
+<td>Checks gamepad pause/resume behavior while ensuring a paused session does not advance.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/controller/index.ts"><code>src/controller/index.ts</code></a></td>
+<td>Re-exports the controller API and public session snapshot types.</td>
+</tr>
+</tbody></table>
+<h3 id="src-core-sdk-independent-flight-and-camera-behavior"><code>src/core/</code> - SDK-independent flight and camera behavior<a class="heading-anchor" href="#src-core-sdk-independent-flight-and-camera-behavior" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/aircraft-flight.ts"><code>src/core/aircraft-flight.ts</code></a></td>
+<td>Defines the optional aircraft flight profile configuration and tuning types.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/aircraft-flight.test.ts"><code>src/core/aircraft-flight.test.ts</code></a></td>
+<td>Checks aircraft profile configuration and tuning validation.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/aircraft-profiles.ts"><code>src/core/aircraft-profiles.ts</code></a></td>
+<td>Defines the built-in aircraft profiles and their speed/handling settings.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/camera-drag.ts"><code>src/core/camera-drag.ts</code></a></td>
+<td>Computes temporary chase-camera orbit from drag offsets.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/camera-drag.test.ts"><code>src/core/camera-drag.test.ts</code></a></td>
+<td>Checks drag offset and camera orbit geometry.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/camera-rig.ts"><code>src/core/camera-rig.ts</code></a></td>
+<td>Computes chase/cockpit camera poses, transitions, framing, and field of view.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/camera-rig.test.ts"><code>src/core/camera-rig.test.ts</code></a></td>
+<td>Checks camera transitions, framing, and mode changes.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/defaults.ts"><code>src/core/defaults.ts</code></a></td>
+<td>Holds shared flight and camera default constants.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/flight.ts"><code>src/core/flight.ts</code></a></td>
+<td>Implements the deterministic classic aircraft flight step and tuning.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/flight.test.ts"><code>src/core/flight.test.ts</code></a></td>
+<td>Checks deterministic motion, control response, and flight limits.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/index.ts"><code>src/core/index.ts</code></a></td>
+<td>Re-exports SDK-independent core behavior and types.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/math.ts"><code>src/core/math.ts</code></a></td>
+<td>Provides shared clamping, interpolation, angle, and vector math helpers.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/paraglider-flight.ts"><code>src/core/paraglider-flight.ts</code></a></td>
+<td>Implements the paraglider&#39;s glide, speed-bar, brake, and energy behavior.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/pose.ts"><code>src/core/pose.ts</code></a></td>
+<td>Converts vehicle state into render-ready aircraft pose data.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/power-mode.ts"><code>src/core/power-mode.ts</code></a></td>
+<td>Defines the slow, normal, and turbo power modes and their transitions.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/power-mode.test.ts"><code>src/core/power-mode.test.ts</code></a></td>
+<td>Checks power mode transitions and speed targets.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/profile-flight.ts"><code>src/core/profile-flight.ts</code></a></td>
+<td>Implements powered aircraft profile flight using configurable tuning.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/runtime.ts"><code>src/core/runtime.ts</code></a></td>
+<td>Runs fixed-step simulation, catch-up limits, and render-pose interpolation.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/runtime.test.ts"><code>src/core/runtime.test.ts</code></a></td>
+<td>Checks fixed-step timing, catch-up, and interpolation behavior.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/space-flight.ts"><code>src/core/space-flight.ts</code></a></td>
+<td>Adds independent vertical thrust and the Space Jet altitude ceiling.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/types.ts"><code>src/core/types.ts</code></a></td>
+<td>Defines shared vehicle, control-frame, and render-pose data types.</td>
+</tr>
+</tbody></table>
+<h3 id="src-i18n-translated-component-labels-and-messages"><code>src/i18n/</code> - translated component labels and messages<a class="heading-anchor" href="#src-i18n-translated-component-labels-and-messages" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/i18n/catalogs.ts"><code>src/i18n/catalogs.ts</code></a></td>
+<td>Contains built-in translated labels and messages.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/i18n/i18n.ts"><code>src/i18n/i18n.ts</code></a></td>
+<td>Resolves locale preferences and formats translated UI text.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/i18n/i18n.test.ts"><code>src/i18n/i18n.test.ts</code></a></td>
+<td>Checks locale selection, fallback, and translated messages.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/i18n/index.ts"><code>src/i18n/index.ts</code></a></td>
+<td>Re-exports localization helpers and public locale types.</td>
+</tr>
+</tbody></table>
+<h3 id="src-input-keyboard-gamepad-and-touch-input"><code>src/input/</code> - keyboard, gamepad, and touch input<a class="heading-anchor" href="#src-input-keyboard-gamepad-and-touch-input" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/input/flight-input.ts"><code>src/input/flight-input.ts</code></a></td>
+<td>Normalizes keyboard and gamepad readings into flight controls and session actions.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/input/flight-input.test.ts"><code>src/input/flight-input.test.ts</code></a></td>
+<td>Checks key ownership, gamepad selection, dead zones, Guide-button filtering, and control settings.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/input/index.ts"><code>src/input/index.ts</code></a></td>
+<td>Re-exports input controllers, helpers, settings, and reading types.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/input/touch-flight-stick.ts"><code>src/input/touch-flight-stick.ts</code></a></td>
+<td>Captures one touch pointer and maps stick movement to bank and pitch.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/input/touch-flight-stick.test.ts"><code>src/input/touch-flight-stick.test.ts</code></a></td>
+<td>Checks touch capture, movement, cancellation, and neutral reset.</td>
+</tr>
+</tbody></table>
+<h3 id="demos-runnable-host-applications"><code>demos/</code> - runnable host applications<a class="heading-anchor" href="#demos-runnable-host-applications" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/simple/index.html"><code>demos/simple/index.html</code></a></td>
+<td>Minimal Scene component and flight element markup.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/simple/main.ts"><code>demos/simple/main.ts</code></a></td>
+<td>Loads the component and shared keyboard-help UI for the basic demo.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/simple-controls/index.html"><code>demos/simple-controls/index.html</code></a></td>
+<td>Hosts the Geneva scene and flight controls.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/simple-controls/main.ts"><code>demos/simple-controls/main.ts</code></a></td>
+<td>Loads SITG imagery, terrain, and 3D scene layers, then starts flight with shared controls.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/simple-controls/services.ts"><code>demos/simple-controls/services.ts</code></a></td>
+<td>Lists the public SITG services used by Flight controls.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/aircraft/index.html"><code>demos/aircraft/index.html</code></a></td>
+<td>Markup for aircraft selection, scene options, and controls.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/aircraft/main.ts"><code>demos/aircraft/main.ts</code></a></td>
+<td>Runs the aircraft showcase and connects its demo controls to the component.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/enterprise/index.html"><code>demos/enterprise/index.html</code></a></td>
+<td>Redirects the former Geneva sample URL to Flight controls.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/zurich/index.html"><code>demos/zurich/index.html</code></a></td>
+<td>Markup for the local Swiss LV95 WebScene demo.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/zurich/main.ts"><code>demos/zurich/main.ts</code></a></td>
+<td>Creates and owns the Zurich <code>WebScene</code> and <code>SceneView</code>, then attaches the component.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/index.html"><code>demos/webscene-selector/index.html</code></a></td>
+<td>Markup for scene selection, address search, and public WebScene loading.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/main.ts"><code>demos/webscene-selector/main.ts</code></a></td>
+<td>Coordinates selector UI, ArcGIS map/view setup, address search, and flight navigation.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/address-search.ts"><code>demos/webscene-selector/lib/address-search.ts</code></a></td>
+<td>Calls the ArcGIS geocoder and validates/normalizes address results.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/address-search.test.ts"><code>demos/webscene-selector/lib/address-search.test.ts</code></a></td>
+<td>Checks address query parameters, cancellation, and result normalization.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/public-webscene-loader.ts"><code>demos/webscene-selector/lib/public-webscene-loader.ts</code></a></td>
+<td>Loads a public WebScene with validation, timeout, cancellation, and cleanup.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/public-webscene-loader.test.ts"><code>demos/webscene-selector/lib/public-webscene-loader.test.ts</code></a></td>
+<td>Checks loading, timeout, failure cleanup, and cancellation.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/scene-activation-controller.ts"><code>demos/webscene-selector/lib/scene-activation-controller.ts</code></a></td>
+<td>Replaces the active map, starts navigation, and restores a fallback scene after failure.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/scene-activation-controller.test.ts"><code>demos/webscene-selector/lib/scene-activation-controller.test.ts</code></a></td>
+<td>Checks scene replacement, failure recovery, and resource ownership.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/scene-resources.ts"><code>demos/webscene-selector/lib/scene-resources.ts</code></a></td>
+<td>Cancels and destroys demo-owned ArcGIS resources safely.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/scene-resources.test.ts"><code>demos/webscene-selector/lib/scene-resources.test.ts</code></a></td>
+<td>Checks resource cancellation, destruction, and idempotence.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/scenes.ts"><code>demos/webscene-selector/lib/scenes.ts</code></a></td>
+<td>Defines the built-in scene presets and their flight start positions.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/scenes.test.ts"><code>demos/webscene-selector/lib/scenes.test.ts</code></a></td>
+<td>Checks preset scene metadata and start configuration.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/webscene-validation.ts"><code>demos/webscene-selector/lib/webscene-validation.ts</code></a></td>
+<td>Validates public Portal item access and supported WebScene properties.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/lib/webscene-validation.test.ts"><code>demos/webscene-selector/lib/webscene-validation.test.ts</code></a></td>
+<td>Checks accepted and rejected Portal items and WebScenes.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/landing.ts"><code>demos/landing.ts</code></a></td>
+<td>Boots the main demo gallery and its shared visual theme.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/shared/demo-ui.ts"><code>demos/shared/demo-ui.ts</code></a></td>
+<td>Builds the shared keyboard and touch control help dialog.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/shared/flight-controls.ts"><code>demos/shared/flight-controls.ts</code></a></td>
+<td>Builds host-owned toolbar controls and binds them to public component methods/events.</td>
+</tr>
+</tbody></table>
+<h3 id="tests-real-browser-and-sdk-integration-harnesses"><code>tests/</code> - real-browser and SDK integration harnesses<a class="heading-anchor" href="#tests-real-browser-and-sdk-integration-harnesses" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tests/browser/aircraft.spec.ts"><code>tests/browser/aircraft.spec.ts</code></a></td>
+<td>Exercises aircraft selection and presentation in a real browser.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tests/browser/enterprise.spec.ts"><code>tests/browser/enterprise.spec.ts</code></a></td>
+<td>Checks the merged Geneva layers and flight controls.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tests/browser/fixtures/local-terrain.ts"><code>tests/browser/fixtures/local-terrain.ts</code></a></td>
+<td>Provides local terrain fixture setup for browser tests.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tests/browser/simple-demo.spec.ts"><code>tests/browser/simple-demo.spec.ts</code></a></td>
+<td>Checks basic demo startup, controls, and flight behavior in a browser.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tests/browser/world-sync.spec.ts"><code>tests/browser/world-sync.spec.ts</code></a></td>
+<td>Checks flight and camera synchronization across view modes and UI actions.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tests/browser/zurich.spec.ts"><code>tests/browser/zurich.spec.ts</code></a></td>
+<td>Exercises the Zurich local-scene integration in a browser.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tests/sdk/fixture.html"><code>tests/sdk/fixture.html</code></a></td>
+<td>Minimal host page for loading the component against a selected ArcGIS SDK.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tests/sdk/fixture.mjs"><code>tests/sdk/fixture.mjs</code></a></td>
+<td>Browser-side SDK fixture harness and interaction checks.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tests/sdk/functional.html"><code>tests/sdk/functional.html</code></a></td>
+<td>Host page for public functional checks against SDK families.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tests/sdk/functional.mjs"><code>tests/sdk/functional.mjs</code></a></td>
+<td>Functional SDK compatibility checks for scene setup, flight, and cleanup.</td>
+</tr>
+</tbody></table>
+<h3 id="scripts-site-bundle-reference-and-release-tooling"><code>scripts/</code> - site, bundle, reference, and release tooling<a class="heading-anchor" href="#scripts-site-bundle-reference-and-release-tooling" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/assemble-pages.mjs"><code>scripts/assemble-pages.mjs</code></a></td>
+<td>Combines compiled demos, component bundles, and documentation into the publishable site tree.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/benchmark-sdk.mjs"><code>scripts/benchmark-sdk.mjs</code></a></td>
+<td>Measures SDK/component loading and runtime behavior for SDK comparisons.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/build-component-distributions.mjs"><code>scripts/build-component-distributions.mjs</code></a></td>
+<td>Builds component-only ESM/AMD distributions and SDK-specific ESM variants.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/build-docs-site.mjs"><code>scripts/build-docs-site.mjs</code></a></td>
+<td>Renders Markdown pages, builds navigation/search, resolves source links, and writes the docs site.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/build-element-metadata.mjs"><code>scripts/build-element-metadata.mjs</code></a></td>
+<td>Generates custom-element and HTML editor metadata from the public attributes and methods.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/generate-world-skytour-reference.mjs"><code>scripts/generate-world-skytour-reference.mjs</code></a></td>
+<td>Regenerates flight/camera reference JSON from a local reference checkout.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/publish-pages.mjs"><code>scripts/publish-pages.mjs</code></a></td>
+<td>Publishes the assembled Pages output to <code>gh-pages</code>, adding the optional local <code>site-analytics.local.html</code> head snippet to published pages only.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/site-navigation.mjs"><code>scripts/site-navigation.mjs</code></a></td>
+<td>Produces shared navigation links for the docs and demo pages.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/test-sdk-compatibility.mjs"><code>scripts/test-sdk-compatibility.mjs</code></a></td>
+<td>Builds and exercises the SDK compatibility matrix using local fixture pages.</td>
+</tr>
+</tbody></table>
+<h3 id="root-and-documentation-site-code-configuration">Root and documentation-site code/configuration<a class="heading-anchor" href="#root-and-documentation-site-code-configuration" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/index.html"><code>index.html</code></a></td>
+<td>Root gallery page and links to runnable demos.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/package.json"><code>package.json</code></a></td>
+<td>Dependency and package metadata, public exports, and build/test commands.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/playwright.config.ts"><code>playwright.config.ts</code></a></td>
+<td>Browser test directory, browser settings, and local dev-server setup.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tsconfig.json"><code>tsconfig.json</code></a></td>
+<td>TypeScript settings for application, tests, and development source.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/tsconfig.lib.json"><code>tsconfig.lib.json</code></a></td>
+<td>TypeScript settings for distributable component declarations and library build.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/vite.config.ts"><code>vite.config.ts</code></a></td>
+<td>Demo-site routes, ArcGIS bundling, browser entry, and development server configuration.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/vite.docs.config.ts"><code>vite.docs.config.ts</code></a></td>
+<td>Preview configuration for the generated docs site.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/vite.lib.config.ts"><code>vite.lib.config.ts</code></a></td>
+<td>Library build entry and SDK-family tree-shaking configuration.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/vitest.config.ts"><code>vitest.config.ts</code></a></td>
+<td>Unit test environment, discovery, and coverage settings.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/site/site.js"><code>docs/site/site.js</code></a></td>
+<td>Implements docs navigation, search, copy-code actions, and keyboard handling.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/site/entry.ts"><code>docs/site/entry.ts</code></a></td>
+<td>Bundles the documentation UI entry and presentation assets.</td>
+</tr>
+</tbody></table>
+<h2 id="non-code-files-that-support-the-implementation">Non-code files that support the implementation<a class="heading-anchor" href="#non-code-files-that-support-the-implementation" aria-label="Link to this section">#</a></h2>
+<ul>
+<li><code>public/models/fleet/*.glb</code> are aircraft, propeller, and boost meshes loaded
+by the demo or by applications that supply their own asset URLs. The flight
+package does not include these public demo models. The adjacent PNG files are
+previews; <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/public/models/fleet/SOURCE.md"><code>public/models/fleet/SOURCE.md</code></a> explains asset provenance and use.</li>
+<li><code>src/ab/*.reference.json</code> are fixed 720-frame flight and camera records used
+by the reference comparison. Their metadata records the SDK, viewport,
+settings, and control segments. They are test inputs, not runtime defaults.</li>
+</ul>
+<h2 id="common-changes-where-to-start">Common changes: where to start<a class="heading-anchor" href="#common-changes-where-to-start" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Change</th>
+<th>Start here</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Add or alter public config, defaults, attributes, or restart behavior</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/config.ts"><code>src/config.ts</code></a>, <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/plane-navigation-config.ts"><code>src/components/plane-navigation-config.ts</code></a>, and <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/arcgis-plane-navigation.ts"><code>src/components/arcgis-plane-navigation.ts</code></a>; update <a href="configuration.html">Configuration</a> and the <a href="api-reference.html">API reference</a> for public changes.</td>
+</tr>
+<tr>
+<td>Tune powered aircraft or add a built-in profile</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/aircraft-profiles.ts"><code>src/core/aircraft-profiles.ts</code></a>, <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/profile-flight.ts"><code>src/core/profile-flight.ts</code></a>, and <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/aircraft-flight.ts"><code>src/core/aircraft-flight.ts</code></a>; see <a href="custom-aircraft.html">Custom aircraft</a>.</td>
+</tr>
+<tr>
+<td>Change classic flight physics</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/flight.ts"><code>src/core/flight.ts</code></a>, then check <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/runtime.ts"><code>src/core/runtime.ts</code></a> and <code>src/ab/</code> for frame and camera effects.</td>
+</tr>
+<tr>
+<td>Change paraglider or Space Jet behavior</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/paraglider-flight.ts"><code>src/core/paraglider-flight.ts</code></a> or <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/space-flight.ts"><code>src/core/space-flight.ts</code></a>, with shared profile settings in <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/aircraft-profiles.ts"><code>src/core/aircraft-profiles.ts</code></a>.</td>
+</tr>
+<tr>
+<td>Change chase/cockpit camera motion or drag</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/camera-rig.ts"><code>src/core/camera-rig.ts</code></a>, <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/core/camera-drag.ts"><code>src/core/camera-drag.ts</code></a>, and <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/flight-camera.ts"><code>src/arcgis/flight-camera.ts</code></a>; for pointer capture use <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/camera-drag-input.ts"><code>src/arcgis/camera-drag-input.ts</code></a>.</td>
+</tr>
+<tr>
+<td>Add keyboard, gamepad, or joystick behavior</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/input/flight-input.ts"><code>src/input/flight-input.ts</code></a> or <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/input/touch-flight-stick.ts"><code>src/input/touch-flight-stick.ts</code></a>; connect visible UI through <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/flight-controls.ts"><code>src/components/flight-controls.ts</code></a> or <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/components/flight-joystick.ts"><code>src/components/flight-joystick.ts</code></a>.</td>
+</tr>
+<tr>
+<td>Change a demo or its host-owned controls</td>
+<td>Start in that demo&#39;s <code>main.ts</code>; shared UI and toolbar logic live in <code>demos/shared/</code>.</td>
+</tr>
+<tr>
+<td>Change WebScene search, validation, loading, or fallback behavior</td>
+<td>Start in the matching <code>demos/webscene-selector/lib/</code> module and its paired test.</td>
+</tr>
+<tr>
+<td>Change browser acceptance coverage or SDK compatibility checks</td>
+<td>Use <code>tests/browser/</code> or <code>tests/sdk/</code>; see <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/playwright.config.ts"><code>playwright.config.ts</code></a> and <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/test-sdk-compatibility.mjs"><code>scripts/test-sdk-compatibility.mjs</code></a>.</td>
+</tr>
+<tr>
+<td>Change package outputs, docs rendering, or published page assembly</td>
+<td>Start in <code>scripts/</code> and the matching <code>vite*.config.ts</code>; see <a href="development.html">Development</a>.</td>
+</tr>
+<tr>
+<td>Change aircraft model rendering, materials, or boost effects</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-presenter.ts"><code>src/arcgis/aircraft-presenter.ts</code></a>, <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-finish.ts"><code>src/arcgis/aircraft-finish.ts</code></a>, or <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/aircraft-exhaust.ts"><code>src/arcgis/aircraft-exhaust.ts</code></a>; model files are under <code>public/models/fleet/</code>.</td>
+</tr>
+<tr>
+<td>Change terrain, host integration, initialization, or cleanup</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/hosted-flight-scene.ts"><code>src/arcgis/hosted-flight-scene.ts</code></a>, then follow its helpers for elevation, host adaptation, borrowed state, and resource disposal. See <a href="architecture.html">Architecture</a>.</td>
+</tr>
+<tr>
+<td>Change ArcGIS SDK support or generated package variants</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/sdk-compatibility.ts"><code>src/arcgis/sdk-compatibility.ts</code></a>, <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/scripts/build-component-distributions.mjs"><code>scripts/build-component-distributions.mjs</code></a>, and <a href="sdk-compatibility.html">SDK integration</a>.</td>
+</tr>
+<tr>
+<td>Change labels or add a locale</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/i18n/catalogs.ts"><code>src/i18n/catalogs.ts</code></a> and <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/i18n/i18n.ts"><code>src/i18n/i18n.ts</code></a>.</td>
+</tr>
+<tr>
+<td>Change optional viewport roll</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/arcgis/scene-roll.ts"><code>src/arcgis/scene-roll.ts</code></a> and its framebuffer helper; see the rendering constraints in <a href="development.html">Development</a>.</td>
+</tr>
+</tbody></table>
+<p>For project setup and the check commands used by contributors, continue to
+the <a href="development.html">Development guide</a>.</p>
+</article>
+        <footer class="page-footer">
+          <span>Source: <code>docs/codebase-guide.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/codebase-guide.md">View on GitHub</a>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

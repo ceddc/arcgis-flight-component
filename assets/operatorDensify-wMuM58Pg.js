@@ -1,0 +1,1 @@
+import{dt as c}from"./arcgis-scene-C3i20sGt.js";import{m as s}from"./ProjectionTransformation-AtpoXkO-.js";const o=new s;function i(t,n,r,e){return o.execute(t,n,r,e,null)}function p(t,n,r,e){const u=o.executeMany(new c(t),n,r,e,null);return Array.from(u)}function l(){return o.supportsCurves()}export{p as o,i as t,l as u};

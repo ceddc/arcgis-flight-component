@@ -1,0 +1,71 @@
+<!--
+  Zurich local-scene demo page. The shell provides a scene container, flight
+  component, and status UI; main.ts loads its LV95 WebScene into a SceneView.
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Zurich local scene in Swiss LV95 with 3D buildings." />
+    <title>Zurich local scene demo | ArcGIS Flight Component</title>
+    <script type="module" crossorigin src="../../assets/zurich-jzOPTGbV.js"></script>
+    <link rel="modulepreload" crossorigin href="../../assets/arcgis-scene-C3i20sGt.js">
+    <link rel="modulepreload" crossorigin href="../../assets/theme-e1Yn4xgW.js">
+    <link rel="modulepreload" crossorigin href="../../assets/GraphicsLayer-FOZzvcRN.js">
+    <link rel="modulepreload" crossorigin href="../../assets/MeshTransform-CeeLvaRN.js">
+    <link rel="modulepreload" crossorigin href="../../assets/browser-Dj_nFuLM.js">
+    <link rel="modulepreload" crossorigin href="../../assets/index-OzCpDdwT.js">
+    <link rel="modulepreload" crossorigin href="../../assets/demo-ui-BG4kZWTj.js">
+    <link rel="modulepreload" crossorigin href="../../assets/flight-controls-M8O9yN8W.js">
+    <link rel="stylesheet" crossorigin href="../../assets/arcgis-scene-T13P7v5O.css">
+    <link rel="stylesheet" crossorigin href="../../assets/simple-C_RIg4xW.css">
+    <link rel="stylesheet" crossorigin href="../../assets/zurich-D1sS3JfS.css">
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <calcite-shell class="flight-shell">
+      <calcite-navigation slot="header" class="app-header" scale="s" aria-label="ArcGIS Flight">
+        <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Zurich / Local scene"></calcite-navigation-logo>
+        <div slot="content-end" class="header-actions"></div>
+        <calcite-dropdown slot="content-end" class="sample-menu" placement="bottom-end" width="m" scale="l"><calcite-action slot="trigger" icon="hamburger" text="Samples and documentation"></calcite-action><calcite-dropdown-group selection-mode="none"><calcite-dropdown-item href="../../index.html">Docs</calcite-dropdown-item><calcite-dropdown-item href="../../demos/simple/">Basic flight</calcite-dropdown-item><calcite-dropdown-item href="../../demos/simple-controls/">Flight controls</calcite-dropdown-item><calcite-dropdown-item href="../../demos/webscene-selector/">Scene explorer</calcite-dropdown-item><calcite-dropdown-item href="../../demos/aircraft/">Other aircraft</calcite-dropdown-item><calcite-dropdown-item href="../../demos/zurich/" aria-current="page" icon-start="check">Zurich local scene</calcite-dropdown-item><calcite-dropdown-item href="https://github.com/ceddc/arcgis-flight-component">GitHub</calcite-dropdown-item></calcite-dropdown-group></calcite-dropdown><calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="../../index.html" appearance="transparent" kind="neutral" scale="s" label="Documentation">Docs</calcite-button><calcite-button href="../../demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="../../demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="../../demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="../../demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="../../demos/zurich/" appearance="transparent" kind="brand" scale="s" label="Zurich local scene demo" aria-current="page"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+      </calcite-navigation>
+      <main class="flight-stage">
+        <!-- SceneView attaches here after the public WebScene finishes loading. -->
+        <div id="scene" aria-label="Zurich skyline"></div>
+        <arcgis-plane-navigation></arcgis-plane-navigation>
+        <aside class="enterprise-info" aria-label="About this flight">
+          <p id="load-status" role="status" aria-live="polite">Loading the Zurich skyline...</p>
+          <button id="retry" type="button" hidden>Reload scene</button>
+          <details>
+            <summary>About this scene</summary>
+            <p>The Zurich LV95 WebScene supplies the basemap, terrain, and 3D buildings.</p>
+            <p>Local scene: Swiss LV95 (EPSG:2056), in metres.</p>
+            <p>Ground clearance does not detect buildings. Stay above the roofs.</p>
+            <a href="https://www.arcgis.com/home/item.html?id=067ada556ed84bb3aa5c65b4f2a7c15d" target="_blank" rel="noopener noreferrer">View the source WebScene</a>
+            <a href="../../getting-started.html#use-an-arcgis-scene-element">Add the plane to your scene</a>
+          </details>
+        </aside>
+      </main>
+    </calcite-shell>
+  </body>
+</html>

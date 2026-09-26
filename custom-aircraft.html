@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ArcGIS Flight Component documentation: Custom aircraft.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Custom aircraft | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=e65ce19d883e">
+    <script type="module" src="doc-assets/docs-ui.js?v=e65ce19d883e"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Getting started</a></li><li><a href="demo.html">Demos</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Common changes</a></li><li><a href="flight-concepts.html">Flight concepts</a></li><li><a href="custom-aircraft.html" aria-current="page">Custom aircraft</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#load-your-model">Load your model</a></li><li class="section-link level-2"><a href="#choose-speed-and-handling">Choose speed and handling</a></li><li class="section-link level-2"><a href="#set-your-own-speed">Set your own speed</a></li><li class="section-link level-2"><a href="#prepare-scale-origin-and-orientation">Prepare scale, origin, and orientation</a></li><li class="section-link level-2"><a href="#optional-parts-and-their-current-defaults">Optional parts and their current defaults</a></li><li class="section-link level-2"><a href="#check-your-aircraft">Check your aircraft</a></li></ul></section></li><li><a href="codebase-guide.html">Codebase guide</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="sdk-compatibility.html">SDK integration</a></li><li><a href="configuration.html">Configuration</a></li><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Custom aircraft</span></nav>
+        <article><h1 id="custom-aircraft">Custom aircraft<a class="heading-anchor" href="#custom-aircraft" aria-label="Link to this section">#</a></h1>
+<p>Bring your own plane model, change how it flies, or do both.
+Try the four aircraft in the <a href="demos/aircraft/">Other aircraft demo</a>
+to get a feel for the different flight profiles.</p>
+<h2 id="load-your-model">Load your model<a class="heading-anchor" href="#load-your-model" aria-label="Link to this section">#</a></h2>
+<p>Export your aircraft as a glTF 2.0 binary (<code>.glb</code>) with textures included. Put
+it at <code>public/models/my-plane.glb</code> in a Vite app; Vite serves that file at
+<code>/models/my-plane.glb</code>. Set the body URL and choose whether to use separate
+propeller and boost meshes. Once you have an ArcGIS <code>SceneView</code> (as in
+<a href="getting-started.html">Getting started</a>), attach the flight element:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">import &quot;@ceddc/arcgis-flight-component&quot;;
+
+const flight = document.createElement(&quot;arcgis-plane-navigation&quot;);
+flight.view = existingSceneView;
+flight.config = {
+  flight: { model: &quot;classic&quot; },
+  assets: {
+    bodyUrl: `${import.meta.env.BASE_URL}models/my-plane.glb`,
+    propellerUrl: null,
+    boostUrl: null,
+  },
+};
+document.body.append(flight);
+</code></pre></div>
+<p>The example disables the separate propeller and boost, leaving the GLB body on
+its own. To keep the bundled optional meshes, omit <code>propellerUrl</code> and
+<code>boostUrl</code>; to use your own, put those GLBs under <code>public/models/</code> and set their
+URLs the same way. <code>import.meta.env.BASE_URL</code> keeps the paths correct when the
+app is deployed below the domain root. Files served from another domain need
+CORS access.</p>
+<p>Before the element has started, assign the configuration as shown above. To
+replace a model in an active session while keeping the current world and flight,
+use <code>setAircraft()</code>:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">await flight.setAircraft({
+  assets: {
+    bodyUrl: `${import.meta.env.BASE_URL}models/my-other-plane.glb`,
+    propellerUrl: null,
+    boostUrl: null,
+  },
+});
+</code></pre></div>
+<p><code>setAircraft()</code> resolves to <code>true</code> when that aircraft becomes active, or <code>false</code>
+when the request is superseded or the session is no longer active. Before
+initialization, it stores the selection and returns <code>false</code>. It can also take
+a <code>flight</code> profile and terrain clearance or ceiling in the same patch. To
+change <code>terrain.enabled</code>, use <code>updateConfig()</code> and let the session restart.
+Changing assets with <code>updateConfig()</code> also restarts the session. Changing
+assets does not by itself change how the aircraft flies.</p>
+<h2 id="choose-speed-and-handling">Choose speed and handling<a class="heading-anchor" href="#choose-speed-and-handling" aria-label="Link to this section">#</a></h2>
+<p>Choose how the aircraft flies with a flight profile. To apply it to an active
+session without reloading the scene, use:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">await flight.setAircraft({ flight: { model: &quot;super-jet&quot; } });
+</code></pre></div>
+<p>This keeps the current position and scene, but resets attitude, speed to the
+new profile&#39;s cruise speed, and power to normal. Camera framing adjusts for
+the new profile. Setting the same profile&#39;s tuning without changing its model
+keeps the current motion.</p>
+<table>
+<thead>
+<tr>
+<th>Profile</th>
+<th align="right">Cruise</th>
+<th align="right">Top speed</th>
+<th>How it flies</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>classic</code></td>
+<td align="right">360 km/h</td>
+<td align="right">1,200 km/h</td>
+<td>Self-leveling propeller-plane handling</td>
+</tr>
+<tr>
+<td><code>super-jet</code></td>
+<td align="right">1,026 km/h</td>
+<td align="right">3,240 km/h</td>
+<td>Wider turns at speed; braking tightens turns</td>
+</tr>
+<tr>
+<td><code>space-jet</code></td>
+<td align="right">2,340 km/h</td>
+<td align="right">36,000 km/h</td>
+<td>Independent vertical thrust; 200 km altitude ceiling</td>
+</tr>
+<tr>
+<td><code>paraglider</code></td>
+<td align="right">50 km/h</td>
+<td align="right">80 km/h</td>
+<td>Unpowered glide; speed bar and brakes, no turbo thrust</td>
+</tr>
+</tbody></table>
+<p>The profiles are made for exploring the map and do not model real aircraft performance.
+For the Space Jet, holding Shift increases speed up to its regular maximum;
+Turbo power mode raises the speed cap to the profile&#39;s <code>turboMaximumSpeed</code>.
+Terrain limits still apply: increase
+<code>terrain.maximumAglM</code> from its 50,000 m default to reach higher altitudes.</p>
+<p>A profile changes handling, not the visible model. To use a model from the
+demo, copy its GLBs from <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/public/models/fleet/SOURCE.md">the sample assets</a>
+and set their URLs as above. They are not included in the installed component
+package.</p>
+<h2 id="set-your-own-speed">Set your own speed<a class="heading-anchor" href="#set-your-own-speed" aria-label="Link to this section">#</a></h2>
+<p>For a slower powered plane, override the profile&#39;s defaults:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">flight.config = {
+  flight: {
+    model: &quot;classic&quot;,
+    tuning: {
+      minimumSpeed: 25,
+      cruiseSpeed: 60,
+      maximumSpeed: 95,
+      turboMaximumSpeed: 140,
+      maximumBankDeg: 30,
+      bankResponse: 2.5,
+    },
+  },
+};
+</code></pre></div>
+<p>Configuration speeds are in <strong>metres per second</strong>; multiply by 3.6 for km/h.
+Keep the speeds in ascending order: minimum, cruise, maximum, turbo maximum.
+<code>flight.tuning</code> changes ongoing behavior. <code>start.speedMps</code> only changes the
+initial speed, which otherwise defaults to the selected profile&#39;s cruise speed.</p>
+<p>For powered aircraft, <code>AircraftTuning</code> also lets you adjust acceleration,
+pitch, bank, and turns. The paraglider uses a fixed glide model and rejects
+tuning overrides that change its defaults. A different kind of flight, such as a
+helicopter, would need changes to the flight code.</p>
+<p>Setting a profile through <code>config</code> or <code>updateConfig()</code> restarts flight;
+<code>setAircraft()</code> applies it in place. Each profile update starts from that
+profile&#39;s defaults, so include every tuning override you want to keep. Use
+<code>flight: null</code> to return to the component&#39;s original flight behavior.</p>
+<h2 id="prepare-scale-origin-and-orientation">Prepare scale, origin, and orientation<a class="heading-anchor" href="#prepare-scale-origin-and-orientation" aria-label="Link to this section">#</a></h2>
+<ul>
+<li>Model in metres, with the origin at the intended flight pivot.</li>
+<li>After ArcGIS imports the GLB, the nose should point along +Y, the wings across X,
+and up along +Z. Check that heading 0 faces north and the model sits upright.</li>
+<li>Bake size and pivot adjustments into the GLB. There is no automatic camera fit.</li>
+<li>For larger aircraft, increase <code>terrain.minimumClearanceM</code> as needed.</li>
+</ul>
+<p>Use the <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/src/assets/aircraft">bundled model</a> as a reference.</p>
+<h2 id="optional-parts-and-their-current-defaults">Optional parts and their current defaults<a class="heading-anchor" href="#optional-parts-and-their-current-defaults" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>assets.propellerUrl</code></td>
+<td>Separate propeller model, centered on its spin axis; rotates around local Y.</td>
+</tr>
+<tr>
+<td><code>assets.propellerAnchorM</code></td>
+<td>Propeller position relative to the body, in metres. Default: <code>{ x: 0, y: 2.68, z: 0 }</code>.</td>
+</tr>
+<tr>
+<td><code>assets.boostUrl</code></td>
+<td>Exhaust model, positioned relative to the body and pointing along -Y. Appears during turbo.</td>
+</tr>
+<tr>
+<td><code>assets.visualPitchDeg</code></td>
+<td>Visual nose tilt, in degrees. Default: 0. Does not alter the flight path.</td>
+</tr>
+<tr>
+<td><code>assets.preserveFinish</code></td>
+<td>Set to <code>true</code> to keep the model&#39;s original material roughness.</td>
+</tr>
+</tbody></table>
+<p>Embedded GLB animation clips are not played. Only the separate propeller and
+boost parts are animated by the component. Multiple propellers or rotors need
+changes to the rendering code.</p>
+<h2 id="check-your-aircraft">Check your aircraft<a class="heading-anchor" href="#check-your-aircraft" aria-label="Link to this section">#</a></h2>
+<p>Take your model for a short flight in a small scene. Check its size and
+orientation, watch the propeller during turns, try both cameras, and make
+sure it has enough ground clearance.</p>
+<p>For camera and control settings, see <a href="configuration-recipes.html">Common changes</a>.
+For changes to the component itself, see <a href="development.html">Development</a>.</p>
+</article>
+        <footer class="page-footer">
+          <span>Source: <code>docs/custom-aircraft.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/custom-aircraft.md">View on GitHub</a>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

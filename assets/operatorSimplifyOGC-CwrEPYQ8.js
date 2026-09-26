@@ -1,0 +1,1 @@
+import{dt as o}from"./arcgis-scene-C3i20sGt.js";import{n as c}from"./OperatorSimplifyOGC-C0a01aRk.js";const e=new c;function f(n,t,r){return e.execute(n,t,r,null)}function l(n,t,r){const u=e.executeMany(new o(n),t,r,null);return Array.from(u)}function m(n,t,r,u){return e.isSimple(n,t,r,u,null)}function p(){return e.supportsCurves()}export{m as o,p as s,f as t,l as u};

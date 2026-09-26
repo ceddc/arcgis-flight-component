@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ArcGIS Flight Component documentation: API reference.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>API reference | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=e65ce19d883e">
+    <script type="module" src="doc-assets/docs-ui.js?v=e65ce19d883e"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Getting started</a></li><li><a href="demo.html">Demos</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Common changes</a></li><li><a href="flight-concepts.html">Flight concepts</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="codebase-guide.html">Codebase guide</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="sdk-compatibility.html">SDK integration</a></li><li><a href="configuration.html">Configuration</a></li><li><a href="api-reference.html" aria-current="page">API reference</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#import">Import</a></li><li class="section-link level-2"><a href="#html-editor-help">HTML editor help</a></li><li class="section-link level-2"><a href="#element-status">Element status</a></li><li class="section-link level-2"><a href="#properties">Properties</a></li><li class="section-link level-3"><a href="#status">status</a></li><li class="section-link level-3"><a href="#referenceelement">referenceElement</a></li><li class="section-link level-3"><a href="#view">view</a></li><li class="section-link level-3"><a href="#config">config</a></li><li class="section-link level-2"><a href="#methods">Methods</a></li><li class="section-link level-3"><a href="#start">start()</a></li><li class="section-link level-3"><a href="#pause">pause()</a></li><li class="section-link level-3"><a href="#resume">resume()</a></li><li class="section-link level-3"><a href="#stop">stop()</a></li><li class="section-link level-3"><a href="#recover">recover()</a></li><li class="section-link level-3"><a href="#setcameramode">setCameraMode()</a></li><li class="section-link level-3"><a href="#setpowermode">setPowerMode()</a></li><li class="section-link level-3"><a href="#toggleturbo">toggleTurbo()</a></li><li class="section-link level-3"><a href="#updateconfig">updateConfig()</a></li><li class="section-link level-3"><a href="#setaircraft">setAircraft()</a></li><li class="section-link level-3"><a href="#setcontrolpatch">setControlPatch()</a></li><li class="section-link level-3"><a href="#clearcontrolpatch">clearControlPatch()</a></li><li class="section-link level-3"><a href="#snapshot">snapshot()</a></li><li class="section-link level-3"><a href="#debugsnapshot">debugSnapshot()</a></li><li class="section-link level-2"><a href="#events">Events</a></li><li class="section-link level-3"><a href="#arcgisplanenavigationready">arcgisPlaneNavigationReady</a></li><li class="section-link level-3"><a href="#arcgisplanenavigationsnapshot">arcgisPlaneNavigationSnapshot</a></li><li class="section-link level-3"><a href="#arcgisplanenavigationerror">arcgisPlaneNavigationError</a></li><li class="section-link level-3"><a href="#arcgisplanenavigationstopped">arcgisPlaneNavigationStopped</a></li><li class="section-link level-2"><a href="#flight-snapshot">Flight snapshot</a></li><li class="section-link level-3"><a href="#vehiclestate">VehicleState</a></li><li class="section-link level-3"><a href="#gamepad-status">Gamepad status</a></li><li class="section-link level-3"><a href="#presented-camera-frame">Presented camera frame</a></li><li class="section-link level-2"><a href="#exported-helpers-and-types">Exported helpers and types</a></li></ul></section></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>API reference</span></nav>
+        <article><h1 id="api-reference">API reference<a class="heading-anchor" href="#api-reference" aria-label="Link to this section">#</a></h1>
+<p>Import the package once to register <code>&lt;arcgis-plane-navigation&gt;</code>. Use this
+page to look up its methods, events, and TypeScript types. For examples you
+can try in your app, start with <a href="configuration-recipes.html">Common changes</a>.</p>
+<h2 id="import">Import<a class="heading-anchor" href="#import" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">import {
+  ArcgisPlaneNavigationElement,
+  DEFAULT_PLANE_NAVIGATION_CONFIG,
+  type PlaneNavigationConfigInput,
+  type FlightSessionSnapshot,
+} from &quot;@ceddc/arcgis-flight-component&quot;;
+</code></pre></div>
+<p>The default import targets SDK 5.1. For an older SDK, use the matching
+<code>sdk-4.30</code> or <code>sdk-4.32</code> subpath described in <a href="sdk-compatibility.html">SDK integration</a>.
+Import <code>arcgis-scene</code> separately if your app uses that element. An existing
+<code>SceneView</code> works without ArcGIS Map Components.</p>
+<h2 id="html-editor-help">HTML editor help<a class="heading-anchor" href="#html-editor-help" aria-label="Link to this section">#</a></h2>
+<p>The <a href="configuration.html#html-attributes">HTML attribute table</a> shows each
+attribute&#39;s value type. This package also includes <code>custom-elements.json</code> for
+editors that read Custom Elements Manifest files and <code>html-data.json</code> for VS
+Code&#39;s HTML attribute suggestions and hover descriptions. In a consuming VS
+Code project, add:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-json">{
+  &quot;html.customData&quot;: [
+    &quot;./node_modules/@ceddc/arcgis-flight-component/html-data.json&quot;
+  ]
+}
+</code></pre></div>
+<p>Place that JSON in <code>.vscode/settings.json</code>. This repository already includes
+the equivalent setting for its own HTML files. HTML attributes are strings or
+presence flags in markup; <code>view</code>, <code>referenceElement</code>, and <code>config</code> are typed
+JavaScript properties described below.</p>
+<h2 id="element-status">Element status<a class="heading-anchor" href="#element-status" aria-label="Link to this section">#</a></h2>
+<p><code>PlaneNavigationStatus</code> is one of:</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>idle</code></td>
+<td>No active session, including deferred scene binding, disconnect, or <code>stop()</code></td>
+</tr>
+<tr>
+<td><code>loading</code></td>
+<td>Waiting for the host view or initializing component resources</td>
+</tr>
+<tr>
+<td><code>ready</code></td>
+<td>Initialized with automatic start disabled</td>
+</tr>
+<tr>
+<td><code>running</code></td>
+<td>Flight animation and input sampling are active</td>
+</tr>
+<tr>
+<td><code>paused</code></td>
+<td>Physics and camera presentation are paused; gamepad buttons are still polled</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>Initialization or host scene transition failed</td>
+</tr>
+</tbody></table>
+<p>The current status is available through <code>flight.status</code> and is reflected to the element&#39;s <code>status</code> attribute.</p>
+<h2 id="properties">Properties<a class="heading-anchor" href="#properties" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Read type</th>
+<th>Assignment type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>status</code></td>
+<td><code>PlaneNavigationStatus</code></td>
+<td>Read-only</td>
+</tr>
+<tr>
+<td><code>referenceElement</code></td>
+<td><code>FlightSceneElement | null</code></td>
+<td><code>FlightSceneElement | null</code></td>
+</tr>
+<tr>
+<td><code>view</code></td>
+<td><code>SceneView | null</code></td>
+<td><code>SceneView | null</code></td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td><code>PlaneNavigationConfig</code></td>
+<td><code>PlaneNavigationConfigInput</code></td>
+</tr>
+</tbody></table>
+<p>In TypeScript, <code>document.createElement(&quot;arcgis-plane-navigation&quot;)</code> returns
+<code>ArcgisPlaneNavigationElement</code> when the package&#39;s types are included. The
+properties above are checked when used from script; HTML editors use the
+attribute metadata described above.</p>
+<h3 id="status"><code>status</code><a class="heading-anchor" href="#status" aria-label="Link to this section">#</a></h3>
+<p><code>readonly status: PlaneNavigationStatus</code> returns one of the states listed above.</p>
+<h3 id="referenceelement"><code>referenceElement</code><a class="heading-anchor" href="#referenceelement" aria-label="Link to this section">#</a></h3>
+<p><code>referenceElement: FlightSceneElement | null</code> gets or sets the caller-owned <code>&lt;arcgis-scene&gt;</code>. A non-null value overrides <code>reference-element</code>. Changes while connected reinitialize the session. With no reference, the element stays <code>idle</code>; an explicit missing or wrong-type target reports an error.</p>
+<h3 id="view"><code>view</code><a class="heading-anchor" href="#view" aria-label="Link to this section">#</a></h3>
+<p><code>view: SceneView | null</code> gets or sets a caller-owned 3D view with an HTML container. It overrides both scene-element references; set it to <code>null</code> to use them again. Changes while connected reinitialize the session. The component waits for <code>view.when()</code> and uses its container for input. It never creates or destroys the view.</p>
+<h3 id="config"><code>config</code><a class="heading-anchor" href="#config" aria-label="Link to this section">#</a></h3>
+<p>Assign a <code>PlaneNavigationConfigInput</code> to change settings. Reading <code>config</code>
+returns the full <code>PlaneNavigationConfig</code>, with defaults and validation
+applied. You can pass just the fields you want to change; they follow the
+same <a href="configuration.html#live-updates-and-session-restarts">live-update and restart rules</a>
+as <code>updateConfig()</code>.</p>
+<h2 id="methods">Methods<a class="heading-anchor" href="#methods" aria-label="Link to this section">#</a></h2>
+<h3 id="start"><code>start()</code><a class="heading-anchor" href="#start" aria-label="Link to this section">#</a></h3>
+<p><code>start(): Promise&lt;void&gt;</code> initializes if needed, resets the aircraft to its configured start state, and starts flight. It rejects when disconnected, missing a valid host, unable to initialize, or explicitly stopped before completion. Stop and disconnect cancel that request; it cannot attach to a later restart. Initialization failures reject with the same <code>Error</code> emitted by <code>arcgisPlaneNavigationError</code>.</p>
+<h3 id="pause"><code>pause()</code><a class="heading-anchor" href="#pause" aria-label="Link to this section">#</a></h3>
+<p><code>pause(): void</code> pauses physics and camera presentation, preserving the aircraft state. Gamepad buttons remain active so Menu can resume. No effect outside a running session.</p>
+<h3 id="resume"><code>resume()</code><a class="heading-anchor" href="#resume" aria-label="Link to this section">#</a></h3>
+<p><code>resume(): void</code> resumes a paused flight. No effect outside a paused session.</p>
+<h3 id="stop"><code>stop()</code><a class="heading-anchor" href="#stop" aria-label="Link to this section">#</a></h3>
+<p><code>stop(options?: { restoreCamera?: boolean }): void</code> aborts initialization, destroys the session, and returns to <code>idle</code>. It removes only component-owned resources, releases listeners, animation work, and the SceneView lease, and restores borrowed navigation state.</p>
+<p><code>restoreCamera</code> defaults to <code>true</code>. Use <code>false</code> when intentionally replacing the host map or view. Explicit stop always emits <code>arcgisPlaneNavigationStopped</code>, even without an active session. Disconnect also cleans up; the caller&#39;s view, map, and layers remain caller-owned.</p>
+<h3 id="recover"><code>recover()</code><a class="heading-anchor" href="#recover" aria-label="Link to this section">#</a></h3>
+<p><code>recover(): void</code> moves to the last safe position, resets attitude and smoothed pitch input, restores initial speed, and presents immediately. It preserves the paused or running state. No effect without a session.</p>
+<h3 id="setcameramode"><code>setCameraMode()</code><a class="heading-anchor" href="#setcameramode" aria-label="Link to this section">#</a></h3>
+<p><code>setCameraMode(mode: &quot;chase&quot; | &quot;cockpit&quot;, instant?: boolean): void</code> stores and applies the mode. Transitions animate unless <code>instant</code> is <code>true</code>. A paused session updates immediately without resuming. Invalid values throw <code>TypeError</code> before state changes.</p>
+<h3 id="setpowermode"><code>setPowerMode()</code><a class="heading-anchor" href="#setpowermode" aria-label="Link to this section">#</a></h3>
+<p><code>setPowerMode(mode: &quot;slow&quot; | &quot;normal&quot; | &quot;turbo&quot;): void</code> stores and applies braking, normal power, or turbo boost. Invalid values throw <code>TypeError</code> before state changes.</p>
+<h3 id="toggleturbo"><code>toggleTurbo()</code><a class="heading-anchor" href="#toggleturbo" aria-label="Link to this section">#</a></h3>
+<p><code>toggleTurbo(): boolean</code> switches turbo on, or returns from turbo to normal, and reports whether turbo is enabled. Without a session, it selects normal power and returns <code>false</code>.</p>
+<h3 id="updateconfig"><code>updateConfig()</code><a class="heading-anchor" href="#updateconfig" aria-label="Link to this section">#</a></h3>
+<p><code>updateConfig(patch: PlaneNavigationConfigInput): void</code> merges and normalizes a partial configuration. See <a href="configuration.html#live-updates-and-session-restarts">live updates and restarts</a> for each field.</p>
+<p>Invalid camera or power modes throw <code>TypeError</code> before mutation. If a live camera update fails, it restores the previous camera mode and frame, leaves configuration and input unchanged, and rethrows the error.</p>
+<h3 id="setaircraft"><code>setAircraft()</code><a class="heading-anchor" href="#setaircraft" aria-label="Link to this section">#</a></h3>
+<p><code>setAircraft(patch: Pick&lt;PlaneNavigationConfigInput, &quot;flight&quot; | &quot;assets&quot; | &quot;terrain&quot;&gt;): Promise&lt;boolean&gt;</code>
+loads and applies an aircraft in the current session without recreating the
+scene. Supply any combination of the flight profile, model assets, and terrain
+clearance or ceiling:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">const changed = await flight.setAircraft({
+  flight: { model: &quot;super-jet&quot; },
+  assets: { bodyUrl: &quot;/models/my-jet.glb&quot;, propellerUrl: null, boostUrl: null },
+  terrain: { maximumAglM: 100_000 },
+});
+</code></pre></div>
+<p>It returns <code>true</code> when the selection becomes active. It returns <code>false</code> if a
+newer selection supersedes it, the session ends, or no session exists yet. In
+the last case, it stores the settings and starts initialization if connected.
+A load or configuration error rejects the promise.</p>
+<p>Changing only assets retains the aircraft&#39;s current position, motion, and
+power mode. Changing the profile&#39;s model keeps the position and scene but resets
+attitude and speed to the new profile&#39;s cruise speed, and sets power to normal.
+The element temporarily reports <code>loading</code> during the swap, then reflects
+the session&#39;s <code>ready</code>, <code>running</code>, or <code>paused</code> status. The swap does not
+emit another <code>arcgisPlaneNavigationReady</code> event.</p>
+<p><code>terrain.minimumClearanceM</code> and <code>terrain.maximumAglM</code> apply in place.
+<code>terrain.enabled</code> is captured when the session starts: do not change it with
+<code>setAircraft()</code>. Use <code>updateConfig()</code> to change it and restart the session. See
+<a href="custom-aircraft.html">Custom aircraft</a> for model preparation.</p>
+<h3 id="setcontrolpatch"><code>setControlPatch()</code><a class="heading-anchor" href="#setcontrolpatch" aria-label="Link to this section">#</a></h3>
+<p><code>setControlPatch(patch: ControlFramePatch): void</code> overrides sampled keyboard or gamepad fields until cleared. No effect without a session.</p>
+<table>
+<thead>
+<tr>
+<th>Fields</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>pitch</code>, <code>bank</code>, <code>yaw</code></td>
+<td>Clamped to <code>-1</code> through <code>1</code></td>
+</tr>
+<tr>
+<td><code>accelerate</code>, <code>brake</code></td>
+<td>Clamped to <code>0</code> through <code>1</code></td>
+</tr>
+<tr>
+<td><code>turboBoost</code>, <code>airbrake</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>respawn</code></td>
+<td><code>true</code> recovers immediately, including while paused; it is not a persistent override</td>
+</tr>
+</tbody></table>
+<p>For example: <code>flight.setControlPatch({ pitch: 0.25, bank: -0.4, accelerate: 1 })</code>.</p>
+<h3 id="clearcontrolpatch"><code>clearControlPatch()</code><a class="heading-anchor" href="#clearcontrolpatch" aria-label="Link to this section">#</a></h3>
+<p><code>clearControlPatch(fields?: readonly (keyof ControlFrame)[]): void</code> clears the named overrides, or all overrides when omitted. The selected power mode is then reapplied. No effect without a session.</p>
+<h3 id="snapshot"><code>snapshot()</code><a class="heading-anchor" href="#snapshot" aria-label="Link to this section">#</a></h3>
+<p><code>snapshot(): FlightSessionSnapshot | null</code> returns the current session state, or <code>null</code> without an active session.</p>
+<h3 id="debugsnapshot"><code>debugSnapshot()</code><a class="heading-anchor" href="#debugsnapshot" aria-label="Link to this section">#</a></h3>
+<p>Returns integration diagnostics, or <code>null</code> without a session: layer ownership, camera submission, terrain sampling, view lease, roll renderer, <code>sessionPhase</code>, and <code>simulationStep</code>. This diagnostic shape may change; use <code>snapshot()</code> for application state.</p>
+<h2 id="events">Events<a class="heading-anchor" href="#events" aria-label="Link to this section">#</a></h2>
+<p>All four events are typed <code>CustomEvent</code> instances with <code>bubbles: true</code> and <code>composed: true</code>.</p>
+<h3 id="arcgisplanenavigationready"><code>arcgisPlaneNavigationReady</code><a class="heading-anchor" href="#arcgisplanenavigationready" aria-label="Link to this section">#</a></h3>
+<p>Emitted after initialization. With <code>autoStart: true</code>, the snapshot may already be <code>running</code>.</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">interface PlaneNavigationReadyDetail {
+  scene: FlightSceneElement | null;
+  view: SceneView;
+  snapshot: FlightSessionSnapshot;
+}
+</code></pre></div>
+<h3 id="arcgisplanenavigationsnapshot"><code>arcgisPlaneNavigationSnapshot</code><a class="heading-anchor" href="#arcgisplanenavigationsnapshot" aria-label="Link to this section">#</a></h3>
+<p>Emitted on immediate state changes and periodically while running, at most once per 50 ms for periodic updates.</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">interface PlaneNavigationSnapshotDetail {
+  snapshot: FlightSessionSnapshot;
+}
+</code></pre></div>
+<h3 id="arcgisplanenavigationerror"><code>arcgisPlaneNavigationError</code><a class="heading-anchor" href="#arcgisplanenavigationerror" aria-label="Link to this section">#</a></h3>
+<p>Emitted when initialization or a scene-ready transition fails; the element enters <code>error</code>.</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">interface PlaneNavigationErrorDetail {
+  error: Error;
+}
+</code></pre></div>
+<h3 id="arcgisplanenavigationstopped"><code>arcgisPlaneNavigationStopped</code><a class="heading-anchor" href="#arcgisplanenavigationstopped" aria-label="Link to this section">#</a></h3>
+<p>Emitted by explicit <code>stop()</code>. <code>restoredCamera</code> reports the requested restoration policy, including when no session was active.</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">interface PlaneNavigationStoppedDetail {
+  restoredCamera: boolean;
+}
+</code></pre></div>
+<h2 id="flight-snapshot">Flight snapshot<a class="heading-anchor" href="#flight-snapshot" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">interface FlightSessionSnapshot {
+  phase: &quot;ready&quot; | &quot;running&quot; | &quot;paused&quot; | &quot;stopped&quot;;
+  vehicle: VehicleState;
+  renderVehicle: VehicleState;
+  altitudeMslM: number;
+  aglM: number | null;
+  cameraMode: &quot;chase&quot; | &quot;cockpit&quot;;
+  powerMode: &quot;slow&quot; | &quot;normal&quot; | &quot;turbo&quot;;
+  turboActive: boolean;
+  braking: boolean;
+  simulationStep: number;
+  presentedTick: number;
+  gamepad: Readonly&lt;FlightGamepadStatus&gt;;
+  camera: PresentedFlightCameraFrame | null;
+}
+</code></pre></div>
+<p><code>vehicle</code> contains the deterministic physics state. <code>renderVehicle</code> is the
+interpolated position and attitude you see on screen. <code>aglM</code> is <code>null</code> when
+the ground height is unknown.</p>
+<h3 id="vehiclestate"><code>VehicleState</code><a class="heading-anchor" href="#vehiclestate" aria-label="Link to this section">#</a></h3>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">interface VehicleState {
+  position: { x: number; y: number; z: number };
+  heading: number;
+  pitch: number;
+  bank: number;
+  driftAngle: number;
+  speed: number;
+  throttle: number;
+  launchBoost: number;
+  cornerAssist: number;
+  verticalSpeed: number;
+  speedBar?: number;
+  wingBrake?: number;
+  speedBarRate?: number;
+  wingBrakeRate?: number;
+  wingRollRate?: number;
+  wingPitchRate?: number;
+  spaceTurnRate?: number;
+  spacePitchRate?: number;
+}
+</code></pre></div>
+<p>The optional fields hold the Paraglider&#39;s controls and motion rates, and
+the Space Jet&#39;s turn and pitch rates.</p>
+<p>Local snapshot positions use metres: projected XY is multiplied by the spatial reference&#39;s metres-per-unit scale. Local speed is metres per second. This supports local Web Mercator and other local projected linear coordinate systems with a finite, positive scale, including views in feet. Global Web Mercator retains projected XY and projected units per second. Vertical position uses metres and vertical speed uses metres per second. Angles use degrees. See <a href="configuration.html#scene-distance-semantics">Scene distance semantics</a>.</p>
+<h3 id="gamepad-status">Gamepad status<a class="heading-anchor" href="#gamepad-status" aria-label="Link to this section">#</a></h3>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">interface FlightGamepadStatus {
+  connected: boolean;
+  index: number | null;
+  id: string | null;
+  mapping: string | null;
+}
+</code></pre></div>
+<h3 id="presented-camera-frame">Presented camera frame<a class="heading-anchor" href="#presented-camera-frame" aria-label="Link to this section">#</a></h3>
+<p>When available, the camera snapshot contains <code>x</code>, <code>y</code>, <code>z</code>, <code>heading</code>, <code>tilt</code>, <code>roll</code>, <code>rollScale</code>, <code>baseFov</code>, <code>fov</code>, <code>aircraftVisible</code>, <code>viewMode</code>, and <code>transitionBlend</code>.</p>
+<h2 id="exported-helpers-and-types">Exported helpers and types<a class="heading-anchor" href="#exported-helpers-and-types" aria-label="Link to this section">#</a></h2>
+<p>The root entry point also exports:</p>
+<ul>
+<li><code>ARCGIS_PLANE_NAVIGATION_TAG</code></li>
+<li><code>DEFAULT_AIRCRAFT_ASSETS</code></li>
+<li><code>DEFAULT_PLANE_NAVIGATION_CONFIG</code></li>
+<li><code>AIRCRAFT_FLIGHT_PROFILES</code> and the aircraft profile and tuning types</li>
+<li>configuration merge, normalization, and UI validation helpers</li>
+<li>supported UI control and position constants</li>
+<li>localization catalogs, locale detection, and text helpers</li>
+<li>configuration, event, snapshot, vehicle, view-mode, power-mode, and control-frame types</li>
+</ul>
+<p>The exported default objects, their nested groups, and the UI option tuples are frozen at runtime and typed through <code>DeepReadonly</code>. <code>normalizePlaneNavigationConfig()</code> returns an independent mutable configuration for application use.</p>
+<p>Use the root entry point instead of importing internal source paths. Internal modules are not declared as package subpath exports.</p>
+</article>
+        <footer class="page-footer">
+          <span>Source: <code>docs/api-reference.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/api-reference.md">View on GitHub</a>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

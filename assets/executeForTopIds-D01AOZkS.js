@@ -1,0 +1,1 @@
+import{jn as m}from"./arcgis-scene-C3i20sGt.js";import{d as s}from"./queryTopFeatures-D3T4-QCw.js";import e from"./TopFeaturesQuery-kfXIrMeV.js";async function i(o,r,t){const a=m(o);return(await s(a,e.from(r),{...t})).data.objectIds}export{i as executeForTopIds};

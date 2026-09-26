@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ArcGIS Flight Component documentation: Getting started.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Getting started | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=e65ce19d883e">
+    <script type="module" src="doc-assets/docs-ui.js?v=e65ce19d883e"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html" aria-current="page">Getting started</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#prerequisites">Prerequisites</a></li><li class="section-link level-2"><a href="#add-the-component-to-an-existing-application">Add the component to an existing application</a></li><li class="section-link level-2"><a href="#use-an-arcgis-scene-element">Use an arcgis-scene element</a></li><li class="section-link level-2"><a href="#choose-the-start-pose">Choose the start pose</a></li><li class="section-link level-2"><a href="#how-to-use-arcgis-enterprise">How to use ArcGIS Enterprise</a></li><li class="section-link level-2"><a href="#local-scenes-in-feet">Local scenes in feet</a></li><li class="section-link level-2"><a href="#stop-and-clean-up">Stop and clean up</a></li><li class="section-link level-2"><a href="#next-steps">Next steps</a></li></ul></section></li><li><a href="demo.html">Demos</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Common changes</a></li><li><a href="flight-concepts.html">Flight concepts</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="codebase-guide.html">Codebase guide</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="sdk-compatibility.html">SDK integration</a></li><li><a href="configuration.html">Configuration</a></li><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Getting started</span></nav>
+        <article><h1 id="getting-started">Getting started<a class="heading-anchor" href="#getting-started" aria-label="Link to this section">#</a></h1>
+<p>On a phone or tablet, the flight joystick appears at the bottom left
+automatically. Drag it to steer. Drag elsewhere in the scene to look around
+in chase view; release to return behind the plane.</p>
+<p>Start with a 3D scene, add the flight component, and take it for a spin. Your
+application loads the map and data; the component adds an aircraft, flight
+controls, and a camera that follows along.</p>
+<p>You can also try one of the <a href="demo.html">demos</a> before setting anything up.
+To clone the source and adapt it for your own project, see
+<a href="development.html#local-setup">Development</a>.</p>
+<h2 id="prerequisites">Prerequisites<a class="heading-anchor" href="#prerequisites" aria-label="Link to this section">#</a></h2>
+<ul>
+<li>Node.js 20+ for development.</li>
+<li>ArcGIS Maps SDK for JavaScript 4.30 through 5.1.</li>
+<li>A browser with WebGL and access to your scene&#39;s services.</li>
+</ul>
+<p>The examples below use SDK 5.1. For an older SDK or a plain HTML page, choose
+the matching option in <a href="sdk-compatibility.html#choose-a-loading-option">SDK integration</a>.</p>
+<h2 id="add-the-component-to-an-existing-application">Add the component to an existing application<a class="heading-anchor" href="#add-the-component-to-an-existing-application" aria-label="Link to this section">#</a></h2>
+<p>If you already have a <code>SceneView</code>, this is all you need to connect it:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-bash">npm install github:ceddc/arcgis-flight-component
+</code></pre></div>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">import &quot;@ceddc/arcgis-flight-component&quot;;
+
+const flight = document.createElement(&quot;arcgis-plane-navigation&quot;);
+flight.view = existingSceneView;
+document.body.append(flight);
+</code></pre></div>
+<p>Flight starts when the view is ready. Click the scene to steer with the keyboard.
+The view needs a visible HTML container. A 2D <code>MapView</code> is not supported.</p>
+<h2 id="use-an-arcgis-scene-element">Use an arcgis-scene element<a class="heading-anchor" href="#use-an-arcgis-scene-element" aria-label="Link to this section">#</a></h2>
+<p>For an application using ArcGIS Map Components, install matching packages:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-bash">npm install github:ceddc/arcgis-flight-component @arcgis/core@~5.1.24 @arcgis/map-components@~5.1.24
+</code></pre></div>
+<p>Import both components in your browser entry point:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">import &quot;@arcgis/map-components/components/arcgis-scene&quot;;
+import &quot;@ceddc/arcgis-flight-component&quot;;
+</code></pre></div>
+<p>Then connect them by ID. Replace the item ID with your public WebScene&#39;s ID:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-html">&lt;style&gt;
+  html, body, arcgis-scene { width: 100%; height: 100%; margin: 0; }
+  arcgis-scene { display: block; }
+&lt;/style&gt;
+&lt;arcgis-scene id=&quot;scene&quot; item-id=&quot;YOUR_PUBLIC_WEBSCENE_ITEM_ID&quot;&gt;&lt;/arcgis-scene&gt;
+&lt;arcgis-plane-navigation reference-element=&quot;scene&quot; show-controls show-speed&gt;&lt;/arcgis-plane-navigation&gt;
+</code></pre></div>
+<p>This example includes an on-screen toolbar. Leave out <code>show-controls</code> and
+<code>show-speed</code> to remove the toolbar. The touch joystick still appears automatically;
+<a href="configuration.html#optional-ui">change its position or visibility</a> if needed.</p>
+<h2 id="choose-the-start-pose">Choose the start pose<a class="heading-anchor" href="#choose-the-start-pose" aria-label="Link to this section">#</a></h2>
+<p>Set a position before adding the element to the page:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">flight.config = {
+  start: {
+    longitude: 8.25613,
+    latitude: 46.97915,
+    altitudeM: 2750,
+    headingDeg: 118,
+  },
+};
+</code></pre></div>
+<p>Give longitude and latitude together. Altitude is in metres, and heading is
+in degrees, with 0 pointing north. Leave the position out to start at the
+view center, 300 m above the sampled ground.</p>
+<h2 id="how-to-use-arcgis-enterprise">How to use ArcGIS Enterprise<a class="heading-anchor" href="#how-to-use-arcgis-enterprise" aria-label="Link to this section">#</a></h2>
+<p>Load your Enterprise WebScene, then connect the component to its view:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">import WebScene from &quot;@arcgis/core/WebScene.js&quot;;
+import &quot;@ceddc/arcgis-flight-component&quot;;
+
+const webScene = new WebScene({
+  portalItem: {
+    id: &quot;YOUR_WEBSCENE_ITEM_ID&quot;,
+    portal: { url: &quot;https://your-organization.example.com/portal&quot; },
+  },
+});
+await webScene.load();
+existingSceneView.map = webScene;
+
+const flight = document.createElement(&quot;arcgis-plane-navigation&quot;);
+flight.view = existingSceneView;
+document.body.append(flight);
+</code></pre></div>
+<p>For private content, set up ArcGIS sign-in in your application before loading
+the scene. The flight component uses the same sign-in. Your services must allow
+requests from your application&#39;s domain through CORS.</p>
+<p>You can also load layers directly from service URLs. The
+<a href="demos/simple-controls/">Flight controls demo</a> connects directly to SITG&#39;s
+public Geneva imagery, terrain, and 3D building services. Its
+<a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/simple-controls/main.ts">source</a> shows the service connections.</p>
+<h2 id="local-scenes-in-feet">Local scenes in feet<a class="heading-anchor" href="#local-scenes-in-feet" aria-label="Link to this section">#</a></h2>
+<p>Use Web Mercator in global or local mode, or another local projected view with
+linear units such as metres, feet, or US survey feet. Geographic local scenes
+are unsupported.</p>
+<p>For a local view, set its coordinate system when you create it:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">import SceneView from &quot;@arcgis/core/views/SceneView.js&quot;;
+
+const view = new SceneView({
+  container: &quot;scene&quot;,
+  map,
+  viewingMode: &quot;local&quot;,
+  spatialReference: { wkid: 2263 }, // New York Long Island, US survey feet
+});
+flight.config = { start: { altitudeM: 540 } };
+flight.view = view;
+</code></pre></div>
+<p>Your layers must support that coordinate system. Keep flight distances in
+metres and speeds in metres per second; the component converts them for the view.
+The <a href="demos/zurich/">Zurich local scene demo</a> uses a ready-made WebScene in
+Swiss LV95 (EPSG:2056), whose units are metres.</p>
+<h2 id="stop-and-clean-up">Stop and clean up<a class="heading-anchor" href="#stop-and-clean-up" aria-label="Link to this section">#</a></h2>
+<p>Remove the element when leaving the page or destroying its view:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">flight.remove();
+</code></pre></div>
+<p>Removing the element cleans up the aircraft and its controls and restores
+the previous camera when appropriate. Your map, view, and data layers are
+still yours to use.</p>
+<h2 id="next-steps">Next steps<a class="heading-anchor" href="#next-steps" aria-label="Link to this section">#</a></h2>
+<ul>
+<li><a href="configuration-recipes.html">Common changes</a>: camera, speed, controls, and ground clearance.</li>
+<li><a href="custom-aircraft.html">Custom aircraft</a>: use another model or change its handling.</li>
+<li><a href="demos/aircraft/">Other aircraft</a>: four aircraft, Esri 3D Buildings, weather and time, camera controls, and picture capture.</li>
+<li><a href="troubleshooting.html">Troubleshooting</a>: help when something does not work.</li>
+<li><a href="api-reference.html">API reference</a>: methods, events, and flight state.</li>
+</ul>
+</article>
+        <footer class="page-footer">
+          <span>Source: <code>docs/getting-started.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/getting-started.md">View on GitHub</a>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

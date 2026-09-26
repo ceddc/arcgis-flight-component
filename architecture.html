@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ArcGIS Flight Component documentation: Architecture.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Architecture | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=e65ce19d883e">
+    <script type="module" src="doc-assets/docs-ui.js?v=e65ce19d883e"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Getting started</a></li><li><a href="demo.html">Demos</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Common changes</a></li><li><a href="flight-concepts.html">Flight concepts</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="codebase-guide.html">Codebase guide</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="sdk-compatibility.html">SDK integration</a></li><li><a href="configuration.html">Configuration</a></li><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Architecture</span></nav>
+        <article><h1 id="architecture">Architecture<a class="heading-anchor" href="#architecture" aria-label="Link to this section">#</a></h1>
+<p>The split is simple: your application looks after the scene, and the
+component looks after the flight. Connect it to your <code>SceneView</code> through
+<code>flight.view</code>, or point it at an <code>&lt;arcgis-scene&gt;</code>. It adds one aircraft layer
+and takes control of navigation and the camera while you fly. Your
+application keeps ownership of the view and its <code>Map</code> or <code>WebScene</code>.</p>
+<p>This page explains how the parts fit together. For what you see while
+flying, read <a href="flight-concepts.html">Flight concepts</a>. To bring your own model,
+start with <a href="custom-aircraft.html">Custom aircraft</a>.</p>
+<h2 id="ownership-contract">Ownership contract<a class="heading-anchor" href="#ownership-contract" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Ownership</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scene, map, ground, layers, authentication, application UI</td>
+<td>Host-owned; never destroyed by the component.</td>
+</tr>
+<tr>
+<td>Aircraft layer, graphics, input listeners, animation, timers, optional controls and roll node</td>
+<td>Component-owned; released when the session ends.</td>
+</tr>
+<tr>
+<td>Camera and navigation settings</td>
+<td>Borrowed; saved before takeover and restored on ordinary stop or disconnect.</td>
+</tr>
+<tr>
+<td>View lease</td>
+<td>One active flight session per SceneView; released on cleanup.</td>
+</tr>
+</tbody></table>
+<p>On cleanup, navigation settings and any added <code>tabindex</code> are restored only
+if they still match the values the component set. This keeps changes your
+application made in the meantime. The saved camera is restored by default;
+call <code>stop({ restoreCamera: false })</code> when you want to keep the current camera
+while replacing the map or view.</p>
+<h2 id="lifecycle">Lifecycle<a class="heading-anchor" href="#lifecycle" aria-label="Link to this section">#</a></h2>
+<ol>
+<li>Wait for the caller&#39;s view, validate its coordinate system, and acquire its lease.</li>
+<li>Save borrowed state, resolve the start pose, and load the aircraft.</li>
+<li>Create the flight session and publish it before callbacks can trigger cleanup.</li>
+<li>Start automatically, or wait in <code>ready</code> when <code>autoStart</code> is false. Pause preserves flight state; resume continues it.</li>
+<li>Stop, disconnect, restart, or failure cancels initialization and releases the session&#39;s resources.</li>
+</ol>
+<p>Initialization uses cancellation and operation identity checks so a late load cannot attach to a newer session. Direct-view hosts assign the replacement <code>flight.view</code>; scene-element hosts also receive ArcGIS readiness events.</p>
+<p>See the <a href="api-reference.html">API reference</a> for statuses, methods, and events.</p>
+<h2 id="runtime-data-flow">Runtime data flow<a class="heading-anchor" href="#runtime-data-flow" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-text">Keyboard / gamepad / programmatic input
+  -&gt; fixed-step flight physics
+  -&gt; interpolated aircraft pose and camera
+  -&gt; one presentation frame
+  -&gt; aircraft graphics + SceneView.camera + optional viewport roll
+</code></pre></div>
+<p>Physics runs at 60 Hz. Display frames interpolate the pose, and the presentation scheduler applies camera and aircraft updates together. Camera writes are capped by <code>camera.submissionHz</code> and can temporarily slow under sustained rendering pressure.</p>
+<p>Ground height comes from the scene&#39;s live elevation sampler. A recent
+nearby sample can fill a short gap while the sampler is replaced. Otherwise,
+missing ground data stays unknown. These checks do not detect buildings or
+other obstacles.</p>
+<h2 id="code-and-sdk-boundaries">Code and SDK boundaries<a class="heading-anchor" href="#code-and-sdk-boundaries" aria-label="Link to this section">#</a></h2>
+<p>The <a href="development.html#repository-layout">development guide</a> maps source folders to responsibilities and documents the camera, terrain, and cleanup rules.</p>
+<p>Component-only builds keep ArcGIS external. The standalone browser build includes it. ESM family files remove imports unavailable in their target SDK; AMD resolves modules through the host loader. See <a href="sdk-compatibility.html">SDK integration</a> for choosing a build.</p>
+</article>
+        <footer class="page-footer">
+          <span>Source: <code>docs/architecture.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/architecture.md">View on GitHub</a>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

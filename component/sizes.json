@@ -1,0 +1,22 @@
+{
+  "arcgis-flight-component.js": {
+    "bytes": 545858,
+    "gzipBytes": 139187
+  },
+  "arcgis-flight-component.amd.js": {
+    "bytes": 557873,
+    "gzipBytes": 140148
+  },
+  "arcgis-flight-component.sdk-4.30.js": {
+    "bytes": 545782,
+    "gzipBytes": 139195
+  },
+  "arcgis-flight-component.sdk-4.32.js": {
+    "bytes": 545934,
+    "gzipBytes": 139250
+  },
+  "arcgis-flight-component.sdk-5.1.js": {
+    "bytes": 545941,
+    "gzipBytes": 139253
+  }
+}

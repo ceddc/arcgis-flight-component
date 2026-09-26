@@ -1,0 +1,1 @@
+import{jn as n}from"./arcgis-scene-C3i20sGt.js";import{a as m}from"./queryTopFeatures-D3T4-QCw.js";import f from"./TopFeaturesQuery-kfXIrMeV.js";async function i(o,t,r){const a=n(o);return(await m(a,f.from(t),{...r})).data.count}export{i as executeForTopCount};

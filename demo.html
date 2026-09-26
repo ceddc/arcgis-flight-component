@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ArcGIS Flight Component documentation: Demos.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Demos | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=e65ce19d883e">
+    <script type="module" src="doc-assets/docs-ui.js?v=e65ce19d883e"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Getting started</a></li><li><a href="demo.html" aria-current="page">Demos</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#run-the-samples">Run the samples</a></li><li class="section-link level-2"><a href="#scene-explorer">Scene explorer</a></li><li class="section-link level-2"><a href="#flight-controls-over-geneva">Flight controls over Geneva</a></li><li class="section-link level-2"><a href="#zurich-local-scene">Zurich local scene</a></li><li class="section-link level-2"><a href="#other-aircraft">Other aircraft</a></li></ul></section></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Common changes</a></li><li><a href="flight-concepts.html">Flight concepts</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="codebase-guide.html">Codebase guide</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="sdk-compatibility.html">SDK integration</a></li><li><a href="configuration.html">Configuration</a></li><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Demos</span></nav>
+        <article><h1 id="demos">Demos<a class="heading-anchor" href="#demos" aria-label="Link to this section">#</a></h1>
+<p>Pick a demo and go flying. Each one starts when its scene is ready; click
+the scene to steer. Demos with a toolbar also have a Pause button.</p>
+<p>Basic flight is the smallest example to build on. The others show controls,
+different scenes, and aircraft you can try in your own app.</p>
+<h2 id="run-the-samples">Run the samples<a class="heading-anchor" href="#run-the-samples" aria-label="Link to this section">#</a></h2>
+<p>Clone this repository, then run:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-bash">npm ci
+npm run dev
+</code></pre></div>
+<p>Open <a href="http://127.0.0.1:3116/">the local site</a> and choose a demo from the top menu.
+If that port is busy, use the address printed by Vite.</p>
+<table>
+<thead>
+<tr>
+<th>Demo</th>
+<th>Description</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="demos/simple/">Basic flight</a></td>
+<td>Fly toward the Matterhorn with keyboard or gamepad controls.</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/simple/index.html">HTML</a></td>
+</tr>
+<tr>
+<td><a href="demos/simple-controls/">Flight controls</a></td>
+<td>Fly over Geneva with SITG imagery, terrain, and 3D buildings while changing power, pause, recovery, and camera.</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/simple-controls/main.ts">TypeScript</a></td>
+</tr>
+<tr>
+<td><a href="demos/webscene-selector/">Scene explorer</a></td>
+<td>Choose a place, search an address, or load a public WebScene.</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/main.ts">TypeScript</a></td>
+</tr>
+<tr>
+<td><a href="demos/zurich/">Zurich local scene</a></td>
+<td>Fly over a ready-made WebScene with 3D buildings.</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/zurich/main.ts">TypeScript</a></td>
+</tr>
+<tr>
+<td><a href="demos/aircraft/">Other aircraft</a></td>
+<td>Four aircraft, Esri 3D Buildings, weather and time, camera controls, and picture capture.</td>
+<td><a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/aircraft/main.ts">TypeScript</a></td>
+</tr>
+</tbody></table>
+<h2 id="scene-explorer">Scene explorer<a class="heading-anchor" href="#scene-explorer" aria-label="Link to this section">#</a></h2>
+<p>Flight starts near Mount Fuji with the scene picker open. Choose a destination,
+search for an address, or search public ArcGIS Online WebScenes and pick one
+from the result cards (or paste an item ID). The picker accepts global Web
+Mercator WebScenes and local WebScenes with projected coordinates.</p>
+<p>The panel stays visible while you fly and when you switch destinations.
+The scene remains interactive beside it.
+<strong>Settings</strong> adjusts steering sensitivity, field of view, pitch direction, and camera roll.</p>
+<h2 id="flight-controls-over-geneva">Flight controls over Geneva<a class="heading-anchor" href="#flight-controls-over-geneva" aria-label="Link to this section">#</a></h2>
+<p>The Flight controls demo loads public SITG imagery and terrain from ArcGIS
+Enterprise, plus 3D building and landmark layers hosted by SITG on ArcGIS Online.
+Use the controls to pause, recover, change power, or switch cameras while
+flying over the 3D building scene.</p>
+<h2 id="zurich-local-scene">Zurich local scene<a class="heading-anchor" href="#zurich-local-scene" aria-label="Link to this section">#</a></h2>
+<p>This demo adds the plane to the <a href="https://www.arcgis.com/home/item.html?id=067ada556ed84bb3aa5c65b4f2a7c15d">Zurich LV95 WebScene</a>.
+The basemap, terrain, and 3D buildings are already part of the scene, so there
+are no building queries or custom renderer to set up.
+It uses Swiss LV95 (EPSG:2056) in local mode. The sample omits the trees layer,
+which requires a subscription.</p>
+<p>Ground clearance in these demos does not detect buildings or other obstacles.</p>
+<h2 id="other-aircraft">Other aircraft<a class="heading-anchor" href="#other-aircraft" aria-label="Link to this section">#</a></h2>
+<p>Try Classic, Super Jet, Space Jet, or Paraglider. The demo starts over the Grand
+Canyon. Choosing another aircraft swaps its model and flight profile in place,
+keeping your current position, camera mode, and scene; the camera framing
+adjusts for the new profile. The panel shows its speeds and controls.</p>
+<p><strong>Buildings</strong> toggles Esri worldwide 3D Buildings. The weather menu applies
+seven ArcGIS weather presets and changes sun lighting with a 24-hour time
+control. <strong>Photo</strong> downloads the scene with live ArcGIS provider credits.</p>
+<p>To use another model or change its speed, follow
+<a href="custom-aircraft.html#choose-speed-and-handling">Custom aircraft</a>.</p>
+</article>
+        <footer class="page-footer">
+          <span>Source: <code>docs/demo.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/demo.md">View on GitHub</a>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

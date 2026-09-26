@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ArcGIS Flight Component documentation: Common changes.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Common changes | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=e65ce19d883e">
+    <script type="module" src="doc-assets/docs-ui.js?v=e65ce19d883e"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Getting started</a></li><li><a href="demo.html">Demos</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html" aria-current="page">Common changes</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#webscene-and-aircraft-only">WebScene and aircraft only</a></li><li class="section-link level-2"><a href="#choose-an-explicit-start-pose">Choose an explicit start pose</a></li><li class="section-link level-2"><a href="#change-camera-behavior">Change camera behavior</a></li><li class="section-link level-2"><a href="#tune-input">Tune input</a></li><li class="section-link level-2"><a href="#add-the-optional-flight-overlay">Add the optional flight overlay</a></li><li class="section-link level-2"><a href="#delay-automatic-flight">Delay automatic flight</a></li><li class="section-link level-2"><a href="#set-ground-clearance">Set ground clearance</a></li><li class="section-link level-2"><a href="#use-your-own-aircraft">Use your own aircraft</a></li><li class="section-link level-2"><a href="#change-power-mode">Change power mode</a></li><li class="section-link level-2"><a href="#know-whether-a-change-is-live">Know whether a change is live</a></li></ul></section></li><li><a href="flight-concepts.html">Flight concepts</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="codebase-guide.html">Codebase guide</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="sdk-compatibility.html">SDK integration</a></li><li><a href="configuration.html">Configuration</a></li><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Common changes</span></nav>
+        <article><h1 id="common-changes">Common changes<a class="heading-anchor" href="#common-changes" aria-label="Link to this section">#</a></h1>
+<p>Once you have <a href="getting-started.html">a scene with an aircraft</a>, try these small
+changes to make it your own. In the JavaScript examples, <code>flight</code> is your
+<code>arcgis-plane-navigation</code> element.</p>
+<h2 id="webscene-and-aircraft-only">WebScene and aircraft only<a class="heading-anchor" href="#webscene-and-aircraft-only" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">import &quot;@arcgis/map-components/components/arcgis-scene&quot;;
+import &quot;@ceddc/arcgis-flight-component&quot;;
+</code></pre></div>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-html">&lt;style&gt;html, body, arcgis-scene { width: 100%; height: 100%; margin: 0; } arcgis-scene { display: block; }&lt;/style&gt;
+&lt;arcgis-scene id=&quot;scene&quot; item-id=&quot;YOUR_PUBLIC_WEBSCENE_ITEM_ID&quot;&gt;&lt;/arcgis-scene&gt;
+&lt;arcgis-plane-navigation reference-element=&quot;scene&quot;&gt;&lt;/arcgis-plane-navigation&gt;
+</code></pre></div>
+<p>This gives you keyboard and gamepad controls, ground-clearance checks, and
+a camera behind the plane. See <a href="getting-started.html">Getting started</a> for
+connecting and removing the component.</p>
+<h2 id="choose-an-explicit-start-pose">Choose an explicit start pose<a class="heading-anchor" href="#choose-an-explicit-start-pose" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-html">&lt;arcgis-plane-navigation
+  reference-element=&quot;scene&quot;
+  start-longitude=&quot;8.25613&quot; start-latitude=&quot;46.97915&quot;
+  start-altitude-m=&quot;2750&quot; start-heading-deg=&quot;118&quot;
+&gt;&lt;/arcgis-plane-navigation&gt;
+</code></pre></div>
+<p>Set longitude and latitude together. Leave them out to use the loaded view
+center. Heading defaults to the scene camera heading; altitude defaults to
+300 m above the sampled ground.</p>
+<h2 id="change-camera-behavior">Change camera behavior<a class="heading-anchor" href="#change-camera-behavior" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-html">&lt;arcgis-plane-navigation reference-element=&quot;scene&quot;
+  camera-mode=&quot;cockpit&quot; fov-deg=&quot;62&quot; camera-roll-disabled&gt;
+&lt;/arcgis-plane-navigation&gt;
+</code></pre></div>
+<p>Camera mode, field of view, and camera roll can also change live:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">flight.updateConfig({ camera: { mode: &quot;cockpit&quot;, fovDeg: 62, bankedViewport: false } });
+</code></pre></div>
+<h2 id="tune-input">Tune input<a class="heading-anchor" href="#tune-input" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-html">&lt;arcgis-plane-navigation reference-element=&quot;scene&quot;
+  sensitivity=&quot;1.1&quot; invert-pitch-disabled&gt;
+&lt;/arcgis-plane-navigation&gt;
+</code></pre></div>
+<p>For an autopilot or your own input controls, see
+<a href="api-reference.html#setcontrolpatch">programmatic input</a>.</p>
+<h2 id="add-the-optional-flight-overlay">Add the optional flight overlay<a class="heading-anchor" href="#add-the-optional-flight-overlay" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-html">&lt;arcgis-plane-navigation reference-element=&quot;scene&quot;
+  show-controls show-speed ui-position=&quot;bottom-end&quot;
+  ui-controls=&quot;power pause camera recover&quot; locale=&quot;auto&quot;&gt;
+&lt;/arcgis-plane-navigation&gt;
+</code></pre></div>
+<p>The toolbar disappears when you remove the flight element. You can also
+set <code>ui.enabled</code>, <code>ui.showSpeed</code>, <code>ui.position</code>, and <code>ui.controls</code> through the
+typed <code>config</code> property.</p>
+<h2 id="delay-automatic-flight">Delay automatic flight<a class="heading-anchor" href="#delay-automatic-flight" aria-label="Link to this section">#</a></h2>
+<p>Add <code>auto-start-disabled</code> to the element. Then call <code>start()</code> when the user
+chooses to fly, for example from a button in your application:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">startButton.addEventListener(&quot;click&quot;, async () =&gt; {
+  await flight.start();
+});
+</code></pre></div>
+<h2 id="set-ground-clearance">Set ground clearance<a class="heading-anchor" href="#set-ground-clearance" aria-label="Link to this section">#</a></h2>
+<p>Use the scene&#39;s ground height to keep the aircraft above the surface and limit
+its height above ground (AGL). This example uses a 5 m lower threshold and a
+3500 m ceiling:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">flight.updateConfig({
+  terrain: { enabled: true, minimumClearanceM: 5, maximumAglM: 3500 },
+});
+</code></pre></div>
+<p>Changing these settings restarts the flight with the new ground limits. Your
+scene keeps its existing terrain data. To turn off the flight ground checks,
+set <code>terrain.enabled</code> to <code>false</code>. Also set <code>start.altitudeM</code> if you want to
+skip the initial ground query. See <a href="configuration.html#terrain">Terrain settings</a>
+for the full list of limits.</p>
+<h2 id="use-your-own-aircraft">Use your own aircraft<a class="heading-anchor" href="#use-your-own-aircraft" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">await flight.setAircraft({
+  assets: { bodyUrl: &quot;/models/aircraft.glb&quot;, propellerUrl: null, boostUrl: null },
+});
+</code></pre></div>
+<p>The body is required; <code>null</code> removes the optional parts. In an active
+session, <code>setAircraft()</code> replaces the model without restarting flight or
+reloading the scene. If no session exists yet, it stores the selection for
+initialization and returns <code>false</code>. Follow
+<a href="custom-aircraft.html">Custom aircraft</a> for scale, orientation, part placement,
+and changes to the flight model.</p>
+<h2 id="change-power-mode">Change power mode<a class="heading-anchor" href="#change-power-mode" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="language-ts">flight.setPowerMode(&quot;turbo&quot;);
+</code></pre></div>
+<p>Use <code>&quot;normal&quot;</code> for cruise or <code>&quot;slow&quot;</code> to brake. To change the aircraft&#39;s
+speed limits, use a <a href="custom-aircraft.html#choose-speed-and-handling">flight profile</a>.</p>
+<h2 id="know-whether-a-change-is-live">Know whether a change is live<a class="heading-anchor" href="#know-whether-a-change-is-live" aria-label="Link to this section">#</a></h2>
+<p>Camera, input, power, and optional UI settings apply live. With <code>config</code> or
+<code>updateConfig()</code>, aircraft assets, flight profiles, start pose, terrain
+settings, navigation capture, camera submission rate, and automatic start
+restart the session. <code>setAircraft()</code> changes the aircraft and the terrain
+clearance/ceiling in place; <code>terrain.enabled</code> still needs a restart. Your
+scene and map stay in place.</p>
+<p>See <a href="configuration.html">Configuration</a> for every field, range, attribute, and
+normalization rule, and <a href="api-reference.html">API reference</a> for methods and events.</p>
+</article>
+        <footer class="page-footer">
+          <span>Source: <code>docs/configuration-recipes.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/docs/configuration-recipes.md">View on GitHub</a>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
