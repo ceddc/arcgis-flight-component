@@ -1,5 +1,9 @@
 # ArcGIS Flight Component
 
+An open-source web component that integrates with the
+[ArcGIS Maps SDK for JavaScript](https://developers.arcgis.com/javascript/latest/)
+to add flight controls and a camera-following aircraft to 3D scenes.
+
 Made with assistance from ChatGPT and Claude. This is a for-fun project I work
 on in my free time to learn about AI agent-assisted development. It is not an
 official Esri project. It works, though it could be better. If you spot
