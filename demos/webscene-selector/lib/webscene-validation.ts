@@ -1,8 +1,8 @@
 /**
  * Enforces the public scene explorer's admission rules for custom WebScenes.
  * Portal metadata must describe a publicly shared Web Scene, and the loaded
- * scene must use a coordinate system the flight component supports: a global
- * Web Mercator view or a local view with projected linear coordinates.
+ * scene must use a coordinate system the flight component supports: Web
+ * Mercator in either view mode or a local view with projected coordinates.
  */
 import {
   flightSceneCoordinateMode,
@@ -36,7 +36,7 @@ export function validatePublicWebSceneItem(item: ArcGISItemMetadata): void {
     throw new Error("The item exists, but it is not an ArcGIS WebScene.");
   }
   if (item.access !== "public") {
-    throw new Error("This public demo can load public WebScenes only.");
+    throw new Error("This WebScene is not shared with everyone. Choose another scene.");
   }
 }
 
@@ -61,7 +61,7 @@ export function validateFlightWebScene(scene: WebSceneMetadata): FlightSceneCoor
     return flightSceneCoordinateMode(scene.viewingMode, spatialReference);
   } catch {
     throw new Error(
-      "Plane navigation needs a global Web Mercator WebScene or a local WebScene with projected coordinates.",
+      "Plane navigation needs Web Mercator or a local WebScene with projected coordinates.",
     );
   }
 }

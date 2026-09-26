@@ -189,6 +189,20 @@ describe("initialization resource cancellation", () => {
     });
   });
 
+  it("uses georeferenced vertex space for local Web Mercator", async () => {
+    const createFromGLTF: GltfMeshLoader = vi.fn(async () => ({} as Mesh));
+    await loadAircraftMeshes(createFromGLTF, point, {
+      bodyUrl: "body.glb",
+      propellerUrl: null,
+      boostUrl: null,
+    }, undefined, "local");
+
+    expect(createFromGLTF).toHaveBeenCalledWith(point, "body.glb", {
+      signal: expect.any(AbortSignal),
+      vertexSpace: "georeferenced",
+    });
+  });
+
   it("does not start a GLTF load when the caller signal is already aborted", async () => {
     const controller = new AbortController();
     const abortError = new DOMException("Stopped", "AbortError");

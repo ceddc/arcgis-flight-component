@@ -49,10 +49,10 @@ Assign a Map or WebScene to your view before starting flight. The component requ
 
 ## Supported scene coordinate systems
 
-Use a global Web Mercator view or a local projected view with a finite,
-positive linear unit scale (`metersPerUnit`). This includes views in metres,
-international feet, and US survey feet. Geographic local scenes and local Web
-Mercator are unsupported. Explicit start longitude and latitude are WGS84 and
+Use Web Mercator in global or local mode, or another local projected view with a
+finite, positive linear unit scale (`metersPerUnit`). This includes views in
+metres, international feet, and US survey feet. Geographic local scenes are
+unsupported. Explicit start longitude and latitude are WGS84 and
 are projected into the local scene.
 
 A view's global/local mode is fixed at creation. To change it, create and assign a replacement view or scene element. See [Scene distance semantics](configuration.md#scene-distance-semantics) for horizontal and vertical units.

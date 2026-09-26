@@ -5,6 +5,7 @@
  * failed map/view setup can roll back before the old resources are destroyed.
  */
 import ArcGISMap from "@arcgis/core/Map.js";
+import esriConfig from "@arcgis/core/config.js";
 import Point from "@arcgis/core/geometry/Point.js";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference.js";
 import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator.js";
@@ -72,6 +73,8 @@ import { mountFlightControls } from "../shared/flight-controls";
 import "./style.css";
 
 const SCENE_LOAD_TIMEOUT_MS = 60_000;
+// This public demo never requests ArcGIS credentials, including for private layers inside a shared WebScene.
+esriConfig.request.useIdentity = false;
 const DEFAULT_START_SPEED_MPS = 100;
 /** Custom WebScenes start this high above the ground, below most city skylines. */
 const WEBSCENE_START_HEIGHT_M = 150;
@@ -133,6 +136,7 @@ const websceneSearchButton = requiredElement<HTMLCalciteButtonElement>("#webscen
 const websceneSort = requiredElement<HTMLCalciteSelectElement>("#webscene-sort");
 const websceneResults = requiredElement<HTMLElement>("#webscene-results");
 const websceneSearchSummary = requiredElement<HTMLElement>("[data-webscene-search-summary]");
+const gaussianSearchButton = requiredElement<HTMLCalciteButtonElement>("#webscene-gaussian-search");
 const itemIdForm = requiredElement<HTMLFormElement>("#item-id-form");
 const itemIdInput = requiredElement<HTMLCalciteInputTextElement>("#webscene-item-id");
 const sceneLoadNotice = requiredElement<HTMLCalciteNoticeElement>("#scene-load-notice");
@@ -763,7 +767,7 @@ function webSceneCard(result: WebSceneSearchResult): HTMLCalciteCardElement {
 async function refreshWebSceneSearch(searchText: string): Promise<void> {
   const query = searchText.trim();
   if (!query) {
-    websceneSearchSummary.textContent = "Enter words to search for public WebScenes.";
+    websceneSearchSummary.textContent = "Enter a place or topic to search.";
     await websceneSearchInput.setFocus();
     return;
   }
@@ -781,8 +785,8 @@ async function refreshWebSceneSearch(searchText: string): Promise<void> {
     if (websceneSearchController !== controller) return;
     websceneResults.replaceChildren(...results.map(webSceneCard));
     websceneSearchSummary.textContent = results.length
-      ? `${results.length} public ${results.length === 1 ? "WebScene" : "WebScenes"}. Choose Fly to load one.`
-      : "No public WebScenes matched. Try other words.";
+      ? `${results.length} ${results.length === 1 ? "WebScene" : "WebScenes"} found. Choose Fly to load one.`
+      : "No matching WebScenes. Try another place or topic.";
   } catch (error) {
     if (isAbortError(error)) return;
     websceneResults.replaceChildren();
@@ -822,6 +826,11 @@ websceneSearchForm.addEventListener("submit", (event) => {
   void refreshWebSceneSearch(websceneSearchInput.value);
 });
 websceneSort.addEventListener("calciteSelectChange", () => {
+  void refreshWebSceneSearch(websceneSearchInput.value);
+});
+gaussianSearchButton.addEventListener("click", () => {
+  websceneSearchInput.value = "Gaussian splat";
+  websceneSort.value = "recent";
   void refreshWebSceneSearch(websceneSearchInput.value);
 });
 websceneSearchInput.value = DEFAULT_WEBSCENE_QUERY;

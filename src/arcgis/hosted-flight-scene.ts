@@ -520,6 +520,7 @@ export async function initializeHostedFlightScene(
       startPoint,
       config.assets,
       signal,
+      view.viewingMode,
     );
     assertNotAborted();
     const initialAircraft = createAircraftBundle(initialMeshes, config.assets);
@@ -532,7 +533,7 @@ export async function initializeHostedFlightScene(
       visualPitchDeg: activeAircraft.assets.visualPitchDeg,
       point: startPoint,
       metersPerUnit,
-      webMercator: coordinateMode === "web-mercator",
+      webMercator: coordinateMode === "web-mercator" && view.viewingMode === "global",
     });
     resources.add("aircraft positions", DISPOSAL_ORDER.accessor, () => aircraftPresenter.destroy());
 
@@ -694,7 +695,7 @@ export async function initializeHostedFlightScene(
         verticalFovDegrees,
         deltaSeconds,
         viewport: { width: view.width, height: view.height },
-        webMercator: coordinateMode === "web-mercator",
+        webMercator: coordinateMode === "web-mercator" && view.viewingMode === "global",
         bankedViewport: bankedViewport && sceneRoll.appliesRoll,
         reducedMotion: reducedMotion.matches,
         elevationAtWorld,
@@ -747,6 +748,7 @@ export async function initializeHostedFlightScene(
               startPoint,
               assets,
               aircraftLoadController.signal,
+              view.viewingMode,
             ).then((meshes) => {
               if (destroyed) {
                 for (const mesh of meshes) if (mesh && !mesh.destroyed) mesh.destroy();

@@ -115,9 +115,9 @@ export async function verifyPublicWebSceneAccess(
     if (timeout.aborted) throw new Error("ArcGIS did not return item details within 10 seconds.");
     throw error;
   }
-  if (!response.ok) throw new Error("This WebScene is private or unavailable. Choose another public WebScene.");
+  if (!response.ok) throw new Error("This WebScene may be private or unavailable. Choose another scene.");
   const metadata = await response.json() as { type: string | undefined; access: string | undefined; error?: unknown };
-  if (metadata.error) throw new Error("This WebScene is private or unavailable. Choose another public WebScene.");
+  if (metadata.error) throw new Error("This WebScene may be private or unavailable. Choose another scene.");
   validatePublicWebSceneItem(metadata);
 }
 

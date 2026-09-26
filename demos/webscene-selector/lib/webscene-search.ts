@@ -11,7 +11,7 @@ export const ARCGIS_ONLINE_URL = "https://www.arcgis.com";
 /** Maximum number of WebScene cards shown per search. */
 export const WEBSCENE_SEARCH_RESULT_LIMIT = 10;
 /** Query shown when the WebScene tab first opens. */
-export const DEFAULT_WEBSCENE_QUERY = "3D city";
+export const DEFAULT_WEBSCENE_QUERY = "city mesh";
 export type WebSceneSearchSort = "most-viewed" | "recent" | "best-match";
 export const DEFAULT_WEBSCENE_SORT: WebSceneSearchSort = "most-viewed";
 
@@ -101,7 +101,7 @@ export async function searchPublicWebScenes(
   options: { signal?: AbortSignal; client?: WebSceneSearchClient; sort?: WebSceneSearchSort } = {},
 ): Promise<WebSceneSearchResult[]> {
   const query = webSceneSearchQuery(searchText);
-  if (!query) throw new Error("Enter words to search for public WebScenes.");
+  if (!query) throw new Error("Enter a place or topic to search.");
   const client = options.client ?? DEFAULT_WEBSCENE_SEARCH_CLIENT;
   const sort = options.sort ?? DEFAULT_WEBSCENE_SORT;
   let items = await client.queryItems(searchParameters(query, sort), { signal: options.signal });

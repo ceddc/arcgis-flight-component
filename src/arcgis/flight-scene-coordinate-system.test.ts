@@ -16,6 +16,12 @@ describe("flight scene coordinate systems", () => {
     const position = { x: 850000, y: 6000000, z: 3000 };
     expect(flightToScenePosition(position, flightSceneMetersPerUnit(mode, sr))).toEqual(position);
   });
+  it("applies Web Mercator scaling in a local scene", () => {
+    const sr = { isGeographic: false, isWebMercator: true, metersPerUnit: 1 };
+    const mode = flightSceneCoordinateMode("local", sr);
+    expect(mode).toBe("web-mercator");
+    expect(flightSceneMetersPerUnit(mode, sr)).toBe(1);
+  });
   it.each([1, 0.3048, 1200 / 3937])("preserves physical movement, clearance, and camera distances at scale %s", scale => {
     const sr = { isGeographic: false, isWebMercator: false, metersPerUnit: scale };
     expect(flightSceneMetersPerUnit(flightSceneCoordinateMode("local", sr), sr)).toBe(scale);
@@ -41,9 +47,9 @@ describe("flight scene coordinate systems", () => {
       expect(metricDistance).toBeGreaterThan(0);
     }
   });
-  it("rejects geographic, local Web Mercator, other global, and invalid linear units", () => {
+  it("rejects geographic, other global, and invalid linear units", () => {
     const sr = { isGeographic: false, isWebMercator: false, metersPerUnit: 1 };
-    for (const invalid of [{ ...sr, isGeographic: true }, { ...sr, isWebMercator: true },
+    for (const invalid of [{ ...sr, isGeographic: true },
       ...[0, -1, NaN, Infinity].map(metersPerUnit => ({ ...sr, metersPerUnit }))]) {
       expect(() => flightSceneCoordinateMode("local", invalid)).toThrow(/projected linear coordinates/);
     }

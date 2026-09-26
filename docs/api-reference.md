@@ -287,7 +287,7 @@ interface VehicleState {
 The optional fields hold the Paraglider's controls and motion rates, and
 the Space Jet's turn and pitch rates.
 
-Local snapshot positions use metres: projected XY is multiplied by the spatial reference's metres-per-unit scale. Local speed is metres per second. This supports any local projected linear coordinate system with a finite, positive scale, including views in feet. Global Web Mercator retains projected XY and projected units per second. Vertical position uses metres and vertical speed uses metres per second. Angles use degrees. See [Scene distance semantics](configuration.md#scene-distance-semantics).
+Local snapshot positions use metres: projected XY is multiplied by the spatial reference's metres-per-unit scale. Local speed is metres per second. This supports local Web Mercator and other local projected linear coordinate systems with a finite, positive scale, including views in feet. Global Web Mercator retains projected XY and projected units per second. Vertical position uses metres and vertical speed uses metres per second. Angles use degrees. See [Scene distance semantics](configuration.md#scene-distance-semantics).
 
 ### Gamepad status
 

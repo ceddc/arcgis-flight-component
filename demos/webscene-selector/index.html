@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#ffffff" />
     <meta
       name="description"
-      content="Choose a curated start, search an address, or load a public ArcGIS Online WebScene, then fly it with the reusable plane navigation component."
+      content="Choose a curated start, search an address, or load an ArcGIS Online WebScene, then fly it with the reusable plane navigation component."
     />
     <title>Scene explorer demo | ArcGIS Flight Component</title>
   </head>
@@ -179,8 +179,8 @@
               <calcite-input-text
                 id="webscene-search"
                 icon="search"
-                label-text="Search public WebScenes"
-                placeholder="City, airport, or topic"
+                label-text="Search WebScenes"
+                placeholder="City mesh, Gaussian splat, or place"
                 autocomplete="off"
                 max-length="120"
                 clearable
@@ -198,8 +198,9 @@
               </calcite-select>
             </calcite-label>
             <p class="search-summary" data-webscene-search-summary aria-live="polite">
-              Search public WebScenes on ArcGIS Online.
+              Find WebScenes on ArcGIS Online.
             </p>
+            <calcite-button id="webscene-gaussian-search" appearance="transparent" scale="s">Explore recent Gaussian splats</calcite-button>
             <div class="webscene-results" id="webscene-results" aria-label="WebScene search results"></div>
             <p class="item-id-heading">Or paste an item ID</p>
             <form class="item-id-form" id="item-id-form" novalidate>
@@ -220,7 +221,7 @@
               </calcite-button>
             </form>
             <p class="item-id-help">
-              Public WebScenes in global Web Mercator or a local projected coordinate system.
+              Paste the ID of a WebScene shared with everyone on ArcGIS Online.
             </p>
           </calcite-tab>
         </calcite-tabs>

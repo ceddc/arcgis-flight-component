@@ -1,7 +1,7 @@
 /**
  * Convert positions between simulation metres and supported ArcGIS scene units.
- * Global Web Mercator keeps the existing metre-based coordinates; local
- * projected views use their spatial reference scale and reject unsupported modes.
+ * Web Mercator keeps the existing metre-based coordinates in either view mode;
+ * other local projected views use their spatial reference scale.
  */
 /** Converts positions between simulation metres and the supported ArcGIS scene units. */
 export type FlightSceneCoordinateMode = "web-mercator" | "local-projected";
@@ -16,10 +16,9 @@ export interface FlightSceneSpatialReference {
 /**
  * Select a supported coordinate strategy for the current 3D scene.
  *
- * Global Web Mercator scenes retain the component's established projected XY
- * behavior. Local scenes are accepted only for projected systems with a finite,
- * positive metres-per-unit scale; geographic and unsupported combinations fail
- * early rather than silently distorting camera motion.
+ * Web Mercator scenes retain the component's projected XY and latitude scale
+ * behavior in either view mode. Other local projected scenes need a finite,
+ * positive metres-per-unit scale; geographic and unsupported combinations fail.
  *
  * @param viewingMode ArcGIS view mode (`global` or `local`).
  * @param spatialReference Coordinate-system properties from the view.
@@ -30,7 +29,7 @@ export function flightSceneCoordinateMode(
   viewingMode: "global" | "local",
   spatialReference: FlightSceneSpatialReference,
 ): FlightSceneCoordinateMode {
-  if (viewingMode === "global" && spatialReference.isWebMercator) {
+  if (spatialReference.isWebMercator && (viewingMode === "global" || viewingMode === "local")) {
     return "web-mercator";
   }
   if (
@@ -43,7 +42,7 @@ export function flightSceneCoordinateMode(
     return "local-projected";
   }
   throw new Error(
-    "Plane navigation requires either a global Web Mercator scene or a local scene with projected linear coordinates.",
+    "Plane navigation requires Web Mercator or a local scene with projected linear coordinates.",
   );
 }
 

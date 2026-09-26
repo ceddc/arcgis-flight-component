@@ -122,9 +122,9 @@ public Geneva imagery, terrain, and 3D building services. Its
 
 ## Local scenes in feet
 
-Use a global Web Mercator view or a local projected view with linear units,
-such as metres, feet, or US survey feet. Geographic local scenes and local Web
-Mercator are unsupported.
+Use Web Mercator in global or local mode, or another local projected view with
+linear units such as metres, feet, or US survey feet. Geographic local scenes
+are unsupported.
 
 For a local view, set its coordinate system when you create it:
 

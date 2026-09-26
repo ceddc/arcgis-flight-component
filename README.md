@@ -111,9 +111,9 @@ to SITG imagery, terrain, and building services.
 
 Node.js 20+ for development, ArcGIS Maps SDK for JavaScript 4.30 through 5.1,
 and a browser with WebGL. The default import targets SDK 5.1; older supported
-SDKs use a matching package subpath. Scenes must use global Web Mercator or
-a local projected coordinate system with linear units (including metres, feet,
-and US survey feet).
+SDKs use a matching package subpath. Scenes may use Web Mercator in global or
+local mode, or another local projected coordinate system with linear units
+(including metres, feet, and US survey feet).
 See [local scene setup](https://ceddc.github.io/arcgis-flight-component/getting-started.html#local-scenes-in-feet).
 
 ## Attribution

@@ -98,6 +98,7 @@ export async function queryInitialGroundElevation(
  * @param startPoint Scene location used as the mesh's load anchor.
  * @param assets URLs for the body and optional propeller/boost meshes.
  * @param signal Optional cancellation signal owned by scene initialization.
+ * @param viewingMode Local scenes need georeferenced mesh vertices, including Web Mercator.
  * @returns Body, propeller and boost mesh slots in that order; optional slots are `null`.
  */
 export async function loadAircraftMeshes(
@@ -105,6 +106,7 @@ export async function loadAircraftMeshes(
   startPoint: Point,
   assets: AircraftAssetConfig,
   signal?: AbortSignal,
+  viewingMode: "global" | "local" = "global",
 ): Promise<[Mesh, Mesh | null, Mesh | null]> {
   signal?.throwIfAborted();
 
@@ -150,8 +152,10 @@ export async function loadAircraftMeshes(
       const mesh = await createFromGLTF(startPoint, url, {
         signal: loadAbort.signal,
         vertexSpace: (
-          startPoint.spatialReference.isGeographic
-          || startPoint.spatialReference.isWebMercator
+          viewingMode !== "local" && (
+            startPoint.spatialReference.isGeographic
+            || startPoint.spatialReference.isWebMercator
+          )
         ) ? "local" : "georeferenced",
       });
       if (failed) destroyMesh(mesh);

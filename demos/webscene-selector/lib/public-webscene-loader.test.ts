@@ -36,7 +36,7 @@ describe("public WebScene loader", () => {
     })).rejects.toThrow(/private or unavailable/);
     await expect(verifyPublicWebSceneAccess("c".repeat(32), {
       fetchItem: async () => ({ ok: true, json: async () => ({ type: "Web Scene", access: "private" }) }),
-    })).rejects.toThrow(/public WebScenes only/);
+    })).rejects.toThrow(/not shared with everyone/);
   });
 
   it("cancels a replaced item load and releases its resource", async () => {

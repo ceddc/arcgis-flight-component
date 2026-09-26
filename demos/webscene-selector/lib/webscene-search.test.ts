@@ -88,7 +88,7 @@ describe("public WebScene search", () => {
 
   it("rejects empty searches without calling the portal", async () => {
     const client = clientWith([]);
-    await expect(searchPublicWebScenes("   ", { client })).rejects.toThrow(/Enter words/);
+    await expect(searchPublicWebScenes("   ", { client })).rejects.toThrow(/Enter a place or topic/);
     expect(client.queryItems).not.toHaveBeenCalled();
   });
 });
