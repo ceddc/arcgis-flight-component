@@ -180,7 +180,7 @@
                 id="webscene-search"
                 icon="search"
                 label-text="Search WebScenes"
-                placeholder="City mesh, Gaussian splat, or place"
+                placeholder="Search by place or topic"
                 autocomplete="off"
                 max-length="120"
                 clearable
@@ -189,7 +189,7 @@
                 Search
               </calcite-button>
             </form>
-            <calcite-label class="webscene-sort-label" scale="s">
+            <calcite-label class="webscene-sort-label" scale="s" hidden>
               Order by
               <calcite-select id="webscene-sort" label="Order WebScenes">
                 <calcite-option value="most-viewed" selected>Most viewed</calcite-option>
@@ -198,10 +198,9 @@
               </calcite-select>
             </calcite-label>
             <p class="search-summary" data-webscene-search-summary aria-live="polite">
-              Find WebScenes on ArcGIS Online.
+              Featured 3D scenes selected for flying.
             </p>
-            <calcite-button id="webscene-gaussian-search" appearance="transparent" scale="s">Explore recent Gaussian splats</calcite-button>
-            <div class="webscene-results" id="webscene-results" aria-label="WebScene search results"></div>
+            <div class="webscene-results" id="webscene-results" aria-label="WebScenes"></div>
             <p class="item-id-heading">Or paste an item ID</p>
             <form class="item-id-form" id="item-id-form" novalidate>
               <calcite-label scale="s">

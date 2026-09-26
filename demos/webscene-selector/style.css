@@ -26,8 +26,7 @@
 .search-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px; }
 .webscene-sort-label { margin-block-start: 12px; }
 .search-summary, .item-id-help, .empty-results { color: var(--calcite-color-text-3); font-size: var(--calcite-font-size--1); line-height: 1.5; }
-.search-summary { margin: 12px 0 4px; }
-#webscene-gaussian-search { display: inline-block; margin-block-end: 16px; }
+.search-summary { margin: 12px 0 16px; }
 .empty-results { padding: 32px 16px; text-align: center; }
 .item-id-form { display: grid; gap: 16px; }
 .item-id-form calcite-label { margin: 0; }

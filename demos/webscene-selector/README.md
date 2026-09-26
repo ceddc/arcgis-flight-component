@@ -10,10 +10,10 @@ Run `npm run dev`, then open
 `http://127.0.0.1:3116/demos/webscene-selector/`.
 
 The suggested places use imagery and elevation. Address search uses Esri
-World Geocoder without storing queries or results. The WebScene tab searches
-public WebScenes on ArcGIS Online and shows each match as a card with its
-thumbnail, owner, update date, and a link to the item page. The picker checks
-that the item is a public Web Scene, then loads it and applies the flight
+World Geocoder without storing queries or results. The WebScene tab opens with
+four featured 3D scenes and an empty search field. Searches return public
+WebScenes on ArcGIS Online with thumbnails, owners, update dates, and item links.
+The picker checks that the item is a public Web Scene, then loads it and applies the flight
 component's rule: Web Mercator in either view mode, or a local scene with
 projected linear coordinates. Flight starts from the scene's initial camera, a little
 short of what it looks at and 150 m above the ground.

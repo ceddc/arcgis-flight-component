@@ -61,7 +61,7 @@ import {
   type AddressSearchResult,
 } from "./lib/address-search";
 import {
-  DEFAULT_WEBSCENE_QUERY,
+  ARCGIS_ONLINE_URL,
   DEFAULT_WEBSCENE_SORT,
   searchPublicWebScenes,
   type WebSceneSearchResult,
@@ -80,6 +80,14 @@ const DEFAULT_START_SPEED_MPS = 100;
 const WEBSCENE_START_HEIGHT_M = 150;
 /** Start this far short of the point the scene's camera looks at, so flight heads into it. */
 const WEBSCENE_APPROACH_DISTANCE_M = 1_500;
+
+/** Public 3D scenes checked for visible content and usable flight starts. */
+const FEATURED_WEBSCENES = [
+  { id: "e444c4228ebc4aa4906980969123c4ee", title: "Nottingham, UK", caption: "Textured city mesh - Esri UK", thumbnail: "thumbnail/ago_downloaded.jpg" },
+  { id: "533e5f8b9d8547249795b6b0903146e8", title: "Milan, Italy", caption: "City mesh - Leica CityMapper", thumbnail: "thumbnail/ago_downloaded.png" },
+  { id: "dc2991b49a014ac79796797990d7c735", title: "Stuttgart, Germany", caption: "Aerial and terrestrial Gaussian splats", thumbnail: "thumbnail/ago_downloaded.png" },
+  { id: "2ff54a4eeff549fa8d203fd7c718d299", title: "Mesa, Arizona", caption: "City mesh - Nearmap", thumbnail: "thumbnail/ago_downloaded.jpeg" },
+] as const;
 
 type StatusTone = "loading" | "ready" | "error";
 
@@ -133,10 +141,10 @@ const addressSearchSummary = requiredElement<HTMLElement>(
 const websceneSearchForm = requiredElement<HTMLFormElement>("#webscene-search-form");
 const websceneSearchInput = requiredElement<HTMLCalciteInputTextElement>("#webscene-search");
 const websceneSearchButton = requiredElement<HTMLCalciteButtonElement>("#webscene-search-submit");
+const websceneSortLabel = requiredElement<HTMLElement>(".webscene-sort-label");
 const websceneSort = requiredElement<HTMLCalciteSelectElement>("#webscene-sort");
 const websceneResults = requiredElement<HTMLElement>("#webscene-results");
 const websceneSearchSummary = requiredElement<HTMLElement>("[data-webscene-search-summary]");
-const gaussianSearchButton = requiredElement<HTMLCalciteButtonElement>("#webscene-gaussian-search");
 const itemIdForm = requiredElement<HTMLFormElement>("#item-id-form");
 const itemIdInput = requiredElement<HTMLCalciteInputTextElement>("#webscene-item-id");
 const sceneLoadNotice = requiredElement<HTMLCalciteNoticeElement>("#scene-load-notice");
@@ -713,18 +721,20 @@ function updatedLabel(modified: Date | null): string {
 }
 
 /**
- * Creates a Calcite card for one WebScene search result: thumbnail, title,
- * owner and update date, a link to its ArcGIS Online item page, and a button
- * that loads it for flight.
+ * Creates a Calcite card for a featured scene or WebScene search result.
  */
-function webSceneCard(result: WebSceneSearchResult): HTMLCalciteCardElement {
+function webSceneCard(result: WebSceneSearchResult | (typeof FEATURED_WEBSCENES)[number]): HTMLCalciteCardElement {
+  const featured = "caption" in result;
+  const thumbnailUrl = featured
+    ? `${ARCGIS_ONLINE_URL}/sharing/rest/content/items/${result.id}/info/${result.thumbnail}`
+    : result.thumbnailUrl;
   const card = document.createElement("calcite-card");
   card.className = "webscene-card";
   card.thumbnailPosition = "inline-start";
-  if (result.thumbnailUrl) {
+  if (thumbnailUrl) {
     const thumbnail = document.createElement("img");
     thumbnail.slot = "thumbnail";
-    thumbnail.src = result.thumbnailUrl;
+    thumbnail.src = thumbnailUrl;
     thumbnail.alt = "";
     thumbnail.loading = "lazy";
     card.append(thumbnail);
@@ -734,14 +744,16 @@ function webSceneCard(result: WebSceneSearchResult): HTMLCalciteCardElement {
   heading.textContent = result.title;
   const description = document.createElement("span");
   description.slot = "description";
-  description.textContent = [
+  description.textContent = featured ? result.caption : [
     result.owner,
     result.numViews === null ? "" : `${result.numViews.toLocaleString()} views`,
     updatedLabel(result.modified),
   ].filter(Boolean).join(" · ");
   const link = document.createElement("calcite-link");
   link.slot = "footer-start";
-  link.href = result.itemPageUrl;
+  link.href = featured
+    ? `${ARCGIS_ONLINE_URL}/home/item.html?id=${result.id}`
+    : result.itemPageUrl;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.iconEnd = "launch";
@@ -758,6 +770,17 @@ function webSceneCard(result: WebSceneSearchResult): HTMLCalciteCardElement {
   return card;
 }
 
+/** Restores the curated scenes when the search field is empty. */
+function showFeaturedWebScenes(): void {
+  websceneSearchController?.abort();
+  websceneSearchController = null;
+  websceneSearchInput.loading = false;
+  websceneSearchButton.loading = false;
+  websceneSortLabel.hidden = true;
+  websceneSearchSummary.textContent = "Featured 3D scenes selected for flying.";
+  websceneResults.replaceChildren(...FEATURED_WEBSCENES.map(webSceneCard));
+}
+
 /**
  * Searches public WebScenes and renders the matches as cards. A newer search
  * cancels an older one, and the identity check stops stale responses.
@@ -767,10 +790,10 @@ function webSceneCard(result: WebSceneSearchResult): HTMLCalciteCardElement {
 async function refreshWebSceneSearch(searchText: string): Promise<void> {
   const query = searchText.trim();
   if (!query) {
-    websceneSearchSummary.textContent = "Enter a place or topic to search.";
-    await websceneSearchInput.setFocus();
+    showFeaturedWebScenes();
     return;
   }
+  websceneSortLabel.hidden = false;
   websceneSearchController?.abort();
   const controller = new AbortController();
   websceneSearchController = controller;
@@ -826,16 +849,13 @@ websceneSearchForm.addEventListener("submit", (event) => {
   void refreshWebSceneSearch(websceneSearchInput.value);
 });
 websceneSort.addEventListener("calciteSelectChange", () => {
-  void refreshWebSceneSearch(websceneSearchInput.value);
+  if (websceneSearchInput.value.trim()) void refreshWebSceneSearch(websceneSearchInput.value);
 });
-gaussianSearchButton.addEventListener("click", () => {
-  websceneSearchInput.value = "Gaussian splat";
-  websceneSort.value = "recent";
-  void refreshWebSceneSearch(websceneSearchInput.value);
+websceneSearchInput.addEventListener("calciteInputTextInput", () => {
+  if (!websceneSearchInput.value.trim()) showFeaturedWebScenes();
 });
-websceneSearchInput.value = DEFAULT_WEBSCENE_QUERY;
 websceneSort.value = DEFAULT_WEBSCENE_SORT;
-void refreshWebSceneSearch(DEFAULT_WEBSCENE_QUERY);
+showFeaturedWebScenes();
 
 itemIdForm.addEventListener("submit", (event) => {
   event.preventDefault();

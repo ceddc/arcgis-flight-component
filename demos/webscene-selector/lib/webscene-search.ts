@@ -10,8 +10,6 @@ import Portal from "@arcgis/core/portal/Portal.js";
 export const ARCGIS_ONLINE_URL = "https://www.arcgis.com";
 /** Maximum number of WebScene cards shown per search. */
 export const WEBSCENE_SEARCH_RESULT_LIMIT = 10;
-/** Query shown when the WebScene tab first opens. */
-export const DEFAULT_WEBSCENE_QUERY = "city mesh";
 export type WebSceneSearchSort = "most-viewed" | "recent" | "best-match";
 export const DEFAULT_WEBSCENE_SORT: WebSceneSearchSort = "most-viewed";
 
