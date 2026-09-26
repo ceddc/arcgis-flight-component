@@ -1,0 +1,32 @@
+<!doctype html>
+<!--
+  Browser host for repeatable SDK performance captures. It chooses the requested
+  SDK version, records page errors, and loads fixture.mjs so the runner can drive
+  fixed aircraft poses and collect frame measurements.
+-->
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flight component SDK benchmark</title>
+<link rel="icon" href="data:,">
+<style>html,body,#view{width:100%;height:100%;margin:0}body{overflow:hidden}#version{position:absolute;top:12px;left:12px;background:#fff;padding:8px 12px;font:14px system-ui;z-index:2}</style>
+<div id="view"></div><div id="version"></div>
+<script>
+  // Capture script and Promise failures so the parent Playwright process can report them.
+  window.addEventListener('error', event => { window.fixtureError = event.message; });
+  window.addEventListener('unhandledrejection', event => { window.fixtureError = String(event.reason?.message ?? event.reason); });
+  // This page accepts an SDK version; the more detailed compatibility matrix has its own host.
+  const query = new URLSearchParams(location.search);
+  const version = query.get('sdk') || '5.1';
+  if (!/^\d+\.\d+(\.\d+)?$/.test(version)) throw new Error('Invalid SDK version');
+  const root = `https://js.arcgis.com/${version}/`;
+  const style = document.createElement('link');
+  style.rel = 'stylesheet'; style.href = root + '@arcgis/core/assets/esri/themes/light/main.css';
+  document.head.append(style);
+  const map = document.createElement('script'); map.type = 'importmap';
+  map.textContent = JSON.stringify({ imports: { '@arcgis/core/': root + '@arcgis/core/' } });
+  document.head.append(map);
+  const entry = document.createElement('script'); entry.type = 'module'; entry.src = './fixture.mjs';
+  document.head.append(entry);
+</script>
+</html>

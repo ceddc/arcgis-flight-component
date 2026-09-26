@@ -1,0 +1,274 @@
+{
+  "schemaVersion": "2.1.0",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "dist/component/arcgis-flight-component.sdk-5.1.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "ArcgisPlaneNavigationElement",
+          "customElement": true,
+          "tagName": "arcgis-plane-navigation",
+          "description": "Adds aircraft flight, camera controls, and optional UI to a caller-owned ArcGIS 3D scene or SceneView. Import the package once to register the element.",
+          "superclass": {
+            "name": "HTMLElement",
+            "package": "global:"
+          },
+          "members": [
+            {
+              "kind": "field",
+              "name": "status",
+              "readonly": true,
+              "type": {
+                "text": "PlaneNavigationStatus"
+              },
+              "description": "Current lifecycle state. Read-only; reflected to the `status` HTML attribute."
+            },
+            {
+              "kind": "field",
+              "name": "view",
+              "type": {
+                "text": "SceneView | null"
+              },
+              "description": "Caller-owned 3D SceneView. Takes precedence over scene-element references and is never destroyed by the component."
+            },
+            {
+              "kind": "field",
+              "name": "referenceElement",
+              "type": {
+                "text": "FlightSceneElement | null"
+              },
+              "description": "Caller-owned `<arcgis-scene>` element. Takes precedence over `reference-element`; an assigned `view` takes precedence over both."
+            },
+            {
+              "kind": "field",
+              "name": "config",
+              "type": {
+                "text": "PlaneNavigationConfig"
+              },
+              "description": "Reading returns the complete normalized configuration. Assign a partial `PlaneNavigationConfigInput` to update it."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "reference-element",
+              "type": {
+                "text": "string"
+              },
+              "description": "ID of a caller-owned `<arcgis-scene>` in the same document. A directly assigned `view` or `referenceElement` property takes precedence."
+            },
+            {
+              "name": "start-longitude",
+              "type": {
+                "text": "number"
+              },
+              "description": "Starting longitude in degrees. Supply together with `start-latitude`."
+            },
+            {
+              "name": "start-latitude",
+              "type": {
+                "text": "number"
+              },
+              "description": "Starting latitude in degrees, from -90 to 90. Supply together with `start-longitude`."
+            },
+            {
+              "name": "start-altitude-m",
+              "type": {
+                "text": "number"
+              },
+              "description": "Starting absolute altitude in metres. Omit to start above sampled terrain."
+            },
+            {
+              "name": "start-heading-deg",
+              "type": {
+                "text": "number"
+              },
+              "description": "Starting heading in degrees clockwise from north."
+            },
+            {
+              "name": "start-speed-mps",
+              "type": {
+                "text": "number"
+              },
+              "description": "Initial forward speed. Uses metres per second in local scenes and projected scene units per second in global Web Mercator scenes."
+            },
+            {
+              "name": "camera-mode",
+              "type": {
+                "text": "\"chase\" | \"cockpit\""
+              },
+              "description": "Initial camera view. Changes to this attribute update the active flight without restarting it."
+            },
+            {
+              "name": "power-mode",
+              "type": {
+                "text": "\"slow\" | \"normal\" | \"turbo\""
+              },
+              "description": "Initial flight power mode: brake toward slow speed, cruise normally, or use turbo boost."
+            },
+            {
+              "name": "sensitivity",
+              "type": {
+                "text": "number"
+              },
+              "description": "Keyboard, gamepad, and touch control sensitivity, clamped to 0.5 through 2."
+            },
+            {
+              "name": "fov-deg",
+              "type": {
+                "text": "number"
+              },
+              "description": "Base camera field of view in degrees, clamped to 58 through 76."
+            },
+            {
+              "name": "invert-pitch-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Presence disables the default inverted pitch control. Remove the attribute to restore the default; `=\"false\"` still counts as present."
+            },
+            {
+              "name": "camera-roll-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Presence disables banked viewport roll during turns."
+            },
+            {
+              "name": "keyboard-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Presence disables keyboard flight input."
+            },
+            {
+              "name": "gamepad-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Presence disables gamepad flight input."
+            },
+            {
+              "name": "capture-scene-navigation-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Presence leaves ArcGIS scene navigation gestures under the host's control."
+            },
+            {
+              "name": "auto-start-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Presence initializes flight in the ready state; call `start()` to begin flying."
+            },
+            {
+              "name": "show-controls",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Presence shows the built-in flight toolbar."
+            },
+            {
+              "name": "joystick",
+              "type": {
+                "text": "\"auto\" | \"always\" | \"never\""
+              },
+              "description": "Touch joystick visibility. `auto` shows it on coarse-pointer devices, independently of the toolbar."
+            },
+            {
+              "name": "joystick-position",
+              "type": {
+                "text": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"top-start\" | \"top-end\" | \"bottom-start\" | \"bottom-end\""
+              },
+              "description": "ArcGIS scene slot for the touch joystick; defaults to `bottom-left`."
+            },
+            {
+              "name": "ui-position",
+              "type": {
+                "text": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"top-start\" | \"top-end\" | \"bottom-start\" | \"bottom-end\""
+              },
+              "description": "ArcGIS scene slot for the built-in toolbar; defaults to `bottom-end`."
+            },
+            {
+              "name": "ui-controls",
+              "type": {
+                "text": "string"
+              },
+              "description": "Unique toolbar controls separated by spaces or commas: `power`, `pause`, `camera`, `recover`."
+            },
+            {
+              "name": "show-speed",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Presence shows the speed readout in the built-in toolbar."
+            },
+            {
+              "name": "locale",
+              "type": {
+                "text": "\"auto\" | \"en\" | \"de\" | \"fr\" | \"it\" | \"es\""
+              },
+              "description": "Language for built-in controls. `auto` follows ArcGIS, document, then browser language."
+            },
+            {
+              "name": "status",
+              "type": {
+                "text": "PlaneNavigationStatus"
+              },
+              "fieldName": "status",
+              "description": "Read-only reflected lifecycle state; set by the component."
+            }
+          ],
+          "events": [
+            {
+              "name": "arcgisPlaneNavigationReady",
+              "type": {
+                "text": "PlaneNavigationReadyEvent"
+              },
+              "description": "Session initialized; detail contains the scene, view, and initial snapshot."
+            },
+            {
+              "name": "arcgisPlaneNavigationSnapshot",
+              "type": {
+                "text": "PlaneNavigationSnapshotEvent"
+              },
+              "description": "Flight state changed; detail contains the current snapshot."
+            },
+            {
+              "name": "arcgisPlaneNavigationError",
+              "type": {
+                "text": "PlaneNavigationErrorEvent"
+              },
+              "description": "Initialization or active scene failed; detail contains the Error."
+            },
+            {
+              "name": "arcgisPlaneNavigationStopped",
+              "type": {
+                "text": "PlaneNavigationStoppedEvent"
+              },
+              "description": "Explicit stop completed; detail reports the camera restoration policy."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ArcgisPlaneNavigationElement",
+          "declaration": {
+            "name": "ArcgisPlaneNavigationElement"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "arcgis-plane-navigation",
+          "declaration": {
+            "name": "ArcgisPlaneNavigationElement"
+          }
+        }
+      ]
+    }
+  ]
+}

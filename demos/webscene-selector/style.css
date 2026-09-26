@@ -1,0 +1,47 @@
+/*
+ * Lays out the scene explorer's status chip, settings panel, scene picker, and
+ * address results around the shared full-screen flight scene. Narrow-screen
+ * rules keep selection and settings controls reachable on mobile layouts.
+ */
+@import "../shared/theme.css";
+
+/* Status and settings controls live above the scene without taking over its UI. */
+.status-chip { margin-inline: 12px; max-width: min(320px, 30vw); }
+.settings-shell-panel { position: relative; z-index: 4; --calcite-shell-panel-width: 320px; }
+.settings-shell-panel calcite-panel { height: 100%; }
+.settings-content { padding: 0 20px 20px; }
+.settings-content > calcite-label { margin-block: 20px; }
+.switch-label { gap: 16px; padding-block-start: 20px; border-block-start: 1px solid var(--calcite-color-border-3); }
+.setting-copy { display: grid; gap: 4px; }
+.setting-copy strong { font-weight: 500; }
+.setting-copy span { color: var(--calcite-color-text-3); font-size: var(--calcite-font-size--2); }
+.scene-picker-shell { position: relative; z-index: 4; --calcite-shell-panel-width: 360px; }
+.scene-picker { height: 100%; }
+.scene-picker calcite-tabs { display: block; }
+/* Scroll long preset/search lists inside their panels rather than the whole page. */
+.scene-picker calcite-tab { padding: 16px 20px 20px; }
+.scene-list { display: block; --calcite-list-icon-color: var(--calcite-color-brand); --calcite-list-border-color: var(--calcite-color-border-3); }
+.scene-list:not(.search-results) { max-height: min(450px, calc(100dvh - 280px)); overflow-y: auto; }
+.search-results { max-height: 300px; overflow-y: auto; }
+.search-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.search-summary, .item-id-help, .empty-results { color: var(--calcite-color-text-3); font-size: var(--calcite-font-size--1); line-height: 1.5; }
+.search-summary { margin: 12px 0 16px; }
+.empty-results { padding: 32px 16px; text-align: center; }
+.item-id-form { display: grid; gap: 16px; }
+.item-id-form calcite-label { margin: 0; }
+.item-id-help { margin: 16px 0 0; }
+/* WebScene search results: compact cards with the thumbnail beside the text. */
+.webscene-results { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; overflow-x: hidden; max-height: min(430px, calc(100dvh - 380px)); overflow-y: auto; margin-block-end: 20px; }
+.webscene-card { --calcite-card-corner-radius: 8px; min-width: 0; }
+.webscene-card img { width: 104px; height: 100%; min-height: 96px; object-fit: cover; }
+.webscene-card [slot="heading"] { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.webscene-card [slot="description"] { color: var(--calcite-color-text-3); }
+.item-id-heading { margin: 0 0 8px; font-weight: 500; color: var(--calcite-color-text-2); font-size: var(--calcite-font-size--1); }
+@media (max-width: 720px) {
+  .status-chip { display: none; }
+  .flight-shell .app-header calcite-navigation-logo { max-width: calc(100vw - 148px); }
+  .settings-shell-panel { --calcite-shell-panel-width: min(320px, 100vw); }
+  .scene-picker-shell { position: absolute; inset-inline-start: 0; --calcite-shell-panel-width: min(360px, calc(100vw - 40px)); height: 55dvh; }
+  .scene-picker calcite-tab { padding-inline: 16px; }
+  .search-form { grid-template-columns: 1fr; }
+}

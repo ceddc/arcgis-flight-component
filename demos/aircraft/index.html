@@ -1,0 +1,87 @@
+<!--
+  Standalone aircraft/weather showcase. The ArcGIS scene and flight element
+  provide the runtime surface; the surrounding controls select aircraft,
+  atmosphere, camera, buildings, and flight actions through main.ts.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Four aircraft with buildings, weather, time, and picture capture.">
+  <title>Other aircraft demo | ArcGIS Flight Component</title>
+</head>
+<body class="calcite-mode-light">
+<calcite-shell class="flight-shell">
+  <calcite-navigation slot="header" class="app-header" scale="s" aria-label="ArcGIS Flight">
+    <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Other aircraft"></calcite-navigation-logo>
+    <div slot="content-end" class="header-actions"></div><!-- site-navigation -->
+  </calcite-navigation>
+  <main class="flight-stage flight" aria-label="Other aircraft demo">
+    <!-- The demo owns this global scene and passes it to the reusable flight element. -->
+    <arcgis-scene id="scene" class="flight-scene" basemap="satellite" ground="world-elevation" viewing-mode="global"
+      camera-position="-112.112, 36.099, 3200" camera-heading="95" camera-tilt="78" popup-disabled aria-label="Grand Canyon flight scene"></arcgis-scene>
+    <arcgis-plane-navigation id="flight" reference-element="scene"></arcgis-plane-navigation>
+
+    <!-- Compact upper-right actions open the aircraft and weather dialogs. -->
+    <div class="flight-top-actions">
+      <nav class="flight-top-menu" aria-label="Flight tools">
+        <button class="flight-tool" id="capture" type="button" title="Save picture" aria-label="Save picture"><calcite-icon icon="camera" scale="s"></calcite-icon><span>Photo</span></button>
+        <button class="flight-tool" id="camera" type="button" title="Change camera" aria-label="Change camera" disabled><calcite-icon icon="view-visible" scale="s"></calcite-icon><span>Camera</span></button>
+        <button class="flight-tool" id="buildings" type="button" title="Esri 3D Buildings" aria-label="Show Esri 3D Buildings" aria-pressed="false" disabled><calcite-icon icon="urban-model" scale="s"></calcite-icon><span>Buildings</span></button>
+        <button class="aircraft-control" id="aircraft-control" type="button" aria-label="Choose aircraft" aria-haspopup="dialog" aria-expanded="false" aria-controls="aircraft-panel"><span class="aircraft-button-icon"><img id="active-aircraft-image" src="../../models/fleet/classic.png" alt=""></span><calcite-icon icon="chevron-down" scale="s"></calcite-icon></button>
+        <button class="weather-control" id="weather-control" type="button" aria-label="Choose weather and time" aria-haspopup="dialog" aria-expanded="false" aria-controls="weather-panel"><span class="weather-button-icon"><calcite-icon id="active-weather-icon" icon="brightness" scale="m"></calcite-icon><calcite-icon class="weather-clock-icon" icon="clock" scale="s"></calcite-icon></span><calcite-icon icon="chevron-down" scale="s"></calcite-icon></button>
+      </nav>
+    </div>
+
+    <!-- Radio-style model choices and the selected model's flight profile. -->
+    <section class="floating-panel aircraft-panel" id="aircraft-panel" role="dialog" hidden aria-labelledby="aircraft-title">
+      <header><span id="aircraft-title">Choose aircraft</span><button type="button" data-close-panel aria-label="Close aircraft selector"><calcite-icon icon="x" scale="s"></calcite-icon></button></header>
+      <div class="aircraft-options" role="radiogroup" aria-label="Aircraft">
+        <button class="aircraft-option" type="button" role="radio" data-aircraft="classic" aria-checked="true"><img src="../../models/fleet/classic.png" alt=""><strong>Classic <span>Recommended</span></strong><small>Balanced and easy</small><calcite-icon class="selection-check" icon="check" scale="s"></calcite-icon></button>
+        <button class="aircraft-option" type="button" role="radio" data-aircraft="super-jet" aria-checked="false" tabindex="-1"><img src="../../models/fleet/super-jet.png" alt=""><strong>Super Jet</strong><small>Fast, wide turns</small><calcite-icon class="selection-check" icon="check" scale="s"></calcite-icon></button>
+        <button class="aircraft-option" type="button" role="radio" data-aircraft="space-jet" aria-checked="false" tabindex="-1"><img src="../../models/fleet/space-jet.png" alt=""><strong>Space Jet</strong><small>Vertical thrusters</small><calcite-icon class="selection-check" icon="check" scale="s"></calcite-icon></button>
+        <button class="aircraft-option" type="button" role="radio" data-aircraft="paraglider" aria-checked="false" tabindex="-1"><img src="../../models/fleet/paraglider.png" alt=""><strong>Paraglider</strong><small>Gentle unpowered glide</small><calcite-icon class="selection-check" icon="check" scale="s"></calcite-icon></button>
+      </div>
+      <div class="aircraft-details">
+        <div><strong id="aircraft-name">Classic</strong><span id="aircraft-kind">Propeller plane</span></div>
+        <p id="aircraft-description"></p>
+        <dl><div><dt>Cruise</dt><dd id="cruise"></dd></div><div><dt id="top-label">Turbo</dt><dd id="top-speed"></dd></div><div><dt>Bank</dt><dd id="bank"></dd></div></dl>
+        <p id="aircraft-controls" class="control-hint"></p><a href="../../custom-aircraft.html">Use another model or flight profile</a>
+      </div>
+    </section>
+
+    <!-- Weather presets and local-solar-time slider are owned by this demo. -->
+    <section class="floating-panel weather-panel" id="weather-panel" role="dialog" hidden aria-labelledby="weather-title">
+      <header><span id="weather-title">Weather</span><button type="button" data-close-panel aria-label="Close weather selector"><calcite-icon icon="x" scale="s"></calcite-icon></button></header>
+      <div class="weather-options" role="radiogroup" aria-label="Weather preset">
+        <button type="button" data-weather="clear" aria-checked="true" role="radio"><calcite-icon icon="brightness" scale="l"></calcite-icon><span>Clear</span></button>
+        <button type="button" data-weather="wispy" aria-checked="false" role="radio" tabindex="-1"><calcite-icon icon="partly-cloudy" scale="l"></calcite-icon><span>Wispy</span></button>
+        <button type="button" data-weather="scattered" aria-checked="false" role="radio" tabindex="-1"><calcite-icon icon="cloudy" scale="l"></calcite-icon><span>Scattered</span></button>
+        <button type="button" data-weather="cloudy" aria-checked="false" role="radio" tabindex="-1"><calcite-icon icon="cloud" scale="l"></calcite-icon><span>Cloudy</span></button>
+        <button type="button" data-weather="rain" aria-checked="false" role="radio" tabindex="-1"><calcite-icon icon="rain" scale="l"></calcite-icon><span>Rain</span></button>
+        <button type="button" data-weather="snow" aria-checked="false" role="radio" tabindex="-1"><calcite-icon icon="snow" scale="l"></calcite-icon><span>Snow</span></button>
+        <button type="button" data-weather="fog" aria-checked="false" role="radio" tabindex="-1"><calcite-icon icon="effects" scale="l"></calcite-icon><span>Fog</span></button>
+      </div>
+      <div class="weather-time">
+        <div class="weather-time-heading"><label for="weather-time">Time</label><div><output id="weather-time-value" for="weather-time">12:00</output><button id="weather-noon" type="button" title="Reset to noon" aria-label="Reset time to noon"><calcite-icon icon="clock" scale="s"></calcite-icon></button></div></div>
+        <input id="weather-time" type="range" min="0" max="1440" step="15" value="720" aria-describedby="weather-time-hint">
+        <div class="weather-time-ticks" aria-hidden="true"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+        <small id="weather-time-hint">Local solar time at the Grand Canyon departure.</small>
+      </div>
+    </section>
+
+    <!-- Persistent lower flight bar: status, start/pause, power, and recovery. -->
+    <nav class="flight-hub" aria-label="Flight controls">
+      <output id="speed" aria-label="Current speed">0 km/h</output>
+      <button class="hub-action hub-action--primary" id="fly" type="button" disabled><calcite-icon icon="play" scale="s"></calcite-icon><span>Loading...</span></button>
+      <label id="power-label">Power <select id="power"><option value="slow">Slow</option><option value="normal" selected>Cruise</option><option value="turbo">Turbo</option></select></label>
+      <button class="hub-action" id="recover" type="button" aria-label="Recover" disabled><calcite-icon icon="reset" scale="s"></calcite-icon><span>Recover</span></button>
+    </nav>
+    <p id="status" role="status">Loading the Grand Canyon...</p><p id="notice" class="notice" role="status" hidden></p>
+  </main>
+</calcite-shell>
+<!-- Vite compiles this module and its imported aircraft, weather, and view logic. -->
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

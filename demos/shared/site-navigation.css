@@ -1,0 +1,54 @@
+/*
+ * Defines the shared brand colors and Calcite navigation treatment used by
+ * both documentation and demos. Header sizing, active links, and compact
+ * layouts remain consistent as each page supplies its own content.
+ */
+:root, .calcite-mode-light {
+  --calcite-color-brand: #007ac2;
+  --calcite-color-brand-hover: #00619b;
+  --calcite-color-brand-press: #004e7d;
+  --calcite-color-focus: #007ac2;
+  --calcite-color-brand-underline: #007ac2;
+  color-scheme: light;
+}
+.app-header {
+  --calcite-navigation-background-color: #fff;
+  --calcite-navigation-border-color: #e4e8eb;
+}
+.app-header calcite-navigation-logo { min-width: 0; }
+.header-actions { display: flex; align-items: center; gap: 4px; padding-inline: 12px; }
+.site-navigation-bar { --calcite-navigation-background-color: #fff; container-type: inline-size; }
+.site-navigation { display: flex; gap: 4px; padding-inline: 16px; }
+.site-navigation calcite-button {
+  height: 44px;
+  border-block-end: 2px solid transparent;
+  --calcite-button-corner-radius: 0;
+}
+.site-navigation calcite-button[aria-current="page"] {
+  border-block-end-color: var(--calcite-color-brand);
+  --calcite-button-background-color: #eef7fd;
+  --calcite-button-text-color: #00619b;
+}
+.sample-menu { display: none; }
+@media (max-width: 720px), (max-height: 500px) and (any-pointer: coarse) {
+  /* Replace the wide navigation row with touch-sized sample links and menu. */
+  .header-actions { gap: 0; padding-inline: 4px; }
+  .header-actions calcite-action { width: 44px; height: 44px; }
+  .site-navigation {
+    gap: 0;
+    padding-inline: 0;
+    height: 44px;
+    max-width: 100cqw;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+  .site-navigation-demo { display: block; }
+  .app-header calcite-navigation-logo { max-width: calc(100vw - 148px); }
+  .flight-shell .site-navigation-bar { display: none; }
+  .flight-shell .app-header { position: relative; z-index: 10; }
+  .flight-shell .app-header calcite-navigation-logo { max-width: calc(100vw - 104px); }
+  .sample-menu { display: block; margin-inline-end: max(4px, env(safe-area-inset-right)); }
+  .sample-menu calcite-action { width: 44px; height: 44px; }
+  .sample-menu calcite-dropdown-item { min-height: 44px; }
+}

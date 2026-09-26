@@ -1,0 +1,239 @@
+<!--
+  Interactive scene explorer. main.ts wires the tabs, settings, curated starts,
+  geocoder, and public WebScene loader to the flight component and scene host.
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Choose a curated start, search an address, or load a public ArcGIS Online WebScene, then fly it with the reusable plane navigation component."
+    />
+    <title>Scene explorer demo | ArcGIS Flight Component</title>
+  </head>
+  <body class="calcite-mode-light">
+    <calcite-shell class="flight-shell">
+      <calcite-navigation slot="header" class="app-header" scale="s" aria-label="ArcGIS Flight">
+        <calcite-navigation-logo
+          slot="logo"
+          icon="plane"
+          heading="ArcGIS Flight"
+          description="Scene explorer"
+          data-scene-title
+        ></calcite-navigation-logo>
+        <calcite-chip
+          slot="content-end"
+          class="status-chip"
+          data-status
+          kind="neutral"
+          appearance="outline-fill"
+          scale="s"
+          icon="information"
+          aria-live="polite"
+        >Waiting for a starting point</calcite-chip>
+        <div slot="content-end" class="header-actions">
+        <calcite-action
+          id="settings-toggle"
+          icon="gear"
+          text="Settings"
+          label="Show flight settings"
+        ></calcite-action>
+        </div>
+        <!-- site-navigation -->
+      </calcite-navigation>
+
+      <main class="flight-stage">
+        <!-- Replaced only when a WebScene needs a different immutable view setup. -->
+        <arcgis-scene
+          id="flight-scene"
+          basemap="satellite"
+          ground="world-elevation"
+          popup-disabled
+          aria-label="ArcGIS 3D flight scene"
+        ></arcgis-scene>
+
+        <arcgis-plane-navigation
+          id="plane-navigation"
+          start-speed-mps="100"
+          camera-mode="chase"
+          power-mode="normal"
+          sensitivity="0.8"
+          fov-deg="65"
+          auto-start-disabled
+        ></arcgis-plane-navigation>
+
+      </main>
+
+      <!-- Optional tuning controls; values are applied to the navigation element. -->
+      <calcite-shell-panel
+        slot="panel-end"
+        class="settings-shell-panel"
+        id="settings-shell-panel"
+        display-mode="dock"
+        width="s"
+        hidden
+      >
+        <calcite-panel
+          id="settings-panel"
+          heading="Flight settings"
+          closable
+        >
+          <calcite-block
+            heading="Controls and camera"
+            description="Changes apply immediately"
+            icon-start="gear"
+            expanded
+          >
+            <div class="settings-content">
+              <calcite-label scale="s">
+                Sensitivity
+                <calcite-slider id="sensitivity" min="0.5" max="2" step="0.05" value="0.8" label-handles precise></calcite-slider>
+              </calcite-label>
+
+              <calcite-label scale="s">
+                Field of view
+                <calcite-slider id="fov" min="58" max="76" step="1" value="65" label-handles></calcite-slider>
+              </calcite-label>
+
+              <calcite-label class="switch-label" layout="inline-space-between" scale="s">
+                <span class="setting-copy">
+                  <strong>Aircraft pitch</strong>
+                  <span>Pull back to climb</span>
+                </span>
+                <calcite-switch id="invert-pitch" label="Pull back to climb" checked></calcite-switch>
+              </calcite-label>
+
+              <calcite-label class="switch-label" layout="inline-space-between" scale="s">
+                <span class="setting-copy">
+                  <strong>Camera roll</strong>
+                  <span>Bank the scene in cockpit view</span>
+                </span>
+                <calcite-switch id="camera-roll" label="Use camera roll" checked></calcite-switch>
+              </calcite-label>
+            </div>
+          </calcite-block>
+        </calcite-panel>
+      </calcite-shell-panel>
+
+      <!-- Scene selection flows: curated places, geocoding, or a public item ID. -->
+      <calcite-shell-panel slot="panel-start" id="scene-picker-shell" class="scene-picker-shell" display-mode="float">
+      <calcite-panel
+        class="scene-picker"
+        id="scene-picker"
+        heading="Choose where to fly"
+      >
+        <calcite-tabs layout="center" scale="s">
+          <calcite-tab-nav slot="title-group">
+            <calcite-tab-title selected icon-start="pin">Places</calcite-tab-title>
+            <calcite-tab-title icon-start="search">Search</calcite-tab-title>
+            <calcite-tab-title icon-start="globe">WebScene</calcite-tab-title>
+          </calcite-tab-nav>
+
+          <calcite-tab selected>
+            <calcite-list
+              class="scene-list"
+              data-scene-grid
+              label="Curated flight starting points"
+              interaction-mode="interactive"
+              selection-mode="none"
+            ></calcite-list>
+          </calcite-tab>
+
+          <calcite-tab>
+            <form class="search-form" id="address-search-form" novalidate>
+              <calcite-input-text
+                id="address-search"
+                icon="search"
+                label-text="Search an address or place"
+                placeholder="City, landmark, or street address"
+                autocomplete="off"
+                max-length="120"
+                required
+                clearable
+              ></calcite-input-text>
+              <calcite-button type="submit" id="address-search-submit" icon-start="search">
+                Search
+              </calcite-button>
+            </form>
+            <p class="search-summary" data-address-search-summary aria-live="polite">
+              Find a city, landmark, or address to fly over.
+            </p>
+            <calcite-list
+              class="scene-list search-results"
+              id="address-search-results"
+              label="Address search results"
+              interaction-mode="interactive"
+              selection-mode="none"
+            >
+              <div slot="empty-content" class="empty-results">
+                Enter a place, landmark, or address.
+              </div>
+            </calcite-list>
+          </calcite-tab>
+
+          <calcite-tab>
+            <form class="search-form" id="webscene-search-form" novalidate>
+              <calcite-input-text
+                id="webscene-search"
+                icon="search"
+                label-text="Search public WebScenes"
+                placeholder="City, airport, or topic"
+                autocomplete="off"
+                max-length="120"
+                clearable
+              ></calcite-input-text>
+              <calcite-button type="submit" id="webscene-search-submit" icon-start="search">
+                Search
+              </calcite-button>
+            </form>
+            <p class="search-summary" data-webscene-search-summary aria-live="polite">
+              Search public WebScenes on ArcGIS Online.
+            </p>
+            <div class="webscene-results" id="webscene-results" aria-label="WebScene search results"></div>
+            <p class="item-id-heading">Or paste an item ID</p>
+            <form class="item-id-form" id="item-id-form" novalidate>
+              <calcite-label scale="s">
+                ArcGIS Online item ID
+                <calcite-input-text
+                  id="webscene-item-id"
+                  name="itemId"
+                  autocomplete="off"
+                  max-length="32"
+                  pattern="[A-Fa-f0-9]{32}"
+                  placeholder="32-character item ID"
+                  aria-describedby="scene-load-status"
+                ></calcite-input-text>
+              </calcite-label>
+              <calcite-button type="submit" icon-start="upload-to" width="full">
+                Load WebScene
+              </calcite-button>
+            </form>
+            <p class="item-id-help">
+              Public WebScenes in global Web Mercator or a local projected coordinate system.
+            </p>
+          </calcite-tab>
+        </calcite-tabs>
+
+        <calcite-notice
+          slot="content-bottom"
+          id="scene-load-notice"
+          kind="brand"
+          icon="information"
+          scale="s"
+        >
+          <span slot="message" id="scene-load-status" data-scene-load-status aria-live="polite">
+            Choose a starting point to begin.
+          </span>
+        </calcite-notice>
+      </calcite-panel>
+      </calcite-shell-panel>
+    </calcite-shell>
+
+    <noscript>This demonstration requires JavaScript.</noscript>
+    <!-- Vite bundles the scene-selection and settings controller for this page. -->
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+/*
+ * Styles the aircraft showcase's in-scene toolbar, popover selectors, weather
+ * controls, and status overlays. Glass-panel tokens keep those controls
+ * legible over the moving ArcGIS scene at desktop and mobile widths.
+ */
+@import '../shared/theme.css';
+
+/* Glass-panel color tokens and the upper-right in-scene flight toolbar. */
+:root { --sky-glass:radial-gradient(circle at 18% -40%,rgba(255,255,255,.98),transparent 46%),linear-gradient(128deg,rgba(255,255,255,.88),rgba(236,238,234,.78) 52%,rgba(255,255,255,.86)); --sky-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 8px 24px rgba(20,27,23,.14); --sky-ink:#335461; --sky-accent:#167fa0; }
+.flight-stage { font-family:"Helvetica Neue","Segoe UI",sans-serif; color:var(--sky-ink); }
+.flight-scene { position:absolute; inset:0; }
+.flight-top-actions { position:absolute; z-index:5; top:16px; right:18px; }
+.flight-top-menu { display:flex; align-items:center; gap:1px; padding:3px; border:1px solid rgba(255,255,255,.72); border-radius:12px; background-color:rgba(246,247,243,.78); background-image:var(--sky-glass); box-shadow:var(--sky-shadow); backdrop-filter:blur(18px) saturate(.82); }
+.flight-top-menu button { font-family:inherit; }
+.flight-tool,.aircraft-control,.weather-control { border:1px solid transparent; border-radius:9px; background:transparent; color:#59666c; cursor:pointer; transition:color .15s,border-color .15s,background .15s; }
+.flight-tool { display:grid; place-items:center; width:44px; min-width:44px; height:42px; padding:3px 2px; }
+.flight-tool span { margin-top:1px; font-size:9px; line-height:1; }
+.flight-tool:hover,.aircraft-control:hover,.weather-control:hover,.aircraft-control[aria-expanded=true],.weather-control[aria-expanded=true] { border-color:rgba(23,27,24,.12); background:rgba(255,255,255,.56); }
+.flight-tool[aria-pressed=true] { border-color:rgba(54,175,227,.3); color:var(--sky-accent); background:linear-gradient(145deg,rgba(126,215,244,.26),rgba(54,175,227,.13)); }
+.flight-tool:disabled { opacity:.46; cursor:default; }
+.aircraft-control,.weather-control { display:flex; align-items:center; justify-content:center; gap:1px; height:42px; padding:0 4px; }
+.aircraft-control { width:56px; background:#f1f6f5; box-shadow:inset 0 0 0 1px #d3e4e5; }
+.aircraft-button-icon { display:block; width:36px; height:32px; }
+.aircraft-button-icon img { width:100%; height:100%; object-fit:contain; }
+.weather-control { width:46px; }
+.weather-button-icon { position:relative; display:grid; width:27px; height:27px; place-items:center; color:#4e7a8d; }
+.weather-clock-icon { position:absolute; top:-4px; right:-4px; box-sizing:content-box; padding:1px; border-radius:50%; background:#f7fcff; color:#6a94a9; }
+.aircraft-control[aria-expanded=true] > calcite-icon:last-child,.weather-control[aria-expanded=true] > calcite-icon:last-child { transform:rotate(180deg); }
+
+.floating-panel { position:fixed; z-index:1000; box-sizing:border-box; padding:11px; border:1px solid rgba(255,255,255,.9); border-radius:16px; background:rgba(255,255,255,.97); box-shadow:0 14px 48px #173f4d30,0 1px 4px #173f4d12; backdrop-filter:blur(22px); color:var(--sky-ink); }
+.floating-panel[hidden] { display:none; }
+/* Aircraft choices, selection state, and the short performance summary. */
+.floating-panel > header { display:flex; align-items:center; justify-content:space-between; margin:0 2px 7px; font-size:14px; font-weight:650; }
+.floating-panel > header button { display:grid; width:28px; height:28px; padding:0; border:0; border-radius:8px; place-items:center; background:transparent; color:#6c848c; cursor:pointer; }
+.floating-panel > header button:hover { background:#e4edeb; }
+.aircraft-panel { width:min(300px,calc(100vw - 24px)); max-height:calc(100dvh - 90px); overflow:auto; }
+.aircraft-options { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.aircraft-option { position:relative; display:flex; min-width:0; padding:4px 9px 9px; border:1px solid #dae3df; border-radius:13px; flex-direction:column; align-items:flex-start; background:#fff; color:inherit; text-align:left; cursor:pointer; font:inherit; }
+.aircraft-option > img { width:100%; height:64px; border-radius:7px; object-fit:contain; }
+.aircraft-option strong { display:flex; flex-wrap:wrap; align-items:center; gap:3px 5px; font-size:14px; line-height:1.35; }
+.aircraft-option strong span { padding:2px 5px; border-radius:5px; background:#e5f0ee; font-size:9px; }
+.aircraft-option small { margin-top:3px; color:#677f85; font-size:11px; line-height:1.35; }
+.aircraft-option:hover { border-color:#95b2b7; background:#eef4f2; }
+.aircraft-option[aria-checked=true] { border-color:#639ba6; background:#f1f8f7; box-shadow:inset 0 0 0 1px #639ba62b; }
+.selection-check { position:absolute; top:8px; right:8px; color:#39778d; opacity:0; }
+.aircraft-option[aria-checked=true] .selection-check { opacity:1; }
+.aircraft-details { margin:10px -1px -1px; padding:10px 3px 2px; border-top:1px solid #e0e8eb; }
+.aircraft-details > div:first-child { display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
+.aircraft-details > div span { color:#6a818a; font-size:10px; }
+.aircraft-details p { margin:5px 0; font-size:11px; line-height:1.4; }
+.aircraft-details dl { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin:8px 0; }
+.aircraft-details dl div { padding:6px; border-radius:7px; background:#f0f5f5; }
+.aircraft-details dt { color:#69808a; font-size:8px; text-transform:uppercase; }
+.aircraft-details dd { margin:2px 0 0; font-size:11px; font-weight:700; }
+.aircraft-details a { color:#0d7189; font-size:11px; }
+.control-hint { color:#5d747d; }
+/* Weather choices and a 15-minute local-solar-time control. */
+.weather-panel { width:min(416px,calc(100vw - 24px)); }
+.weather-options { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px; }
+.weather-options button { display:flex; min-height:82px; padding:9px 2px; border:1px solid transparent; border-radius:12px; flex-direction:column; align-items:center; justify-content:center; gap:7px; background:transparent; color:#304e5b; cursor:pointer; }
+.weather-options button:hover { background:#ecf3f6; }
+.weather-options button[aria-checked=true] { border-color:#c1dde9; background:#e4f0f6; }
+.weather-options button span { font-size:11px; }
+.weather-options calcite-icon { color:#608da0; }
+.weather-time { margin:12px 6px 0; padding-top:12px; border-top:1px solid #e0e8eb; }
+.weather-time-heading { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; font-size:12px; font-weight:550; }
+.weather-time-heading > div { display:flex; align-items:center; gap:5px; }
+.weather-time-heading output { color:#436a79; font-variant-numeric:tabular-nums; }
+.weather-time-heading button { display:grid; width:24px; height:24px; padding:0; border:0; border-radius:6px; place-items:center; background:transparent; color:#718e9b; cursor:pointer; }
+.weather-time-heading button:hover { background:#e7eff1; }
+.weather-time input[type=range] { appearance:none; width:100%; height:26px; margin:0; padding:0; border:0; background:transparent; cursor:pointer; }
+.weather-time input[type=range]::-webkit-slider-runnable-track { height:5px; border-radius:5px; background:linear-gradient(90deg,#537087,#dab6a4 25%,#97cde6 50%,#e6c596 75%,#537087); }
+.weather-time input[type=range]::-webkit-slider-thumb { appearance:none; width:16px; height:16px; margin-top:-5.5px; border:3px solid white; border-radius:50%; background:#558fa5; box-shadow:0 1px 5px #31506155; }
+.weather-time input[type=range]::-moz-range-track { height:5px; border-radius:5px; background:linear-gradient(90deg,#537087,#dab6a4 25%,#97cde6 50%,#e6c596 75%,#537087); }
+.weather-time input[type=range]::-moz-range-thumb { width:10px; height:10px; border:3px solid white; border-radius:50%; background:#558fa5; box-shadow:0 1px 5px #31506155; }
+.weather-time-ticks { display:flex; justify-content:space-between; color:#82959d; font-size:9px; }
+.weather-time small { display:block; margin-top:9px; color:#82959d; font-size:10px; }
+
+/* Bottom-center flight status/actions; touch layouts move this beside the joystick. */
+.flight-hub { position:absolute; z-index:4; bottom:26px; left:50%; display:flex; align-items:center; gap:4px; padding:4px; border:1px solid rgba(255,255,255,.72); border-radius:13px; transform:translateX(-50%); background-color:rgba(246,247,243,.8); background-image:var(--sky-glass); box-shadow:var(--sky-shadow); backdrop-filter:blur(18px) saturate(.82); white-space:nowrap; }
+.flight-hub output { min-width:78px; padding:0 8px; color:#315864; font-size:13px; font-weight:700; text-align:center; }
+.hub-action { display:flex; height:38px; padding:0 11px; border:1px solid transparent; border-radius:9px; align-items:center; gap:5px; background:transparent; color:#405e68; cursor:pointer; }
+.hub-action:hover { border-color:rgba(23,27,24,.12); background:rgba(255,255,255,.58); }
+.hub-action--primary { color:white; background:#337685; }
+.hub-action--primary:hover { background:#286777; }
+.hub-action:disabled { opacity:.52; cursor:default; }
+.flight-hub label { display:flex; align-items:center; gap:5px; padding-left:7px; color:#637981; font-size:10px; }
+.flight-hub select { height:34px; border:1px solid #ccdadd; border-radius:8px; background:#fff; color:#355660; font:12px inherit; }
+#status { position:absolute; z-index:3; right:0; bottom:78px; left:0; margin:0; color:white; font-size:10px; text-align:center; text-shadow:0 1px 4px #000; pointer-events:none; }
+.notice { position:absolute; z-index:1001; top:76px; left:50%; margin:0; padding:9px 14px; border-radius:8px; transform:translateX(-50%); background:#102f39e8; color:white; font-size:12px; box-shadow:0 6px 22px #071b2644; }
+button:focus-visible,select:focus-visible { outline:2px solid #2b8ba5; outline-offset:2px; }
+@media(max-width:700px) { .flight-top-actions{top:8px;right:8px}.flight-tool{width:40px;min-width:40px}.flight-tool span,.hub-action span{display:none}.floating-panel{max-height:calc(100dvh - 170px)}.flight-hub{bottom:25px;max-width:calc(100% - 16px)}.flight-hub output{min-width:62px}.flight-hub label{padding-left:2px;font-size:0} }
+/* Leave left-thumb steering space while keeping the flight bar reachable. */
+@media (max-width: 720px), (any-pointer: coarse) {
+  .flight-top-actions { top: 8px; right: max(8px, env(safe-area-inset-right)); }
+  .flight-tool { min-width: 44px; height: 44px; }
+  /* Match the other samples: steering on the left, flight settings on the right. */
+  .flight-hub {
+    left: auto; right: max(12px, env(safe-area-inset-right));
+    bottom: calc(32px + env(safe-area-inset-bottom)); transform: none;
+    width: min(212px, calc(100% - 156px)); padding: 8px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  }
+  .flight-hub output { grid-column: 1 / -1; padding: 4px; }
+  .flight-hub label { grid-column: 1 / -1; grid-row: 2; padding: 0; font-size: 0; }
+  .flight-hub select { width: 100%; height: 44px; font-size: 13px; }
+  .hub-action { height: 44px; justify-content: center; }
+  .hub-action span { display: none; }
+  #status { left: auto; right: 12px; bottom: calc(200px + env(safe-area-inset-bottom)); max-width: calc(100% - 156px); }
+}
+@media (max-height: 500px) and (any-pointer: coarse) and (min-width: 721px) {
+  .flight-hub { bottom: calc(24px + env(safe-area-inset-bottom)); }
+}

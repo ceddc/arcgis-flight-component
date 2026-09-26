@@ -1,0 +1,29 @@
+/*
+ * Applies the full-screen demo theme and a compact Geneva data panel. Flight
+ * controls use the shared theme's bottom toolbar, clear of the panel.
+ */
+@import "../shared/theme.css";
+
+.scene-info {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  left: 16px;
+  max-width: min(310px, calc(100% - 32px));
+  padding: 10px 14px;
+  border: 1px solid var(--calcite-color-border-3);
+  border-radius: 6px;
+  background: var(--calcite-color-foreground-1);
+  box-shadow: var(--calcite-shadow-md);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.scene-info p { margin: 0 0 8px; }
+.scene-info summary { cursor: pointer; color: var(--calcite-color-brand); }
+.scene-info details p:first-of-type { margin-top: 10px; }
+.scene-info a { display: block; margin-top: 6px; color: var(--calcite-color-brand); }
+.scene-info button { padding: 8px 12px; margin-bottom: 8px; cursor: pointer; }
+.scene-info[data-ready="true"] #load-status { display: none; }
+@media (max-width: 720px) {
+  .scene-info { top: 8px; left: 8px; padding: 8px 12px; }
+}

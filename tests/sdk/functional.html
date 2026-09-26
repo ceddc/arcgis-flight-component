@@ -1,0 +1,52 @@
+<!doctype html>
+<!--
+  Browser host for the SDK compatibility matrix. Its query-driven bootstrap
+  selects SDK version, module loader, projection, and optional terrain before
+  functional.mjs exposes flight and cleanup evidence to Playwright.
+-->
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flight component compatibility checks</title>
+<link rel="icon" href="data:,">
+<style>
+  html, body, #view { width: 100%; height: 100%; margin: 0; }
+  body { overflow: hidden; }
+  #version { position: absolute; top: 12px; left: 12px; padding: 8px 12px; background: white; font: 14px system-ui; z-index: 2; }
+</style>
+<div id="view"></div><div id="version"></div>
+<script>
+  // Surface synchronous errors and rejected imports to the Playwright compatibility runner.
+  const fail = error => { window.functionalError = String(error?.message ?? error); };
+  window.addEventListener('error', event => fail(event.error ?? event.message));
+  window.addEventListener('unhandledrejection', event => fail(event.reason));
+  // Validate every dimension before loading code so invalid cases fail immediately.
+  const query = new URLSearchParams(location.search);
+  const sdk = query.get('sdk') || '4.32';
+  const loader = query.get('loader') || 'amd';
+  const wkid = Number(query.get('wkid') || 3857);
+  if (!/^\d+\.\d+(\.\d+)?$/.test(sdk) || !['amd', 'esm'].includes(loader) || ![3857, 2056].includes(wkid)) {
+    throw new Error('Invalid compatibility case');
+  }
+  window.functionalConfiguration = { sdk, loader, wkid, terrain: query.get('terrain') === 'true' };
+  const root = 'https://js.arcgis.com/' + sdk + '/';
+  const style = document.createElement('link');
+  style.rel = 'stylesheet';
+  style.href = root + (loader === 'amd' ? 'esri/themes/light/main.css' : '@arcgis/core/assets/esri/themes/light/main.css');
+  document.head.append(style);
+  const start = () => import('./functional.mjs').catch(fail);
+  if (loader === 'amd') {
+    // Install the official host SDK first. The component must reuse this require.
+    const sdkScript = document.createElement('script');
+    sdkScript.src = root;
+    sdkScript.onload = start;
+    sdkScript.onerror = () => fail('The AMD host SDK did not load');
+    document.head.append(sdkScript);
+  } else {
+    const importMap = document.createElement('script');
+    importMap.type = 'importmap';
+    importMap.textContent = JSON.stringify({ imports: { '@arcgis/core/': root + '@arcgis/core/' } });
+    document.head.append(importMap);
+    start();
+  }
+</script>
