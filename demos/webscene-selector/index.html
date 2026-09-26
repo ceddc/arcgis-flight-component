@@ -189,6 +189,14 @@
                 Search
               </calcite-button>
             </form>
+            <calcite-label class="webscene-sort-label" scale="s">
+              Order by
+              <calcite-select id="webscene-sort" label="Order WebScenes">
+                <calcite-option value="most-viewed" selected>Most viewed</calcite-option>
+                <calcite-option value="recent">Recently updated</calcite-option>
+                <calcite-option value="best-match">Best match</calcite-option>
+              </calcite-select>
+            </calcite-label>
             <p class="search-summary" data-webscene-search-summary aria-live="polite">
               Search public WebScenes on ArcGIS Online.
             </p>

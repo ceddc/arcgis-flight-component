@@ -24,6 +24,7 @@
 .scene-list:not(.search-results) { max-height: min(450px, calc(100dvh - 280px)); overflow-y: auto; }
 .search-results { max-height: 300px; overflow-y: auto; }
 .search-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.webscene-sort-label { margin-block-start: 12px; }
 .search-summary, .item-id-help, .empty-results { color: var(--calcite-color-text-3); font-size: var(--calcite-font-size--1); line-height: 1.5; }
 .search-summary { margin: 12px 0 16px; }
 .empty-results { padding: 32px 16px; text-align: center; }

@@ -25,7 +25,9 @@ import "@esri/calcite-components/components/calcite-list-item";
 import "@esri/calcite-components/components/calcite-navigation";
 import "@esri/calcite-components/components/calcite-navigation-logo";
 import "@esri/calcite-components/components/calcite-notice";
+import "@esri/calcite-components/components/calcite-option";
 import "@esri/calcite-components/components/calcite-panel";
+import "@esri/calcite-components/components/calcite-select";
 import "@esri/calcite-components/components/calcite-shell";
 import "@esri/calcite-components/components/calcite-shell-panel";
 import "@esri/calcite-components/components/calcite-slider";
@@ -45,6 +47,7 @@ import {
 } from "./lib/scenes";
 import {
   loadPublicWebScene,
+  verifyPublicWebSceneAccess,
   withLoadTimeout,
 } from "./lib/public-webscene-loader";
 import {
@@ -58,8 +61,10 @@ import {
 } from "./lib/address-search";
 import {
   DEFAULT_WEBSCENE_QUERY,
+  DEFAULT_WEBSCENE_SORT,
   searchPublicWebScenes,
   type WebSceneSearchResult,
+  type WebSceneSearchSort,
 } from "./lib/webscene-search";
 import { supportedFlightLocale } from "../../src/i18n";
 import { setupDemoUi } from "../shared/demo-ui";
@@ -110,7 +115,6 @@ const sensitivity = document.querySelector<HTMLCalciteSliderElement>("#sensitivi
 const fov = document.querySelector<HTMLCalciteSliderElement>("#fov");
 const invertPitch = document.querySelector<HTMLCalciteSwitchElement>("#invert-pitch");
 const cameraRoll = document.querySelector<HTMLCalciteSwitchElement>("#camera-roll");
-const scenePicker = requiredElement<HTMLCalcitePanelElement>("#scene-picker");
 const sceneGrid = requiredElement<HTMLCalciteListElement>("[data-scene-grid]");
 const addressSearchForm = requiredElement<HTMLFormElement>("#address-search-form");
 const addressSearchInput = requiredElement<HTMLCalciteInputTextElement>("#address-search");
@@ -126,6 +130,7 @@ const addressSearchSummary = requiredElement<HTMLElement>(
 const websceneSearchForm = requiredElement<HTMLFormElement>("#webscene-search-form");
 const websceneSearchInput = requiredElement<HTMLCalciteInputTextElement>("#webscene-search");
 const websceneSearchButton = requiredElement<HTMLCalciteButtonElement>("#webscene-search-submit");
+const websceneSort = requiredElement<HTMLCalciteSelectElement>("#webscene-sort");
 const websceneResults = requiredElement<HTMLElement>("#webscene-results");
 const websceneSearchSummary = requiredElement<HTMLElement>("[data-webscene-search-summary]");
 const itemIdForm = requiredElement<HTMLFormElement>("#item-id-form");
@@ -156,6 +161,8 @@ type ActiveDemoScene = ActivatableDemoScene<
 >;
 
 let busy = false;
+let activeSelection: AbortController | null = null;
+let activating = false;
 let sceneLayerWarning: string | null = null;
 let addressSearchController: AbortController | null = null;
 let websceneSearchController: AbortController | null = null;
@@ -248,16 +255,10 @@ function setReadyStatus(label: string): void {
   else setStatus(label, "ready");
 }
 
-/** Locks scene-selection controls while a scene is being loaded or activated. */
+/** Keeps the status notice visible while a scene is being loaded or activated. */
 function setBusy(next: boolean): void {
   busy = next;
   if (!next && sceneLoadNotice.kind !== "danger") sceneLoadNotice.open = false;
-  scenePicker.loading = next;
-  for (const control of scenePicker.querySelectorAll<HTMLElement & { disabled?: boolean }>(
-    "calcite-button, calcite-input-text, calcite-list-item",
-  )) {
-    control.disabled = next;
-  }
 }
 
 /** Shows or hides the optional settings shell and synchronizes its action state. */
@@ -442,11 +443,13 @@ async function startFromSceneCamera(webScene: WebScene): Promise<PlaneNavigation
  *   scene's own view mode (global Web Mercator or local projected).
  * @throws On timeout, private/non-WebScene content, or incompatible coordinates.
  */
-async function publicWebScene(itemId: string): Promise<ActiveDemoScene> {
+async function publicWebScene(itemId: string, signal: AbortSignal): Promise<ActiveDemoScene> {
+  await verifyPublicWebSceneAccess(itemId, { signal });
   const loaded = await loadPublicWebScene(itemId, {
-    createPortalItem: (id) => new PortalItem({ id }),
+    createPortalItem: (id) => new PortalItem({ id, portal: { url: "https://www.arcgis.com", authMode: "no-prompt" } }),
     createWebScene: (portalItem) => new WebScene({ portalItem }),
     timeoutMs: SCENE_LOAD_TIMEOUT_MS,
+    signal,
     onCleanupError: (error) => {
       console.warn("ArcGIS demo resource cleanup failed.", error);
     },
@@ -657,33 +660,45 @@ async function activateScene(next: ActiveDemoScene): Promise<void> {
 /**
  * Runs one user selection through the shared loading/status/error lifecycle.
  *
- * The factory is lazy so a second click while busy cannot allocate an unused
- * map or PortalItem. Failed candidates are rolled back and cleaned up by the
- * scene activation controller/loader before the status is updated here.
+ * A new choice cancels a pending load. Scene activation remains serialized;
+ * stale candidates are discarded before they can replace the active map.
  *
  * @param label Text shown while the choice loads.
  * @param create Factory for either an immediate map or asynchronous WebScene.
  */
 async function loadSelection(
   label: string,
-  create: () => ActiveDemoScene | Promise<ActiveDemoScene>,
+  create: (signal: AbortSignal) => ActiveDemoScene | Promise<ActiveDemoScene>,
 ): Promise<void> {
-  if (busy) return;
+  if (activating) return;
+  activeSelection?.abort();
+  const selection = new AbortController();
+  activeSelection = selection;
   setBusy(true);
   sceneLayerWarning = null;
   setStatus(`Loading ${label}`, "loading");
   setSceneLoadStatus(`Loading ${label}...`, "loading");
   try {
-    const candidate = await create();
+    const candidate = await create(selection.signal);
+    if (activeSelection !== selection) {
+      disposeArcGISResource(candidate.map);
+      return;
+    }
+    activating = true;
     await activateScene(candidate);
     if (sceneLayerWarning) setSceneLoadStatus(sceneLayerWarning, "error");
     else setSceneLoadStatus(`${candidate.title} is ready.`, "ready");
   } catch (error) {
+    if (activeSelection !== selection) return;
     const message = errorMessage(error);
     setStatus("Scene load failed", "error");
     setSceneLoadStatus(message, "error");
   } finally {
-    setBusy(false);
+    if (activeSelection === selection) {
+      activeSelection = null;
+      activating = false;
+      setBusy(false);
+    }
   }
 }
 
@@ -715,7 +730,11 @@ function webSceneCard(result: WebSceneSearchResult): HTMLCalciteCardElement {
   heading.textContent = result.title;
   const description = document.createElement("span");
   description.slot = "description";
-  description.textContent = [result.owner, updatedLabel(result.modified)].filter(Boolean).join(" · ");
+  description.textContent = [
+    result.owner,
+    result.numViews === null ? "" : `${result.numViews.toLocaleString()} views`,
+    updatedLabel(result.modified),
+  ].filter(Boolean).join(" · ");
   const link = document.createElement("calcite-link");
   link.slot = "footer-start";
   link.href = result.itemPageUrl;
@@ -730,7 +749,7 @@ function webSceneCard(result: WebSceneSearchResult): HTMLCalciteCardElement {
   fly.iconStart = "plane";
   fly.label = `Fly in ${result.title}`;
   fly.textContent = "Fly";
-  fly.addEventListener("click", () => void loadSelection(result.title, () => publicWebScene(result.id)));
+  fly.addEventListener("click", () => void loadSelection(result.title, (signal) => publicWebScene(result.id, signal)));
   card.append(heading, description, link, fly);
   return card;
 }
@@ -755,7 +774,10 @@ async function refreshWebSceneSearch(searchText: string): Promise<void> {
   websceneSearchButton.loading = true;
   websceneSearchSummary.textContent = `Searching ArcGIS Online for "${query}"...`;
   try {
-    const results = await searchPublicWebScenes(query, { signal: controller.signal });
+    const results = await searchPublicWebScenes(query, {
+      signal: controller.signal,
+      sort: websceneSort.value as WebSceneSearchSort,
+    });
     if (websceneSearchController !== controller) return;
     websceneResults.replaceChildren(...results.map(webSceneCard));
     websceneSearchSummary.textContent = results.length
@@ -799,7 +821,11 @@ websceneSearchForm.addEventListener("submit", (event) => {
   event.preventDefault();
   void refreshWebSceneSearch(websceneSearchInput.value);
 });
+websceneSort.addEventListener("calciteSelectChange", () => {
+  void refreshWebSceneSearch(websceneSearchInput.value);
+});
 websceneSearchInput.value = DEFAULT_WEBSCENE_QUERY;
+websceneSort.value = DEFAULT_WEBSCENE_SORT;
 void refreshWebSceneSearch(DEFAULT_WEBSCENE_QUERY);
 
 itemIdForm.addEventListener("submit", (event) => {
@@ -810,7 +836,7 @@ itemIdForm.addEventListener("submit", (event) => {
     void itemIdInput.setFocus();
     return;
   }
-  void loadSelection("WebScene", () => publicWebScene(itemId));
+  void loadSelection("WebScene", (signal) => publicWebScene(itemId, signal));
 });
 
 sensitivity?.addEventListener("calciteSliderInput", () => {

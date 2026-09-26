@@ -17,13 +17,13 @@ import {
 /** Portal item contract needed to validate and clean up a public WebScene item. */
 export interface DemoPortalItem extends ArcGISDisposableResource, ArcGISItemMetadata {
   readonly title?: string | null;
-  load(): Promise<this>;
+  load(options?: { signal?: AbortSignal }): Promise<this>;
 }
 
 /** WebScene contract needed to load its map and inspect flight compatibility. */
 export interface DemoWebScene extends ArcGISDisposableResource {
   readonly initialViewProperties: WebSceneMetadata;
-  load(): Promise<this>;
+  load(options?: { signal?: AbortSignal }): Promise<this>;
 }
 
 /** Factories and timing hooks that isolate ArcGIS construction from loader logic. */
@@ -34,6 +34,7 @@ export interface PublicWebSceneLoaderOptions<
   createPortalItem(itemId: string): TItem;
   createWebScene(item: TItem): TScene;
   timeoutMs?: number;
+  signal?: AbortSignal;
   setTimer?: (callback: () => void, delayMs: number) => ReturnType<typeof setTimeout>;
   clearTimer?: (handle: ReturnType<typeof setTimeout>) => void;
   onCleanupError?: (error: unknown) => void;
@@ -66,6 +67,7 @@ export function withLoadTimeout<T>(
     setTimer?: PublicWebSceneLoaderOptions<DemoPortalItem, DemoWebScene>["setTimer"];
     clearTimer?: PublicWebSceneLoaderOptions<DemoPortalItem, DemoWebScene>["clearTimer"];
     onCleanupError?: (error: unknown) => void;
+    signal?: AbortSignal;
   },
 ): Promise<T> {
   const setTimer = options.setTimer ?? setTimeout;
@@ -81,9 +83,42 @@ export function withLoadTimeout<T>(
       }
     }, options.timeoutMs);
   });
-  return Promise.race([promise, timeout]).finally(() => {
-    if (timer !== null) clearTimer(timer);
+  let onAbort: (() => void) | undefined;
+  const aborted = new Promise<never>((_resolve, reject) => {
+    onAbort = () => reject(new DOMException("Scene load replaced.", "AbortError"));
+    if (options.signal?.aborted) onAbort();
+    else options.signal?.addEventListener("abort", onAbort, { once: true });
   });
+  return Promise.race([promise, timeout, aborted]).finally(() => {
+    if (timer !== null) clearTimer(timer);
+    if (onAbort) options.signal?.removeEventListener("abort", onAbort);
+  });
+}
+
+/** Checks ArcGIS Online item metadata without credentials or an SDK sign-in prompt. */
+export async function verifyPublicWebSceneAccess(
+  itemId: string,
+  options: {
+    signal?: AbortSignal;
+    fetchItem?: (url: string, init: RequestInit) => Promise<Pick<Response, "ok" | "json">>;
+  } = {},
+): Promise<void> {
+  const timeout = AbortSignal.timeout(10_000);
+  const signal = options.signal ? AbortSignal.any([options.signal, timeout]) : timeout;
+  let response: Pick<Response, "ok" | "json">;
+  try {
+    response = await (options.fetchItem ?? fetch)(
+      `https://www.arcgis.com/sharing/rest/content/items/${itemId}?f=json`,
+      { credentials: "omit", signal },
+    );
+  } catch (error) {
+    if (timeout.aborted) throw new Error("ArcGIS did not return item details within 10 seconds.");
+    throw error;
+  }
+  if (!response.ok) throw new Error("This WebScene is private or unavailable. Choose another public WebScene.");
+  const metadata = await response.json() as { type: string | undefined; access: string | undefined; error?: unknown };
+  if (metadata.error) throw new Error("This WebScene is private or unavailable. Choose another public WebScene.");
+  validatePublicWebSceneItem(metadata);
 }
 
 /**
@@ -117,24 +152,26 @@ export async function loadPublicWebScene<
   const item = options.createPortalItem(itemId);
   let webScene: TScene | null = null;
   try {
-    await withLoadTimeout(item.load(), {
+    await withLoadTimeout(item.load({ signal: options.signal }), {
       timeoutMs,
       message: `ArcGIS did not return the item within ${timeoutMs / 1_000} seconds.`,
       onTimeout: () => dispose(item),
       setTimer: options.setTimer,
       clearTimer: options.clearTimer,
       onCleanupError: options.onCleanupError,
+      signal: options.signal,
     });
     validatePublicWebSceneItem(item);
 
     webScene = options.createWebScene(item);
-    await withLoadTimeout(webScene.load(), {
+    await withLoadTimeout(webScene.load({ signal: options.signal }), {
       timeoutMs,
       message: `The WebScene did not load within ${timeoutMs / 1_000} seconds.`,
       onTimeout: () => dispose(webScene!),
       setTimer: options.setTimer,
       clearTimer: options.clearTimer,
       onCleanupError: options.onCleanupError,
+      signal: options.signal,
     });
     validateFlightWebScene(webScene.initialViewProperties);
     return {

@@ -21,7 +21,7 @@ const id = (n: number) => n.toString(16).padStart(32, "a");
 describe("public WebScene search", () => {
   it("restricts matches to public WebScenes and normalizes input", () => {
     expect(webSceneSearchQuery('  Frankfurt   "mesh" ')).toBe(
-      '(Frankfurt mesh) AND type:"Web Scene" AND access:public',
+      "title:Frankfurt AND title:mesh",
     );
     expect(webSceneSearchQuery('  " ')).toBeNull();
   });
@@ -31,9 +31,32 @@ describe("public WebScene search", () => {
     const controller = new AbortController();
     await searchPublicWebScenes("Zurich", { client, signal: controller.signal });
     expect(client.queryItems).toHaveBeenCalledWith(
-      { query: '(Zurich) AND type:"Web Scene" AND access:public', num: WEBSCENE_SEARCH_RESULT_LIMIT },
+      {
+        query: "title:Zurich", filter: 'type:"Web Scene" AND access:public',
+        num: WEBSCENE_SEARCH_RESULT_LIMIT, sortField: "num-views", sortOrder: "desc",
+      },
       { signal: controller.signal },
     );
+  });
+
+  it("sorts on the server by update date or portal relevance", async () => {
+    const client = clientWith([{ id: id(1), title: "Zurich" }]);
+    await searchPublicWebScenes("Zurich", { client, sort: "recent" });
+    await searchPublicWebScenes("Zurich", { client, sort: "best-match" });
+    expect(client.queryItems).toHaveBeenNthCalledWith(1,
+      expect.objectContaining({ sortField: "modified", sortOrder: "desc" }), expect.anything());
+    expect(client.queryItems).toHaveBeenNthCalledWith(2,
+      expect.not.objectContaining({ sortField: expect.anything() }), expect.anything());
+  });
+
+  it("falls back to broad text search when no scene title matches", async () => {
+    const client: WebSceneSearchClient = { queryItems: vi.fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ id: id(1), title: "Aerial scene" }]) };
+    const results = await searchPublicWebScenes("photogrammetry", { client });
+    expect(results).toHaveLength(1);
+    expect(client.queryItems).toHaveBeenNthCalledWith(2,
+      expect.objectContaining({ query: "photogrammetry" }), expect.anything());
   });
 
   it("keeps valid results and fills card defaults", async () => {
@@ -41,7 +64,7 @@ describe("public WebScene search", () => {
     const results = await searchPublicWebScenes("Frankfurt", {
       client: clientWith([
         {
-          id: id(1), title: " Frankfurt Airport ", owner: "esri_DE_content", modified,
+          id: id(1), title: " Frankfurt Airport ", owner: "esri_DE_content", modified, numViews: 1234,
           thumbnailUrl: "https://example.com/t.png", itemPageUrl: "https://www.arcgis.com/home/item.html?id=1",
         },
         { id: id(2), title: "No owner" },
@@ -52,10 +75,12 @@ describe("public WebScene search", () => {
     expect(results).toEqual([
       {
         id: id(1), title: "Frankfurt Airport", owner: "esri_DE_content", modified, snippet: "",
+        numViews: 1234,
         thumbnailUrl: "https://example.com/t.png", itemPageUrl: "https://www.arcgis.com/home/item.html?id=1",
       },
       {
         id: id(2), title: "No owner", owner: "ArcGIS Online", modified: null, snippet: "",
+        numViews: null,
         thumbnailUrl: null, itemPageUrl: `${ARCGIS_ONLINE_URL}/home/item.html?id=${id(2)}`,
       },
     ]);

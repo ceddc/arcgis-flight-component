@@ -5,6 +5,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   loadPublicWebScene,
+  verifyPublicWebSceneAccess,
   type DemoPortalItem,
   type DemoWebScene,
 } from "./public-webscene-loader";
@@ -23,6 +24,40 @@ function disposable<T extends object>(value: T) {
 afterEach(() => vi.useRealTimers());
 
 describe("public WebScene loader", () => {
+  it("accepts anonymous public metadata and rejects inaccessible items before SDK load", async () => {
+    const fetchItem = vi.fn(async () => ({ ok: true, json: async () => ({ type: "Web Scene", access: "public" }) }));
+    await verifyPublicWebSceneAccess("a".repeat(32), { fetchItem });
+    expect(fetchItem).toHaveBeenCalledWith(
+      `https://www.arcgis.com/sharing/rest/content/items/${"a".repeat(32)}?f=json`,
+      expect.objectContaining({ credentials: "omit", signal: expect.any(AbortSignal) }),
+    );
+    await expect(verifyPublicWebSceneAccess("b".repeat(32), {
+      fetchItem: async () => ({ ok: true, json: async () => ({ error: { code: 400 } }) }),
+    })).rejects.toThrow(/private or unavailable/);
+    await expect(verifyPublicWebSceneAccess("c".repeat(32), {
+      fetchItem: async () => ({ ok: true, json: async () => ({ type: "Web Scene", access: "private" }) }),
+    })).rejects.toThrow(/public WebScenes only/);
+  });
+
+  it("cancels a replaced item load and releases its resource", async () => {
+    const controller = new AbortController();
+    const item = disposable({
+      type: "Web Scene", access: "public", title: "Replaced scene",
+      load: vi.fn(() => new Promise<DemoPortalItem>(() => undefined)),
+    });
+    const loading = loadPublicWebScene("a".repeat(32), {
+      createPortalItem: () => item,
+      createWebScene: () => { throw new Error("must not create"); },
+      signal: controller.signal,
+      timeoutMs: 100,
+    });
+    const rejection = expect(loading).rejects.toMatchObject({ name: "AbortError" });
+    controller.abort();
+    await rejection;
+    expect(item.cancelLoad).toHaveBeenCalledOnce();
+    expect(item.destroy).toHaveBeenCalledOnce();
+  });
+
   it("loads and validates a public global WebScene", async () => {
     const item = disposable({
       type: "Web Scene",
