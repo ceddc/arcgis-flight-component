@@ -83,10 +83,11 @@ const WEBSCENE_APPROACH_DISTANCE_M = 1_500;
 
 /** Public 3D scenes checked for visible content and usable flight starts. */
 const FEATURED_WEBSCENES = [
-  { id: "e444c4228ebc4aa4906980969123c4ee", title: "Nottingham, UK", caption: "Textured city mesh - Esri UK", thumbnail: "thumbnail/ago_downloaded.jpg" },
-  { id: "533e5f8b9d8547249795b6b0903146e8", title: "Milan, Italy", caption: "City mesh - Leica CityMapper", thumbnail: "thumbnail/ago_downloaded.png" },
-  { id: "dc2991b49a014ac79796797990d7c735", title: "Stuttgart, Germany", caption: "Aerial and terrestrial Gaussian splats", thumbnail: "thumbnail/ago_downloaded.png" },
-  { id: "2ff54a4eeff549fa8d203fd7c718d299", title: "Mesa, Arizona", caption: "City mesh - Nearmap", thumbnail: "thumbnail/ago_downloaded.jpeg" },
+  { id: "cfa6d2a5841f40b0859e6eb72cf2dd0e", title: "Geneva, Switzerland", caption: "Photoreal city mesh - SITG", thumbnail: "thumbnail/ago_downloaded.png" },
+  { id: "698a905884654ba2816f85b7375bb20b", title: "Boston, USA", caption: "City mesh - Bluesky International", thumbnail: "thumbnail/thumbnail1748491995558.png" },
+  { id: "807ce184cdf846cabf7c5d2092eb6015", title: "Munich, Germany", caption: "City mesh and point cloud", thumbnail: "thumbnail/ago_downloaded.jpg" },
+  { id: "e2b0e9864d514004ab32187bf59f730e", title: "Auckland, New Zealand", caption: "CBD city mesh - aerometrex", thumbnail: "thumbnail/ago_downloaded.png" },
+  { id: "646ad56647544762b1919508158ba619", title: "Gaussian splat examples", caption: "Boston and other 3D capture demos", thumbnail: "thumbnail/ago_downloaded.jpg" },
 ] as const;
 
 type StatusTone = "loading" | "ready" | "error";
