@@ -10,6 +10,7 @@ import type { FlightLocale } from "../i18n";
 const LABELS: Record<FlightLocale, string> = {
   en: "Flight joystick", fr: "Joystick de vol", de: "Flugjoystick",
   it: "Joystick di volo", es: "Joystick de vuelo",
+  pt: "Joystick de voo",
 };
 
 /**

@@ -183,7 +183,7 @@ function presentAttributePatch(
       if (value === "auto") return { ui: { locale: "auto" } };
       const locale = supportedFlightLocale(value);
       if (!locale) {
-        invalidAttribute(name, value, '"auto", "en", "de", "fr", "it", or "es"');
+        invalidAttribute(name, value, '"auto", "en", "de", "fr", "it", "es", or "pt"');
       }
       return { ui: { locale } };
     }

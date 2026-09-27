@@ -23,8 +23,8 @@ import {
 } from "./index";
 
 describe("flight UI localization", () => {
-  it("supports English, German, French, Italian, and Spanish", () => {
-    expect(SUPPORTED_FLIGHT_LOCALES).toEqual(["en", "de", "fr", "it", "es"]);
+  it("supports English, German, French, Italian, Spanish, and Portuguese", () => {
+    expect(SUPPORTED_FLIGHT_LOCALES).toEqual(["en", "de", "fr", "it", "es", "pt"]);
     expect(DEFAULT_FLIGHT_LOCALE).toBe("en");
     expect(FLIGHT_LANGUAGE_NAMES).toEqual({
       en: "English",
@@ -32,6 +32,7 @@ describe("flight UI localization", () => {
       fr: "Français",
       it: "Italiano",
       es: "Español",
+      pt: "Português",
     });
     expect(Object.keys(FLIGHT_MESSAGES)).toEqual(SUPPORTED_FLIGHT_LOCALES);
   });
@@ -50,7 +51,7 @@ describe("flight UI localization", () => {
     })).toBe("it");
     expect(resolveFlightLocale("auto", {
       documentLanguage: null,
-      navigatorLanguages: ["pt-BR"],
+      navigatorLanguages: ["rm-CH"],
       fallback: "fr",
     })).toBe("fr");
     expect(resolveFlightLocale("de", { documentLanguage: "fr-CH" })).toBe("de");
@@ -65,7 +66,7 @@ describe("flight UI localization", () => {
       intlLocale: "en-US",
     })).toBe("es");
     expect(detectFlightLocale({
-      locale: "pt-BR",
+      locale: "xx",
       documentLanguage: "fr-CH",
       navigatorLanguages: ["de-CH"],
       navigatorLanguage: "it-IT",

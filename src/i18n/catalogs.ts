@@ -1,12 +1,12 @@
 /**
- * Stores the component's English, German, French, Italian, and Spanish UI messages.
+ * Stores the component's English, German, French, Italian, Spanish, and Portuguese UI messages.
  *
  * Keys come from the English catalog and are shared by every translation, so
  * runtime lookup can select a locale without changing the message contract.
- * Language names here also populate the visible selector.
+ * Language names are available to host applications that offer a selector.
  */
 /** Locales with complete built-in control and status message catalogs. */
-export const SUPPORTED_FLIGHT_LOCALES = ["en", "de", "fr", "it", "es"] as const;
+export const SUPPORTED_FLIGHT_LOCALES = ["en", "de", "fr", "it", "es", "pt"] as const;
 
 /** Locale code accepted by translation catalog lookups. */
 export type FlightLocale = (typeof SUPPORTED_FLIGHT_LOCALES)[number];
@@ -21,6 +21,7 @@ export const FLIGHT_LANGUAGE_NAMES: Readonly<Record<FlightLocale, string>> = {
   fr: "Français",
   it: "Italiano",
   es: "Español",
+  pt: "Português",
 };
 
 const ENGLISH = {
@@ -353,6 +354,72 @@ const SPANISH: FlightMessageCatalog = {
   "status.error": "Error",
 };
 
+// Portuguese (Portugal baseline); regional tags share the same messages.
+const PORTUGUESE: FlightMessageCatalog = {
+  "language.label": "Idioma",
+  "language.select": "Escolher idioma",
+  "language.current": "Idioma: {language}. Escolher outro idioma",
+  "flight.settings": "Definições",
+  "flight.hideInterface": "Ocultar interface",
+  "flight.showInterface": "Mostrar interface",
+  "flight.controls": "Comandos de voo",
+  "flight.controlsAria": "Comandos de voo e da cena",
+  "flight.speed": "Velocidade",
+  "flight.speedAria": "Velocidade de voo",
+  "flight.paused": "Voo em pausa",
+  "flight.continue": "Continuar a voar",
+  "flight.turbo": "Turbo",
+  "flight.cruise": "Cruzeiro",
+  "flight.slow": "Reduzida",
+  "flight.speedOptionAria": "Velocidade: {mode}{selected}",
+  "flight.speedSelectedSuffix": ", selecionada",
+  "flight.selectSpeed": "Selecionar velocidade: {mode}",
+  "flight.turboSpeed": "Velocidade Turbo",
+  "flight.turboSpeedSelected": "Velocidade Turbo, selecionada",
+  "flight.cruiseSpeed": "Velocidade de cruzeiro",
+  "flight.cruiseSpeedSelected": "Velocidade de cruzeiro, selecionada",
+  "flight.slowSpeed": "Velocidade reduzida",
+  "flight.slowSpeedSelected": "Velocidade reduzida, selecionada",
+  "flight.selectTurboSpeed": "Selecionar velocidade Turbo",
+  "flight.selectCruiseSpeed": "Selecionar velocidade de cruzeiro",
+  "flight.selectSlowSpeed": "Selecionar velocidade reduzida",
+  "flight.cockpit": "Cabina",
+  "flight.exterior": "Exterior",
+  "flight.switchCockpit": "Mudar para a vista da cabina",
+  "flight.switchExterior": "Mudar para a vista exterior",
+  "flight.start": "Iniciar voo",
+  "flight.pause": "Pausar",
+  "flight.recover": "Reposicionar",
+  "flight.toast.cockpit": "Vista da cabina",
+  "flight.toast.exterior": "Vista exterior",
+  "flight.toast.turbo": "Turbo armado",
+  "flight.toast.slow": "Velocidade reduzida",
+  "flight.toast.cruise": "Velocidade de cruzeiro",
+  "flight.toast.recovered": "Avião reposicionado",
+  "settings.title": "Definições de voo",
+  "settings.close": "Fechar definições",
+  "settings.actions": "Ações de voo",
+  "settings.actionsHelp": "Pausar o voo ou reposicionar o avião em segurança acima do terreno.",
+  "settings.controlsCamera": "Comandos e câmara",
+  "settings.sensitivity": "Sensibilidade dos comandos",
+  "settings.sensitivityHelp": "Rapidez de resposta do avião",
+  "settings.gentle": "Baixa",
+  "settings.quick": "Alta",
+  "settings.fov": "Campo de visão",
+  "settings.fovHelp": "Amplitude da vista de voo",
+  "settings.narrow": "Estreito",
+  "settings.wide": "Amplo",
+  "settings.planePitch": "Comando longitudinal de avião",
+  "settings.planePitchHelp": "Puxe para trás para subir; empurre para a frente para descer",
+  "status.label": "Estado",
+  "status.idle": "Inativo",
+  "status.loading": "A carregar",
+  "status.ready": "Pronto",
+  "status.running": "Em voo",
+  "status.paused": "Em pausa",
+  "status.error": "Erro",
+};
+
 /** Complete user-facing message strings indexed by locale and message key. */
 export const FLIGHT_MESSAGES: Readonly<Record<FlightLocale, FlightMessageCatalog>> = {
   en: ENGLISH,
@@ -360,4 +427,5 @@ export const FLIGHT_MESSAGES: Readonly<Record<FlightLocale, FlightMessageCatalog
   fr: FRENCH,
   it: ITALIAN,
   es: SPANISH,
+  pt: PORTUGUESE,
 };

@@ -100,7 +100,7 @@ fields. Boolean attributes are on when present, whatever their value:
 | `ui-controls` | `ui.controls` | `power`, `pause`, `camera`, `recover`, separated by spaces or commas |
 | `joystick` | `ui.joystick` | `auto`, `always`, `never` |
 | `joystick-position` | `ui.joystickPosition` | A [position](#ui) |
-| `locale` | `ui.locale` | `auto`, `en`, `de`, `fr`, `it`, `es` |
+| `locale` | `ui.locale` | `auto`, `en`, `de`, `fr`, `it`, `es`, `pt` |
 
 Removing an attribute restores the default. An invalid value sets `status` to
 `error`. The aircraft, the terrain settings, and the camera update rate have no
@@ -175,7 +175,7 @@ See [Ground clearance](flight-concepts.md#ground-clearance).
 | `controls` | `string[]` | All four | Toolbar buttons, in order: `"power"`, `"pause"`, `"camera"`, `"recover"`. |
 | `joystick` | `"auto" \| "always" \| "never"` | `"auto"` | Touch joystick. `auto` shows it on touch screens. |
 | `joystickPosition` | `string` | `"bottom-left"` | Joystick position. |
-| `locale` | `string` | `"auto"` | `"en"`, `"de"`, `"fr"`, `"it"`, `"es"`, or `"auto"` to follow the page and browser language. |
+| `locale` | `string` | `"auto"` | `"en"`, `"de"`, `"fr"`, `"it"`, `"es"`, `"pt"`, or `"auto"` to follow the page and browser language. |
 
 Positions are the same as the ArcGIS view UI: `top-left`, `top-right`,
 `bottom-left`, `bottom-right`, `top-start`, `top-end`, `bottom-start`, and
