@@ -74,9 +74,9 @@ flight.view = view;
 
 [![Other aircraft sample](images/sample-other-aircraft.png)](../demos/aircraft/)
 
-Switch between five aircraft over the Grand Canyon without reloading the
-scene. The sample also toggles Esri 3D buildings, changes the weather and time
-of day, and saves a photo.
+Switch between five aircraft (Classic, Super Jet, Space Jet, Paraglider, and
+Airliner) over the Grand Canyon without reloading the scene. The sample also
+toggles Esri 3D buildings, changes the weather and time of day, and saves a photo.
 
 [Open the sample](../demos/aircraft/) · [View the source](../demos/aircraft/main.ts)
 

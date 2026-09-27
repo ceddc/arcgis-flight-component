@@ -45,7 +45,7 @@
         <!-- site-navigation -->
       </calcite-navigation>
 
-      <main class="flight-stage">
+      <main class="flight-stage is-loading" aria-busy="true">
         <!-- Replaced only when a WebScene needs a different immutable view setup. -->
         <arcgis-scene
           id="flight-scene"
@@ -64,6 +64,17 @@
           fov-deg="65"
           auto-start-disabled
         ></arcgis-plane-navigation>
+
+        <div class="scene-loading" id="scene-loading">
+          <div class="scene-loading-card">
+            <div class="scene-loading-ring" id="scene-loading-progress" role="progressbar" aria-label="Estimated scene loading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <span class="scene-loading-percent" id="scene-loading-percent" aria-hidden="true">0%</span>
+            </div>
+            <h2 class="scene-loading-destination" id="scene-loading-destination">Loading scene</h2>
+            <p class="scene-loading-phase" id="scene-loading-phase" role="status" aria-live="polite">Loading scene data</p>
+            <p class="scene-loading-hint">Estimated progress</p>
+          </div>
+        </div>
 
       </main>
 
@@ -198,7 +209,7 @@
               </calcite-select>
             </calcite-label>
             <p class="search-summary" data-webscene-search-summary aria-live="polite">
-              Featured 3D scenes selected for flying.
+              Featured 3D scenes from ArcGIS Living Atlas.
             </p>
             <div class="webscene-results" id="webscene-results" aria-label="WebScenes"></div>
             <p class="item-id-heading">Or paste an item ID</p>
