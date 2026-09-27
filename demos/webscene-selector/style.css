@@ -18,6 +18,16 @@
 .scene-picker-shell { position: relative; z-index: 4; --calcite-shell-panel-width: 360px; }
 .scene-picker { height: 100%; }
 .scene-picker calcite-tabs { display: block; }
+/* Cover the scene while keeping the picker above the loading card. */
+.scene-loading { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; background: radial-gradient(circle at 50% 42%, var(--calcite-color-foreground-2), var(--calcite-color-background) 72%); }
+.scene-loading-card { width: min(360px, calc(100% - 48px)); display: grid; justify-items: center; gap: 10px; padding: 28px 24px; background: var(--calcite-color-foreground-1); border: 1px solid var(--calcite-color-border-3); border-radius: 14px; box-shadow: var(--calcite-shadow-lg); text-align: center; }
+.scene-loading-ring { --scene-progress: 0%; position: relative; display: grid; place-items: center; width: 132px; aspect-ratio: 1; margin-block-end: 6px; border-radius: 50%; background: conic-gradient(var(--calcite-color-brand) 0 var(--scene-progress), var(--calcite-color-border-2) var(--scene-progress) 100%); }
+.scene-loading-ring::before { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: var(--calcite-color-foreground-1); }
+.scene-loading-percent { position: relative; color: var(--calcite-color-text-1); font-size: 34px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.scene-loading-destination { margin: 0; color: var(--calcite-color-text-1); font-size: 20px; font-weight: 600; line-height: 1.3; }
+.scene-loading-phase { margin: 0; color: var(--calcite-color-text-2); font-size: 13px; line-height: 1.4; }
+.scene-loading-hint { margin: 2px 0 0; color: var(--calcite-color-text-3); font-size: 12px; }
+.flight-stage.is-loading .demo-flight-controls { visibility: hidden; }
 /* Scroll long preset/search lists inside their panels rather than the whole page. */
 .scene-picker calcite-tab { padding: 16px 20px 20px; }
 .scene-list { display: block; --calcite-list-icon-color: var(--calcite-color-brand); --calcite-list-border-color: var(--calcite-color-border-3); }
@@ -39,6 +49,10 @@
 .webscene-card [slot="description"] { color: var(--calcite-color-text-3); }
 .item-id-heading { margin: 0 0 8px; font-weight: 500; color: var(--calcite-color-text-2); font-size: var(--calcite-font-size--1); }
 @media (max-width: 720px) {
+  .scene-loading { align-items: end; padding: 0 12px max(16px, env(safe-area-inset-bottom)); }
+  .scene-loading-card { width: 100%; padding: 18px 20px; }
+  .scene-loading-ring { width: 116px; }
+  .scene-loading-hint { display: none; }
   .status-chip { display: none; }
   .flight-shell .app-header calcite-navigation-logo { max-width: calc(100vw - 148px); }
   .settings-shell-panel { --calcite-shell-panel-width: min(320px, 100vw); }

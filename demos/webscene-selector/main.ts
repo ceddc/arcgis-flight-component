@@ -6,6 +6,7 @@
  */
 import ArcGISMap from "@arcgis/core/Map.js";
 import esriConfig from "@arcgis/core/config.js";
+import * as reactiveUtils from "@arcgis/core/core/reactiveUtils.js";
 import Point from "@arcgis/core/geometry/Point.js";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference.js";
 import * as projectOperator from "@arcgis/core/geometry/operators/projectOperator.js";
@@ -73,6 +74,9 @@ import { mountFlightControls } from "../shared/flight-controls";
 import "./style.css";
 
 const SCENE_LOAD_TIMEOUT_MS = 60_000;
+const SCENE_RENDER_MIN_MS = 1_500;
+const SCENE_RENDER_MAX_MS = 5_000;
+const SCENE_PROGRESS_TICK_MS = 120;
 // This public demo never requests ArcGIS credentials, including for private layers inside a shared WebScene.
 esriConfig.request.useIdentity = false;
 const DEFAULT_START_SPEED_MPS = 100;
@@ -81,13 +85,12 @@ const WEBSCENE_START_HEIGHT_M = 150;
 /** Start this far short of the point the scene's camera looks at, so flight heads into it. */
 const WEBSCENE_APPROACH_DISTANCE_M = 1_500;
 
-/** Public 3D scenes checked for visible content and usable flight starts. */
+/** Public 3D scenes in the official ArcGIS Living Atlas group, with usable flight starts. */
 const FEATURED_WEBSCENES = [
-  { id: "cfa6d2a5841f40b0859e6eb72cf2dd0e", title: "Geneva, Switzerland", caption: "Photoreal city mesh - SITG", thumbnail: "thumbnail/ago_downloaded.png" },
-  { id: "698a905884654ba2816f85b7375bb20b", title: "Boston, USA", caption: "City mesh - Bluesky International", thumbnail: "thumbnail/thumbnail1748491995558.png" },
-  { id: "807ce184cdf846cabf7c5d2092eb6015", title: "Munich, Germany", caption: "City mesh and point cloud", thumbnail: "thumbnail/ago_downloaded.jpg" },
-  { id: "e2b0e9864d514004ab32187bf59f730e", title: "Auckland, New Zealand", caption: "CBD city mesh - aerometrex", thumbnail: "thumbnail/ago_downloaded.png" },
-  { id: "646ad56647544762b1919508158ba619", title: "Gaussian splat examples", caption: "Boston and other 3D capture demos", thumbnail: "thumbnail/ago_downloaded.jpg" },
+  { id: "698a905884654ba2816f85b7375bb20b", title: "Boston, USA", caption: "Detailed city mesh and 3D buildings", thumbnail: "thumbnail/thumbnail1748491995558.png" },
+  { id: "7b506043536246faa4194d4c3d4c921b", title: "Zurich, Switzerland", caption: "Digital twin with a city mesh", thumbnail: "thumbnail/thumbnail1748298184010.png" },
+  { id: "94b4704af89e4e908e18e0a8fc1c9a04", title: "Hong Kong", caption: "3D buildings and infrastructure", thumbnail: "thumbnail/thumbnail1777002397095.png" },
+  { id: "1fc1c55881ec4c64afb305c95762d45a", title: "Utrecht, Netherlands", caption: "City mesh and flood impact", thumbnail: "thumbnail/thumbnail1748569919463.png" },
 ] as const;
 
 type StatusTone = "loading" | "ready" | "error";
@@ -112,6 +115,14 @@ function requiredElement<T extends Element>(selector: string): T {
 }
 
 let scene = requiredElement<HTMLArcgisSceneElement>("#flight-scene");
+const flightStage = requiredElement<HTMLElement>(".flight-stage");
+const sceneLoading = requiredElement<HTMLElement>("#scene-loading");
+const sceneLoadingDestination = requiredElement<HTMLElement>("#scene-loading-destination");
+const sceneLoadingPhase = requiredElement<HTMLElement>("#scene-loading-phase");
+const sceneLoadingPercent = requiredElement<HTMLElement>("#scene-loading-percent");
+const sceneLoadingProgress = requiredElement<HTMLElement>("#scene-loading-progress");
+let sceneProgressValue = 0;
+let sceneProgressTimer: number | null = null;
 let retiredScene: HTMLArcgisSceneElement | null = null;
 const navigation = requiredElement<ArcgisPlaneNavigationElement>("#plane-navigation");
 const statusOutput = document.querySelector<HTMLCalciteChipElement>("[data-status]");
@@ -272,6 +283,58 @@ function setReadyStatus(label: string): void {
 function setBusy(next: boolean): void {
   busy = next;
   if (!next && sceneLoadNotice.kind !== "danger") sceneLoadNotice.open = false;
+}
+
+/** Covers only the scene while its first imagery and 3D layers settle. */
+function showSceneLoading(label: string): void {
+  sceneLoadingDestination.textContent = label;
+  sceneLoading.hidden = false;
+  flightStage.classList.add("is-loading");
+  flightStage.setAttribute("aria-busy", "true");
+  setSceneLoadingProgress(5);
+  setSceneLoadingPhase("Loading scene data", 5, 45, 12_000);
+}
+
+/** Progress is an estimate bounded by completed setup stages, not transferred bytes. */
+function setSceneLoadingProgress(percent: number): void {
+  const value = Math.min(100, Math.max(0, Math.floor(percent)));
+  sceneProgressValue = value;
+  sceneLoadingProgress.style.setProperty("--scene-progress", `${value}%`);
+  sceneLoadingProgress.setAttribute("aria-valuenow", String(value));
+  sceneLoadingPercent.textContent = `${value}%`;
+}
+
+function setSceneLoadingPhase(label: string, floor: number, ceiling: number, durationMs: number): void {
+  if (sceneProgressTimer !== null) window.clearInterval(sceneProgressTimer);
+  sceneLoadingPhase.textContent = label;
+  setSceneLoadingProgress(Math.max(sceneProgressValue, floor));
+  const startedAt = performance.now();
+  sceneProgressTimer = window.setInterval(() => {
+    const elapsed = performance.now() - startedAt;
+    const estimate = floor + (ceiling - floor) * (1 - Math.exp(-elapsed / durationMs));
+    setSceneLoadingProgress(Math.max(sceneProgressValue, estimate));
+  }, SCENE_PROGRESS_TICK_MS);
+}
+
+function hideSceneLoading(): void {
+  if (sceneProgressTimer !== null) window.clearInterval(sceneProgressTimer);
+  sceneProgressTimer = null;
+  sceneLoading.hidden = true;
+  flightStage.classList.remove("is-loading");
+  flightStage.setAttribute("aria-busy", "false");
+}
+
+/** Waits for initial scene updates, with a short cap for continuously streaming layers. */
+async function waitForSceneRender(targetScene: HTMLArcgisSceneElement, signal: AbortSignal): Promise<void> {
+  const timeout = AbortSignal.timeout(SCENE_RENDER_MAX_MS);
+  const renderSignal = AbortSignal.any([signal, timeout]);
+  await new Promise<void>((resolve) => setTimeout(resolve, SCENE_RENDER_MIN_MS));
+  if (renderSignal.aborted) return;
+  try {
+    await reactiveUtils.whenOnce(() => !targetScene.view.updating, { signal: renderSignal });
+  } catch {
+    // Keep the picker usable and reveal the scene even if its layers keep streaming.
+  }
 }
 
 /** Shows or hides the optional settings shell and synchronizes its action state. */
@@ -660,14 +723,12 @@ const sceneController = new SceneActivationController<
 });
 
 /**
- * Activates a scene, then returns keyboard focus to the scene for steering.
+ * Activates a scene before the first render has finished.
  *
  * @param next Scene map, flight start, and optional view settings to activate.
  */
 async function activateScene(next: ActiveDemoScene): Promise<void> {
   await sceneController.activate(next);
-  scene.focus();
-  setReadyStatus("Ready to fly");
 }
 
 /**
@@ -688,6 +749,7 @@ async function loadSelection(
   const selection = new AbortController();
   activeSelection = selection;
   setBusy(true);
+  showSceneLoading(label);
   sceneLayerWarning = null;
   setStatus(`Loading ${label}`, "loading");
   setSceneLoadStatus(`Loading ${label}...`, "loading");
@@ -697,8 +759,22 @@ async function loadSelection(
       disposeArcGISResource(candidate.map);
       return;
     }
+    setSceneLoadingPhase("Building the 3D view", 50, 72, 6_000);
     activating = true;
     await activateScene(candidate);
+    activating = false;
+    setSceneLoadStatus(`Rendering ${candidate.title}...`, "loading");
+    setSceneLoadingPhase("Rendering the scene", 76, 95, 3_000);
+    await waitForSceneRender(scene, selection.signal);
+    if (activeSelection !== selection) return;
+    if (sceneProgressTimer !== null) window.clearInterval(sceneProgressTimer);
+    sceneProgressTimer = null;
+    sceneLoadingPhase.textContent = "Ready to fly";
+    setSceneLoadingProgress(100);
+    await new Promise<void>((resolve) => setTimeout(resolve, 250));
+    if (activeSelection !== selection) return;
+    scene.focus();
+    setReadyStatus("Ready to fly");
     if (sceneLayerWarning) setSceneLoadStatus(sceneLayerWarning, "error");
     else setSceneLoadStatus(`${candidate.title} is ready.`, "ready");
   } catch (error) {
@@ -711,6 +787,7 @@ async function loadSelection(
       activeSelection = null;
       activating = false;
       setBusy(false);
+      hideSceneLoading();
     }
   }
 }
@@ -778,7 +855,7 @@ function showFeaturedWebScenes(): void {
   websceneSearchInput.loading = false;
   websceneSearchButton.loading = false;
   websceneSortLabel.hidden = true;
-  websceneSearchSummary.textContent = "Featured 3D scenes selected for flying.";
+  websceneSearchSummary.textContent = "Featured 3D scenes from ArcGIS Living Atlas.";
   websceneResults.replaceChildren(...FEATURED_WEBSCENES.map(webSceneCard));
 }
 
@@ -894,10 +971,12 @@ cameraRoll?.addEventListener("calciteSwitchChange", () => {
 });
 
 navigation.addEventListener("arcgisPlaneNavigationReady", () => {
+  if (busy) return;
   setReadyStatus("Scene ready");
 });
 
 navigation.addEventListener("arcgisPlaneNavigationSnapshot", (event) => {
+  if (busy) return;
   if (event.detail.snapshot.phase === "paused") {
     setReadyStatus("Flight paused");
   } else if (event.detail.snapshot.phase === "running") {

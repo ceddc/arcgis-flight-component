@@ -1,11 +1,12 @@
 # Scene explorer sample
 
-Pick a place and fly around it. The app starts near Mount Fuji with the place
+Pick a place and fly around it. The app starts at the Grand Canyon with the place
 picker open. You can:
 
 - choose one of the suggested places,
 - search for an address (Esri World Geocoder; queries are not stored), or
-- search public WebScenes on ArcGIS Online, or paste an item ID.
+- choose a featured 3D WebScene from ArcGIS Living Atlas, search public
+  WebScenes on ArcGIS Online, or paste an item ID.
 
 **Settings** changes the steering sensitivity, field of view, pitch direction,
 and horizon roll.

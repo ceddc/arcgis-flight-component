@@ -11,8 +11,8 @@ import {
 } from "./scenes";
 
 describe("demo scene catalog", () => {
-  it("contains ten destinations with valid start positions", () => {
-    expect(DEMO_SCENE_PRESETS).toHaveLength(10);
+  it("contains eight destinations with valid start positions", () => {
+    expect(DEMO_SCENE_PRESETS).toHaveLength(8);
     expect(new Set(DEMO_SCENE_PRESETS.map(preset => preset.key)).size).toBe(DEMO_SCENE_PRESETS.length);
     for (const preset of DEMO_SCENE_PRESETS) {
       expect(Number.isFinite(preset.start.altitudeM)).toBe(true);
@@ -31,7 +31,7 @@ describe("demo scene catalog", () => {
   });
 
   it("resolves presets without inventing a fallback", () => {
-    expect(demoScenePreset("redlands")?.title).toBe("Redlands");
+    expect(demoScenePreset("grand-canyon")?.title).toBe("Grand Canyon");
     expect(demoScenePreset("missing")).toBeNull();
   });
 });
