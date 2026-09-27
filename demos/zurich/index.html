@@ -1,0 +1,41 @@
+<!--
+  Zurich local-scene demo page. The shell provides a scene container, flight
+  component, and status UI; main.ts loads its LV95 WebScene into a SceneView.
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Zurich local scene in Swiss LV95 with 3D buildings." />
+    <title>Zurich local scene demo | ArcGIS Flight Component</title>
+  </head>
+  <body class="calcite-mode-light">
+    <calcite-shell class="flight-shell">
+      <calcite-navigation slot="header" class="app-header" scale="s" aria-label="ArcGIS Flight">
+        <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Zurich / Local scene"></calcite-navigation-logo>
+        <div slot="content-end" class="header-actions"></div>
+        <!-- site-navigation -->
+      </calcite-navigation>
+      <main class="flight-stage">
+        <!-- SceneView attaches here after the public WebScene finishes loading. -->
+        <div id="scene" aria-label="Zurich skyline"></div>
+        <arcgis-plane-navigation></arcgis-plane-navigation>
+        <aside class="enterprise-info" aria-label="About this flight">
+          <p id="load-status" role="status" aria-live="polite">Loading the Zurich skyline...</p>
+          <button id="retry" type="button" hidden>Reload scene</button>
+          <details>
+            <summary>About this scene</summary>
+            <p>The Zurich LV95 WebScene supplies the basemap, terrain, and 3D buildings.</p>
+            <p>Local scene: Swiss LV95 (EPSG:2056), in metres.</p>
+            <p>Ground clearance does not detect buildings. Stay above the roofs.</p>
+            <a href="https://www.arcgis.com/home/item.html?id=067ada556ed84bb3aa5c65b4f2a7c15d" target="_blank" rel="noopener noreferrer">View the source WebScene</a>
+            <a href="../../getting-started.html#use-an-arcgis-scene-element">Add the plane to your scene</a>
+          </details>
+        </aside>
+      </main>
+    </calcite-shell>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

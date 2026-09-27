@@ -1,0 +1,211 @@
+{
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "arcgis-plane-navigation",
+      "description": "Fly an aircraft in a caller-owned ArcGIS 3D scene. Set the scene with `reference-element` in HTML; assign `view`, `referenceElement`, or `config` as JavaScript properties. See the API reference for methods and events.",
+      "references": [
+        {
+          "name": "API reference",
+          "url": "https://ceddc.github.io/arcgis-flight-component/api-reference.html"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "reference-element",
+          "description": "Type: string. ID of a caller-owned `<arcgis-scene>` in the same document. A directly assigned `view` or `referenceElement` property takes precedence."
+        },
+        {
+          "name": "start-longitude",
+          "description": "Type: number. Starting longitude in degrees. Supply together with `start-latitude`."
+        },
+        {
+          "name": "start-latitude",
+          "description": "Type: number. Starting latitude in degrees, from -90 to 90. Supply together with `start-longitude`."
+        },
+        {
+          "name": "start-altitude-m",
+          "description": "Type: number. Starting absolute altitude in metres. Omit to start above sampled terrain."
+        },
+        {
+          "name": "start-heading-deg",
+          "description": "Type: number. Starting heading in degrees clockwise from north."
+        },
+        {
+          "name": "start-speed-mps",
+          "description": "Type: number. Initial forward speed. Uses metres per second in local scenes and projected scene units per second in global Web Mercator scenes."
+        },
+        {
+          "name": "camera-mode",
+          "description": "Type: \"chase\" | \"cockpit\". Initial camera view. Changes to this attribute update the active flight without restarting it.",
+          "values": [
+            {
+              "name": "chase"
+            },
+            {
+              "name": "cockpit"
+            }
+          ]
+        },
+        {
+          "name": "power-mode",
+          "description": "Type: \"slow\" | \"normal\" | \"turbo\". Initial flight power mode: brake toward slow speed, cruise normally, or use turbo boost.",
+          "values": [
+            {
+              "name": "slow"
+            },
+            {
+              "name": "normal"
+            },
+            {
+              "name": "turbo"
+            }
+          ]
+        },
+        {
+          "name": "sensitivity",
+          "description": "Type: number. Keyboard, gamepad, and touch control sensitivity, clamped to 0.5 through 2."
+        },
+        {
+          "name": "fov-deg",
+          "description": "Type: number. Base camera field of view in degrees, clamped to 58 through 76."
+        },
+        {
+          "name": "invert-pitch-disabled",
+          "description": "Type: boolean (presence). Presence disables the default inverted pitch control. Remove the attribute to restore the default; `=\"false\"` still counts as present."
+        },
+        {
+          "name": "camera-roll-disabled",
+          "description": "Type: boolean (presence). Presence disables banked viewport roll during turns."
+        },
+        {
+          "name": "keyboard-disabled",
+          "description": "Type: boolean (presence). Presence disables keyboard flight input."
+        },
+        {
+          "name": "gamepad-disabled",
+          "description": "Type: boolean (presence). Presence disables gamepad flight input."
+        },
+        {
+          "name": "capture-scene-navigation-disabled",
+          "description": "Type: boolean (presence). Presence leaves ArcGIS scene navigation gestures under the host's control."
+        },
+        {
+          "name": "auto-start-disabled",
+          "description": "Type: boolean (presence). Presence initializes flight in the ready state; call `start()` to begin flying."
+        },
+        {
+          "name": "show-controls",
+          "description": "Type: boolean (presence). Presence shows the built-in flight toolbar."
+        },
+        {
+          "name": "joystick",
+          "description": "Type: \"auto\" | \"always\" | \"never\". Touch joystick visibility. `auto` shows it on coarse-pointer devices, independently of the toolbar.",
+          "values": [
+            {
+              "name": "auto"
+            },
+            {
+              "name": "always"
+            },
+            {
+              "name": "never"
+            }
+          ]
+        },
+        {
+          "name": "joystick-position",
+          "description": "Type: \"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"top-start\" | \"top-end\" | \"bottom-start\" | \"bottom-end\". ArcGIS scene slot for the touch joystick; defaults to `bottom-left`.",
+          "values": [
+            {
+              "name": "top-left"
+            },
+            {
+              "name": "top-right"
+            },
+            {
+              "name": "bottom-left"
+            },
+            {
+              "name": "bottom-right"
+            },
+            {
+              "name": "top-start"
+            },
+            {
+              "name": "top-end"
+            },
+            {
+              "name": "bottom-start"
+            },
+            {
+              "name": "bottom-end"
+            }
+          ]
+        },
+        {
+          "name": "ui-position",
+          "description": "Type: \"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"top-start\" | \"top-end\" | \"bottom-start\" | \"bottom-end\". ArcGIS scene slot for the built-in toolbar; defaults to `bottom-end`.",
+          "values": [
+            {
+              "name": "top-left"
+            },
+            {
+              "name": "top-right"
+            },
+            {
+              "name": "bottom-left"
+            },
+            {
+              "name": "bottom-right"
+            },
+            {
+              "name": "top-start"
+            },
+            {
+              "name": "top-end"
+            },
+            {
+              "name": "bottom-start"
+            },
+            {
+              "name": "bottom-end"
+            }
+          ]
+        },
+        {
+          "name": "ui-controls",
+          "description": "Type: string. Unique toolbar controls separated by spaces or commas: `power`, `pause`, `camera`, `recover`."
+        },
+        {
+          "name": "show-speed",
+          "description": "Type: boolean (presence). Presence shows the speed readout in the built-in toolbar."
+        },
+        {
+          "name": "locale",
+          "description": "Type: \"auto\" | \"en\" | \"de\" | \"fr\" | \"it\" | \"es\". Language for built-in controls. `auto` follows ArcGIS, document, then browser language.",
+          "values": [
+            {
+              "name": "auto"
+            },
+            {
+              "name": "en"
+            },
+            {
+              "name": "de"
+            },
+            {
+              "name": "fr"
+            },
+            {
+              "name": "it"
+            },
+            {
+              "name": "es"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

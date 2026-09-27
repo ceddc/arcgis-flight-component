@@ -1,0 +1,26 @@
+# ArcGIS Flight Component
+
+> A browser web component, <arcgis-plane-navigation>, that adds a flyable aircraft with chase and cockpit cameras to a 3D scene built with the ArcGIS Maps SDK for JavaScript (SDK 4.30 to 5.1).
+
+Install: npm install github:ceddc/arcgis-flight-component @arcgis/core@~5.1.24 @arcgis/map-components@~5.1.24
+Import: import "@ceddc/arcgis-flight-component"; (SDK 5.1). Use the /sdk-4.32 or /sdk-4.30 subpath for older SDKs.
+Connect: <arcgis-plane-navigation reference-element="scene-id"> next to an <arcgis-scene>, or set element.view = sceneView.
+
+The app owns the view, map, layers, and sign-in. The component adds the aircraft and input, controls the camera while flying, and restores the camera and navigation when it stops or is removed.
+
+## Guides
+
+- [Get started](https://raw.githubusercontent.com/ceddc/arcgis-flight-component/main/docs/getting-started.md): install, add the component, controls, start position, existing SceneView, cleanup
+- [Samples](https://raw.githubusercontent.com/ceddc/arcgis-flight-component/main/docs/samples.md): five sample apps with code
+- [Configure the flight](https://raw.githubusercontent.com/ceddc/arcgis-flight-component/main/docs/configuration-recipes.md): recipes for camera, controls, toolbar, speed, terrain, events, and programmatic control
+- [Custom aircraft](https://raw.githubusercontent.com/ceddc/arcgis-flight-component/main/docs/custom-aircraft.md): flight profiles, custom glTF models, setAircraft(), tuning
+- [How it works](https://raw.githubusercontent.com/ceddc/arcgis-flight-component/main/docs/flight-concepts.md): what the component owns, defaults, camera, ground clearance, supported scenes, units
+- [SDK versions](https://raw.githubusercontent.com/ceddc/arcgis-flight-component/main/docs/sdk-compatibility.md): imports per SDK version, AMD, standalone HTML
+
+## Reference
+
+- [API reference](https://raw.githubusercontent.com/ceddc/arcgis-flight-component/main/docs/api-reference.md): properties, attributes, config fields, methods, events, types
+- [Troubleshooting](https://raw.githubusercontent.com/ceddc/arcgis-flight-component/main/docs/troubleshooting.md): common problems and fixes
+- [Development](https://raw.githubusercontent.com/ceddc/arcgis-flight-component/main/docs/development.md): setup, commands, code map, rules, build and publish
+
+Source code and bundled aircraft models use the MIT License. ArcGIS services and data have their own terms.

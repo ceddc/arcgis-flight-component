@@ -1,0 +1,6 @@
+/*
+ * Gives the minimal Matterhorn demo the common full-screen Calcite shell,
+ * scene placement, navigation, and responsive control styling. This page needs
+ * no additional local selectors beyond the shared theme.
+ */
+@import "../shared/theme.css";

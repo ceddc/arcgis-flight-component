@@ -1,0 +1,89 @@
+<!doctype html>
+<!--
+  Landing page for the runnable demo index. Vite replaces the site-navigation
+  marker at build time so this page shares links with the documentation site.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Runnable examples for the ArcGIS Flight Component."
+    />
+    <title>Samples | ArcGIS Flight Component</title>
+  </head>
+  <body class="calcite-mode-light">
+    <calcite-shell>
+      <calcite-navigation class="app-header" scale="s" slot="header" aria-label="ArcGIS Flight Component samples">
+        <calcite-navigation-logo
+          slot="logo"
+          icon="plane"
+          heading="ArcGIS Flight Component"
+          description="Samples"
+        ></calcite-navigation-logo>
+      <!-- site-navigation -->
+      </calcite-navigation>
+
+      <main class="sample-index">
+        <header class="sample-intro">
+          <p class="eyebrow">ArcGIS Maps SDK for JavaScript</p>
+          <h1>ArcGIS Flight Component samples</h1>
+        </header>
+
+        <section class="sample-grid" aria-label="Available samples">
+          <calcite-card>
+            <div slot="thumbnail" class="sample-number">01</div>
+            <span slot="heading">Basic flight demo</span>
+            <p>Keyboard flight toward the Matterhorn.</p>
+            <calcite-button
+              slot="footer-end"
+              href="./demos/simple/"
+              icon-end="arrow-right"
+              width="full"
+            >Open basic flight</calcite-button>
+          </calcite-card>
+
+          <calcite-card>
+            <div slot="thumbnail" class="sample-number">02</div>
+            <span slot="heading">Flight controls demo</span>
+            <p>Fly over Geneva's 3D buildings while changing power, camera, and flight state.</p>
+            <calcite-button
+              slot="footer-end"
+              href="./demos/simple-controls/"
+              icon-end="arrow-right"
+              width="full"
+            >Open flight controls</calcite-button>
+          </calcite-card>
+
+          <calcite-card>
+            <div slot="thumbnail" class="sample-number">03</div>
+            <span slot="heading">Scene explorer demo</span>
+            <p>Choose a place, search an address, or load a public WebScene.</p>
+            <calcite-button
+              slot="footer-end"
+              href="./demos/webscene-selector/"
+              icon-end="arrow-right"
+              width="full"
+            >Open scene explorer</calcite-button>
+          </calcite-card>
+          <calcite-card>
+            <div slot="thumbnail" class="sample-number">04</div>
+            <span slot="heading">Zurich local scene</span>
+            <p>Local Zurich scene with 3D buildings.</p>
+            <calcite-button slot="footer-end" href="./demos/zurich/" icon-end="arrow-right" width="full">Open Zurich</calcite-button>
+          </calcite-card>
+          <calcite-card>
+            <div slot="thumbnail" class="sample-number">05</div>
+            <span slot="heading">World Sky Tour UI</span>
+            <p>Choose an aircraft, change weather and time, and save a picture.</p>
+            <calcite-button slot="footer-end" href="./demos/aircraft/" icon-end="arrow-right" width="full">Open World Sky Tour UI</calcite-button>
+          </calcite-card>
+        </section>
+
+      </main>
+    </calcite-shell>
+    <script type="module" src="./demos/landing.ts"></script>
+  </body>
+</html>
