@@ -13,7 +13,7 @@ keyboard, a gamepad, or a touch joystick.
 
 > [!NOTE]
 > This is a personal, for-fun project, built with help from ChatGPT.
-> It is not an official Esri product, and the API may change before 1.0.
+> It is not an official Esri product.
 > Issues and ideas are welcome.
 
 ## Quick start
