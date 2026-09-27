@@ -1,15 +1,32 @@
 /**
  * Builds the static documentation site from Markdown sources. This script
  * renders the selected pages, resolves repository-relative links/media,
- * bundles the docs UI, generates search data, and copies assets to dist/docs-site.
+ * highlights code, bundles the docs UI, generates search data, and copies
+ * assets to dist/docs-site.
  */
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import hljs from "highlight.js/lib/core";
+import bash from "highlight.js/lib/languages/bash";
+import css from "highlight.js/lib/languages/css";
+import javascript from "highlight.js/lib/languages/javascript";
+import json from "highlight.js/lib/languages/json";
+import typescript from "highlight.js/lib/languages/typescript";
+import xml from "highlight.js/lib/languages/xml";
 import { marked } from "marked";
 import { build } from "vite";
 import { siteNavigation } from "./site-navigation.mjs";
+
+// Only the languages used in the docs, with the label shown on each code block.
+hljs.registerLanguage("bash", bash);
+hljs.registerLanguage("css", css);
+hljs.registerLanguage("js", javascript);
+hljs.registerLanguage("json", json);
+hljs.registerLanguage("ts", typescript);
+hljs.registerLanguage("html", xml);
+const codeLabels = { bash: "Shell", css: "CSS", js: "JavaScript", json: "JSON", ts: "TypeScript", html: "HTML" };
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, "..");
@@ -17,6 +34,7 @@ const outputDirectory = path.resolve(repositoryRoot, "dist", "docs-site");
 const siteAssetsDirectory = path.resolve(repositoryRoot, "docs", "site");
 const documentationImagesDirectory = path.resolve(repositoryRoot, "docs", "images");
 const githubSourceRoot = "https://github.com/ceddc/arcgis-flight-component/blob/main/";
+const githubEditRoot = "https://github.com/ceddc/arcgis-flight-component/edit/main/";
 const packageManifest = JSON.parse(
   await readFile(path.join(repositoryRoot, "package.json"), "utf8"),
 );
@@ -27,21 +45,29 @@ const arcgisSdkRange = String(
     ?? "not declared",
 );
 
+// Navigation order. Previous/next links follow this order too.
 const pages = [
   { group: "Start here", title: "Overview", source: "README.md", output: "index.html" },
-  { group: "Start here", title: "Getting started", source: "docs/getting-started.md", output: "getting-started.html" },
-  { group: "Guides", title: "Common changes", source: "docs/configuration-recipes.md", output: "configuration-recipes.html" },
-  { group: "Guides", title: "Flight concepts", source: "docs/flight-concepts.md", output: "flight-concepts.html" },
+  { group: "Start here", title: "Get started", source: "docs/getting-started.md", output: "getting-started.html" },
+  { group: "Start here", title: "Samples", source: "docs/samples.md", output: "samples.html" },
+  { group: "Guides", title: "Configure the flight", source: "docs/configuration-recipes.md", output: "configuration-recipes.html" },
   { group: "Guides", title: "Custom aircraft", source: "docs/custom-aircraft.md", output: "custom-aircraft.html" },
-  { group: "Start here", title: "Demos", source: "docs/demo.md", output: "demo.html" },
-  { group: "Reference", title: "SDK integration", source: "docs/sdk-compatibility.md", output: "sdk-compatibility.html" },
-  { group: "Reference", title: "Configuration", source: "docs/configuration.md", output: "configuration.html" },
+  { group: "Guides", title: "How it works", source: "docs/flight-concepts.md", output: "flight-concepts.html" },
+  { group: "Guides", title: "SDK versions", source: "docs/sdk-compatibility.md", output: "sdk-compatibility.html" },
   { group: "Reference", title: "API reference", source: "docs/api-reference.md", output: "api-reference.html" },
   { group: "Reference", title: "Troubleshooting", source: "docs/troubleshooting.md", output: "troubleshooting.html" },
-  { title: "Architecture", source: "docs/architecture.md", output: "architecture.html" },
-  { group: "Guides", title: "Codebase guide", source: "docs/codebase-guide.md", output: "codebase-guide.html" },
-  { title: "Development", source: "docs/development.md", output: "development.html" },
+  { group: "Contribute", title: "Development", source: "docs/development.md", output: "development.html" },
 ];
+
+// Pages merged into others. Old links redirect, keeping their #section when present.
+const redirects = {
+  "demo.html": "samples.html",
+  "configuration.html": "api-reference.html#configuration",
+  "architecture.html": "flight-concepts.html",
+  "codebase-guide.html": "development.html#code-map",
+};
+
+const calloutTitles = { NOTE: "Note", TIP: "Tip", IMPORTANT: "Important", WARNING: "Warning", CAUTION: "Caution" };
 
 /**
  * Ensures the cleanup/rebuild target is the expected repository output folder.
@@ -142,16 +168,82 @@ function sectionNavigation(html) {
   return `<section class="section-nav"><h2>On this page</h2><ul>${links}</ul></section>`;
 }
 
+// Render fenced code with syntax highlighting, a language label, and a copy button.
+marked.use({
+  renderer: {
+    code({ text, lang }) {
+      const language = (lang ?? "").trim().split(/\s+/)[0].toLowerCase();
+      const body = hljs.getLanguage(language)
+        ? hljs.highlight(text, { language, ignoreIllegals: true }).value
+        : escapeHtml(text);
+      const label = codeLabels[language] ? `<span class="code-label">${codeLabels[language]}</span>` : "";
+      return `<div class="code-shell">${label}<button class="copy-button" type="button">Copy</button>`
+        + `<pre><code class="hljs">${body}</code></pre></div>\n`;
+    },
+  },
+});
+
 /**
- * Wraps fenced-code blocks with the UI shell used by the copy button.
+ * Turns GitHub-style alerts (`> [!NOTE]`, `> [!TIP]`, ...) into styled callouts,
+ * so the same Markdown reads well on GitHub and on the site.
  *
  * @param {string} html Rendered page content.
- * @returns {string} Content with each code block enclosed in its copy shell.
+ * @returns {string} Content with alert blockquotes replaced by callouts.
  */
-function decorateCodeBlocks(html) {
-  return html
-    .replace(/<pre><code/g, '<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code')
-    .replace(/<\/code><\/pre>/g, "</code></pre></div>");
+function decorateCallouts(html) {
+  return html.replace(
+    /<blockquote>\s*<p>\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*([\s\S]*?)<\/blockquote>/g,
+    (_match, kind, body) => `<aside class="callout callout-${kind.toLowerCase()}">`
+      + `<p class="callout-title">${calloutTitles[kind]}</p><p>${body}</aside>`,
+  );
+}
+
+/**
+ * Uses the page's first paragraph as its meta description.
+ *
+ * @param {string} html Rendered page content.
+ * @param {string} fallback Text used when the page has no paragraph.
+ * @returns {string} Plain text of at most about 160 characters.
+ */
+function pageDescription(html, fallback) {
+  const paragraph = html.match(/<p>([\s\S]*?)<\/p>/)?.[1] ?? fallback;
+  const text = paragraph.replace(/<[^>]+>/g, "").replace(/&[a-z#0-9]+;/gi, " ").replace(/\s+/g, " ").trim();
+  return text.length > 160 ? `${text.slice(0, 157).replace(/\s+\S*$/, "")}...` : text;
+}
+
+/**
+ * Renders links to the previous and next pages in navigation order.
+ *
+ * @param {{output: string}} page Current page.
+ * @returns {string} Pager markup.
+ */
+function pager(page) {
+  const index = pages.indexOf(page);
+  const link = (target, rel, label) => target
+    ? `<a class="pager-${rel}" href="${target.output}" rel="${rel}"><span>${label}</span>${escapeHtml(target.title)}</a>`
+    : "<span></span>";
+  return `<nav class="pager" aria-label="Previous and next pages">${link(pages[index - 1], "prev", "Previous")}${link(pages[index + 1], "next", "Next")}</nav>`;
+}
+
+/**
+ * Creates a small page that forwards an old URL to its new location.
+ *
+ * @param {string} target New page, with an optional default #section.
+ * @returns {string} Redirect HTML that keeps the visitor's own #section if any.
+ */
+function redirectPage(target) {
+  const [targetPage] = target.split("#");
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Page moved | ArcGIS Flight Component</title>
+    <link rel="canonical" href="${target}">
+    <script>location.replace(${JSON.stringify(targetPage)} + (location.hash || ${JSON.stringify(target.slice(targetPage.length))}));</script>
+    <meta http-equiv="refresh" content="0; url=${target}">
+  </head>
+  <body><p>This page moved to <a href="${target}">${target}</a>.</p></body>
+</html>`;
 }
 
 /**
@@ -211,7 +303,7 @@ function resolveInternalMedia(html, page) {
  * Renders the grouped, page-aware navigation list from the page catalog.
  *
  * @param {string} activeOutput Output filename for the current page.
- * @param {string} sections In-page links for the current page.
+ * @param {string} sections In-page links for the current page, shown on narrow screens.
  * @returns {string} Accessible grouped navigation markup.
  */
 function navigation(activeOutput, sections) {
@@ -237,7 +329,8 @@ function navigation(activeOutput, sections) {
  * @returns {string} Complete HTML document with the site analytics guard.
  */
 function pageTemplate(page, content, sections) {
-  const description = `ArcGIS Flight Component documentation: ${page.title}.`;
+  const description = pageDescription(content, `ArcGIS Flight Component documentation: ${page.title}.`);
+  const pageId = path.basename(page.output, ".html");
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -250,7 +343,7 @@ function pageTemplate(page, content, sections) {
     <link rel="stylesheet" href="doc-assets/docs-ui.css?v=${uiRevision}">
     <script type="module" src="doc-assets/docs-ui.js?v=${uiRevision}"></script>
   </head>
-  <body class="calcite-mode-light">
+  <body class="calcite-mode-light" data-page="${pageId}">
     <a class="skip-link" href="#content">Skip to documentation</a>
     <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
       <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
@@ -270,11 +363,13 @@ function pageTemplate(page, content, sections) {
       <main id="content" class="content" tabindex="-1">
         <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>${escapeHtml(page.title)}</span></nav>
         <article>${content}</article>
+        ${pager(page)}
         <footer class="page-footer">
           <span>Source: <code>${escapeHtml(page.source)}</code></span>
-          <a href="${githubSourceRoot}${page.source}">View on GitHub</a>
+          <a href="${githubEditRoot}${page.source}">Edit this page on GitHub</a>
         </footer>
       </main>
+      ${sections ? `<aside class="toc">${sections}</aside>` : ""}
     </div>
   </body>
 </html>`;
@@ -308,7 +403,7 @@ for (const page of pages) {
   const markdown = await readFile(path.join(repositoryRoot, page.source), "utf8");
   const parsed = marked.parse(markdown, { gfm: true });
   if (typeof parsed !== "string") throw new Error(`Unexpected asynchronous Markdown output for ${page.source}.`);
-  const content = decorateCodeBlocks(
+  const content = decorateCallouts(
     addHeadingIds(resolveInternalLinks(resolveInternalMedia(parsed, page), page)),
   );
   const sections = sectionNavigation(content);
@@ -326,5 +421,8 @@ await writeFile(
   "utf8",
 );
 await cp(path.join(repositoryRoot, "docs", "llms.txt"), path.join(outputDirectory, "llms.txt"));
+for (const [from, to] of Object.entries(redirects)) {
+  await writeFile(path.join(outputDirectory, from), redirectPage(to), "utf8");
+}
 
 console.log(`Built ${pages.length} documentation pages in ${path.relative(repositoryRoot, outputDirectory)}.`);

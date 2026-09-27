@@ -1,80 +1,121 @@
-# Flight concepts
+# How it works
 
-The aircraft, camera, and ground checks work together to let you explore
-your scene. Here is how they behave, and what the
-[configuration settings](configuration.md) change.
+The component adds a plane to a 3D scene that your app already owns. This page
+explains what it controls, what it leaves alone, and which scenes it supports.
 
-## The plane
+## Your app and the component
 
-The default plane moves forward as you steer. Heading is the
-direction of travel, pitch raises or lowers the nose, and bank tilts the wings
-and turns the aircraft. Releasing the controls gradually levels pitch and bank.
-Flight continues forward until paused or stopped.
-
-Think of it as a playful way to explore maps. The flight model is simplified
-and is not suitable for pilot training.
-The GLB file gives the aircraft its appearance. A [flight profile](custom-aircraft.md#choose-speed-and-handling)
-controls speed and handling. The Space Jet and Paraglider have different controls
-from the default plane.
-
-The default aircraft has a body, a separately spinning propeller, and a boost
-effect that grows and fades in turbo mode. To replace
-them or change the flight rules, see [Custom aircraft](custom-aircraft.md).
-
-## What happens with no options
-
-| Setting | Default behavior |
+| Your app owns | The component adds |
 | --- | --- |
-| Start | Use the loaded view center and camera heading, 300 m above sampled ground. |
-| Motion | Start automatically at speed `100`, displayed as 360 km/h, in normal power mode. |
-| Camera | Chase view behind the aircraft, base field of view 65 degrees, viewport banking enabled. |
-| Input | Keyboard and gamepad enabled, sensitivity `0.8`, inverted pitch. W/Up lowers the nose; S/Down raises it. |
-| Ground limits | Clearance enabled, a 2.8 m lower threshold, and a 50000 m ceiling above ground. |
-| Controls on screen | Hidden. The controls demo supplies its own toolbar. |
+| The `SceneView` or `<arcgis-scene>` | A graphics layer with the aircraft |
+| The map, ground, and layers | Keyboard, gamepad, and touch input |
+| Sign-in and access to private content | Camera movement that follows the plane |
+| The page layout and your own UI | The optional toolbar and joystick |
 
-Without `start.altitudeM`, startup needs a ground elevation sample. If ArcGIS
-cannot supply one, flight reports an error instead of assuming ground is at
-zero.
+While flying, the component takes over the camera and the scene's mouse and
+touch navigation. When the flight stops, it removes everything it added and
+restores the camera and navigation settings. It never destroys your view, map,
+or layers.
 
-Demos can choose different defaults. Local scenes use metre-based flight
-distances. Global scenes retain Web Mercator movement; see
-[distance units](configuration.md#scene-distance-semantics) if you need accurate travel distances.
+Only one flight can run in a view at a time.
+
+## Default behavior
+
+With no options set:
+
+| | Default |
+| --- | --- |
+| Start | Center of the view, 300 m above the ground, in the camera's direction |
+| Speed | 360 km/h, normal power mode |
+| Camera | Chase view behind the plane, 65° field of view, horizon tilts in turns |
+| Input | Keyboard and gamepad on, sensitivity `0.8`, pitch inverted like a flight stick |
+| Touch | Joystick on touch screens only |
+| Ground | Stays at least 2.8 m above the ground, at most 50 km above it |
+| Toolbar | Hidden |
+| Start time | As soon as the scene is ready |
 
 ## The camera
 
-Chase view follows behind the plane with smoothed movement. Cockpit view moves
-the camera near the aircraft's origin and hides the aircraft model; it does
-not render an instrument panel. Switching views preserves the flight.
+**Chase** view follows behind the plane. Drag the scene with the mouse or one
+finger to look around; release to swing back behind the plane.
 
-Drag the scene with the left mouse button or one finger to look around in chase view. Release to return behind the plane. Cockpit view stays fixed. Two-finger gestures do not zoom during flight. This requires `controls.captureSceneNavigation`, enabled by default.
+**Cockpit** view puts the camera at the plane's position and hides the model.
+There is no instrument panel.
 
-`fovDeg` sets the base viewing angle: larger values show more of the scene.
-Camera transitions and boost can adjust the presented angle. Viewport banking
-tilts the horizon during turns; disabling it leaves the horizon level while
-the plane still banks. `submissionHz` caps camera updates, not the simulation
-rate or guaranteed frame rate.
+In turns, the horizon tilts with the plane. This uses an ArcGIS
+[`RenderNode`](https://developers.arcgis.com/javascript/latest/references/core/views/3d/webgl/RenderNode/).
+If it is not available, or you set `camera-roll-disabled`, the horizon stays
+level and everything else works the same.
 
-## Terrain and height above ground
+## Ground clearance
 
-The hills and valleys come from your scene's elevation data. The component
-uses that data to check the aircraft's height above the ground. Its `terrain`
-settings control those checks; your scene still supplies and loads the terrain.
+The component reads the ground height from the scene's elevation data:
 
-**AGL means above ground level.** It is aircraft altitude minus the sampled
-ground elevation underneath. For example, altitude 1300 m over ground at
-1000 m means 300 m AGL. Altitude uses the host scene's vertical reference.
+- Below `terrain.minimumClearanceM` above the ground, it lifts the plane and
+  raises its nose.
+- Above `terrain.maximumAglM`, it caps the altitude.
 
-When a valid ground height is available, flying below `minimumClearanceM`
-lifts the aircraft and nudges its nose upward. Flying above `maximumAglM`
-limits its altitude to ground height plus that ceiling. These checks use the
-aircraft's position, not its wing tips or a collision shape.
+AGL means *above ground level*: a plane at 1,300 m altitude over ground at
+1,000 m is 300 m AGL.
 
-Ground samples can be unavailable while ArcGIS loads data. Clearance and
-ceiling checks then wait for usable data; the component never assumes missing
-ground is at zero. Buildings, trees, bridges, and integrated meshes are not
-obstacles detected by these checks. See [Terrain settings](configuration.md#terrain)
-for defaults and an example.
+These checks use the plane's position and the ground surface only. Buildings,
+trees, and bridges are not obstacles, and the wing tips can touch a slope. When
+elevation data is still loading, the checks wait. The component never treats
+missing ground as sea level.
 
-`recover()` returns to the last safe flight position, resets the attitude and
-initial speed, and preserves pause state. It does not plan a route around
-obstacles.
+Without `start.altitudeM`, the start needs a ground height. If the scene cannot
+supply one, the component reports an error.
+
+## Supported scenes
+
+| Scene | Supported |
+| --- | --- |
+| Global, Web Mercator | Yes |
+| Local, Web Mercator | Yes |
+| Local, projected coordinate system in metres or feet (for example LV95 or a State Plane system) | Yes |
+| Local, geographic coordinates (WGS84) | No |
+| 2D `MapView` | No |
+
+For a local scene, set the coordinate system when you create the view. Your
+layers must use it too:
+
+```js
+const view = new SceneView({
+  container: "viewDiv",
+  map,
+  viewingMode: "local",
+  spatialReference: { wkid: 2263 }, // New York Long Island, US feet
+});
+```
+
+Start longitude and latitude are always WGS84 degrees. The component projects
+them into the scene. The [Zurich sample](../demos/zurich/) shows a local scene
+in Swiss LV95.
+
+> [!TIP]
+> In a large local scene, the plane can disappear behind the camera's near
+> clipping plane. Set `view.constraints.clipDistance` in your app. The component
+> manages clipping only in global scenes.
+
+## Units
+
+Configuration always uses metres, metres per second, and degrees, whatever the
+scene's units.
+
+- **Local scenes:** positions and speeds in snapshots are in metres and metres
+  per second, converted from the scene's units.
+- **Global scenes:** horizontal positions and speeds stay in Web Mercator
+  units. Web Mercator stretches distances away from the equator, so the
+  displayed km/h is a game speed, not a true ground speed. Compute real
+  distances from longitude and latitude if you need them.
+
+Altitude and height above the ground are always in metres.
+
+## ArcGIS Enterprise and private content
+
+The component uses whatever your view loads. To fly over ArcGIS Enterprise or
+private content, sign in and load the scene in your app first, the way you
+normally would. The services must allow requests from your domain (CORS).
+
+The [Flight controls sample](../demos/simple-controls/) loads imagery and terrain
+directly from an ArcGIS Enterprise server.

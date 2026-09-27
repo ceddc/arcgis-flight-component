@@ -1,139 +1,185 @@
-# Common changes
+# Configure the flight
 
-Once you have [a scene with an aircraft](getting-started.md), try these small
-changes to make it your own. In the JavaScript examples, `flight` is your
-`arcgis-plane-navigation` element.
+Short recipes for common changes. Each one works with the page from
+[Get started](getting-started.md). In the JavaScript examples, `flight` is the
+`<arcgis-plane-navigation>` element:
 
-## WebScene and aircraft only
-
-```ts
-import "@arcgis/map-components/components/arcgis-scene";
-import "@ceddc/arcgis-flight-component";
+```js
+const flight = document.querySelector("arcgis-plane-navigation");
 ```
 
-```html
-<style>html, body, arcgis-scene { width: 100%; height: 100%; margin: 0; } arcgis-scene { display: block; }</style>
-<arcgis-scene id="scene" item-id="YOUR_PUBLIC_WEBSCENE_ITEM_ID"></arcgis-scene>
-<arcgis-plane-navigation reference-element="scene"></arcgis-plane-navigation>
-```
+Most options exist both as an HTML attribute and as a field of the `config`
+property. The [API reference](api-reference.md) lists them all.
 
-This gives you keyboard and gamepad controls, ground-clearance checks, and
-a camera behind the plane. See [Getting started](getting-started.md) for
-connecting and removing the component.
-
-## Choose an explicit start pose
-
-```html
-<arcgis-plane-navigation
-  reference-element="scene"
-  start-longitude="8.25613" start-latitude="46.97915"
-  start-altitude-m="2750" start-heading-deg="118"
-></arcgis-plane-navigation>
-```
-
-Set longitude and latitude together. Leave them out to use the loaded view
-center. Heading defaults to the scene camera heading; altitude defaults to
-300 m above the sampled ground.
-
-## Change camera behavior
+## Set the start position
 
 ```html
 <arcgis-plane-navigation reference-element="scene"
-  camera-mode="cockpit" fov-deg="62" camera-roll-disabled>
+  start-longitude="8.256" start-latitude="46.979"
+  start-altitude-m="2750" start-heading-deg="118" start-speed-mps="60">
 </arcgis-plane-navigation>
 ```
 
-Camera mode, field of view, and camera roll can also change live:
+Or in JavaScript, before the flight starts:
 
-```ts
-flight.updateConfig({ camera: { mode: "cockpit", fovDeg: 62, bankedViewport: false } });
+```js
+flight.config = {
+  start: { longitude: 8.256, latitude: 46.979, altitudeM: 2750, headingDeg: 118, speedMps: 60 },
+};
 ```
 
-## Tune input
+Leave out any value to use its default: the view center, 300 m above the
+ground, the camera's heading, and the aircraft's cruise speed.
+
+## Change the camera
+
+Start in the cockpit, narrow the field of view, and keep the horizon level in
+turns:
 
 ```html
 <arcgis-plane-navigation reference-element="scene"
-  sensitivity="1.1" invert-pitch-disabled>
+  camera-mode="cockpit" fov-deg="60" camera-roll-disabled>
 </arcgis-plane-navigation>
 ```
 
-For an autopilot or your own input controls, see
-[programmatic input](api-reference.md#setcontrolpatch).
+Camera changes apply immediately, even during a flight:
 
-## Add the optional flight overlay
+```js
+flight.setCameraMode("chase");
+flight.updateConfig({ camera: { fovDeg: 70, bankedViewport: true } });
+```
+
+## Adjust the controls
 
 ```html
 <arcgis-plane-navigation reference-element="scene"
-  show-controls show-speed ui-position="bottom-end"
-  ui-controls="power pause camera recover" locale="auto">
+  sensitivity="1.2" invert-pitch-disabled gamepad-disabled>
 </arcgis-plane-navigation>
 ```
 
-The toolbar disappears when you remove the flight element. You can also
-set `ui.enabled`, `ui.showSpeed`, `ui.position`, and `ui.controls` through the
-typed `config` property.
+`sensitivity` goes from `0.5` to `2` (default `0.8`). `invert-pitch-disabled`
+makes W and ↑ raise the nose. `keyboard-disabled` and `gamepad-disabled` turn
+off an input.
 
-## Delay automatic flight
+## Show the toolbar
 
-Add `auto-start-disabled` to the element. Then call `start()` when the user
-chooses to fly, for example from a button in your application:
+The component has a small built-in toolbar with speed, power, pause, camera,
+and recover buttons. It is hidden by default.
 
-```ts
-startButton.addEventListener("click", async () => {
-  await flight.start();
-});
+```html
+<arcgis-plane-navigation reference-element="scene"
+  show-controls show-speed ui-position="bottom-end" ui-controls="power pause">
+</arcgis-plane-navigation>
 ```
 
-## Set ground clearance
+`ui-controls` picks the buttons and their order: `power`, `pause`, `camera`,
+`recover`. `locale` sets the language: `en`, `de`, `fr`, `it`, or `es`. By
+default the toolbar follows the page language.
 
-Use the scene's ground height to keep the aircraft above the surface and limit
-its height above ground (AGL). This example uses a 5 m lower threshold and a
-3500 m ceiling:
+## Move or hide the touch joystick
 
-```ts
-flight.updateConfig({
-  terrain: { enabled: true, minimumClearanceM: 5, maximumAglM: 3500 },
-});
+The joystick appears on touch screens only. You can move it, always show it,
+or hide it and build your own:
+
+```html
+<arcgis-plane-navigation reference-element="scene"
+  joystick="always" joystick-position="bottom-right">
+</arcgis-plane-navigation>
 ```
 
-Changing these settings restarts the flight with the new ground limits. Your
-scene keeps its existing terrain data. To turn off the flight ground checks,
-set `terrain.enabled` to `false`. Also set `start.altitudeM` if you want to
-skip the initial ground query. See [Terrain settings](configuration.md#terrain)
-for the full list of limits.
+`joystick` accepts `auto` (default), `always`, or `never`.
 
-## Use your own aircraft
+## Change speed
 
-```ts
-await flight.setAircraft({
-  assets: { bodyUrl: "/models/aircraft.glb", propellerUrl: null, boostUrl: null },
-});
-```
+Switch between the three power modes. `slow` brakes, `normal` cruises, and
+`turbo` speeds up to the top speed:
 
-The body is required; `null` removes the optional parts. In an active
-session, `setAircraft()` replaces the model without restarting flight or
-reloading the scene. If no session exists yet, it stores the selection for
-initialization and returns `false`. Follow
-[Custom aircraft](custom-aircraft.md) for scale, orientation, part placement,
-and changes to the flight model.
-
-## Change power mode
-
-```ts
+```js
 flight.setPowerMode("turbo");
 ```
 
-Use `"normal"` for cruise or `"slow"` to brake. To change the aircraft's
-speed limits, use a [flight profile](custom-aircraft.md#choose-speed-and-handling).
+To change the speed limits themselves, use a
+[flight profile](custom-aircraft.md#change-speed-and-handling).
 
-## Know whether a change is live
+## Keep the plane above the ground
 
-Camera, input, power, and optional UI settings apply live. With `config` or
-`updateConfig()`, aircraft assets, flight profiles, start pose, terrain
-settings, navigation capture, camera submission rate, and automatic start
-restart the session. `setAircraft()` changes the aircraft and the terrain
-clearance/ceiling in place; `terrain.enabled` still needs a restart. Your
-scene and map stay in place.
+The component samples the scene's elevation and pushes the plane up when it
+gets too close to the ground. It also caps the height above the ground.
 
-See [Configuration](configuration.md) for every field, range, attribute, and
-normalization rule, and [API reference](api-reference.md) for methods and events.
+```js
+flight.updateConfig({
+  terrain: { minimumClearanceM: 20, maximumAglM: 3000 },
+});
+```
+
+These checks use the ground surface only. Buildings, trees, and bridges are
+not obstacles. Set `terrain.enabled` to `false` to turn the checks off.
+
+## Start flying on demand
+
+By default, the flight starts as soon as the scene is ready. Add
+`auto-start-disabled` to wait, then call `start()`:
+
+```html
+<arcgis-plane-navigation reference-element="scene" auto-start-disabled>
+</arcgis-plane-navigation>
+<button id="fly">Take off</button>
+```
+
+```js
+document.querySelector("#fly").addEventListener("click", () => flight.start());
+```
+
+## Show flight data in your own UI
+
+Listen to `arcgisPlaneNavigationSnapshot`. It fires on every state change and
+up to 20 times a second during flight.
+
+```js
+flight.addEventListener("arcgisPlaneNavigationSnapshot", (event) => {
+  const { vehicle, aglM, phase } = event.detail.snapshot;
+  const speedKmh = Math.round(vehicle.speed * 3.6);
+  const height = aglM === null ? "?" : Math.round(aglM);
+  label.textContent = `${phase}: ${speedKmh} km/h, ${height} m above ground`;
+});
+```
+
+To read the state once, call `flight.snapshot()`.
+
+## Drive the plane from code
+
+`setControlPatch()` overrides the keyboard and gamepad. Use it for an
+autopilot, your own buttons, or a scripted tour:
+
+```js
+// Gentle right turn with full throttle
+flight.setControlPatch({ bank: 0.4, accelerate: 1 });
+
+// Give control back to the user
+flight.clearControlPatch();
+```
+
+`pitch`, `bank`, and `yaw` go from `-1` to `1`. `accelerate` and `brake` go
+from `0` to `1`.
+
+## Handle errors
+
+The component fires `arcgisPlaneNavigationError` if it cannot start, for
+example when a model URL is wrong or the scene has no elevation data:
+
+```js
+flight.addEventListener("arcgisPlaneNavigationError", (event) => {
+  console.error("Flight could not start:", event.detail.error);
+});
+```
+
+## Which changes restart the flight
+
+Changing the start position, the terrain settings, the aircraft, or
+`autoStart` restarts the flight from its start position. Most other changes,
+such as camera, controls, toolbar, and power, apply immediately. The scene
+itself is never reloaded. The [API reference](api-reference.md#live-updates)
+has the full list.
+
+To change the aircraft without a restart, use
+[`setAircraft()`](custom-aircraft.md#swap-the-aircraft-during-a-flight).

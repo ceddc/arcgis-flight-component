@@ -1,26 +1,31 @@
-# Scene explorer demo
+# Scene explorer sample
 
-A small Calcite app for picking a place and flying around it. Try one of the
-suggested destinations, search for an address, or search public ArcGIS Online
-WebScenes (or paste an item ID). Flight starts near Mount Fuji with the place picker open; the
-picker stays available when you change destinations. **Settings** adjusts
-steering sensitivity, field of view, pitch direction, and camera roll.
+Pick a place and fly around it. The app starts near Mount Fuji with the place
+picker open. You can:
 
-Run `npm run dev`, then open
-`http://127.0.0.1:3116/demos/webscene-selector/`.
+- choose one of the suggested places,
+- search for an address (Esri World Geocoder; queries are not stored), or
+- search public WebScenes on ArcGIS Online, or paste an item ID.
 
-The suggested places use imagery and elevation. Address search uses Esri
-World Geocoder without storing queries or results. The WebScene tab opens with
-five featured 3D scenes and an empty search field. Searches return public
-WebScenes on ArcGIS Online with thumbnails, owners, update dates, and item links.
-The picker checks that the item is a public Web Scene, then loads it and applies the flight
-component's rule: Web Mercator in either view mode, or a local scene with
-projected linear coordinates. Flight starts from the scene's initial camera, a little
-short of what it looks at and 150 m above the ground.
+**Settings** changes the steering sensitivity, field of view, pitch direction,
+and horizon roll.
 
-Scene switching lives in the controller beside this demo, so the reusable
-flight component only needs to handle flying. When you choose another scene,
-the controller stops flight, restores the camera, replaces the map, and waits
-for the new view. If loading fails, it tries to return to the previous scene.
+Run `npm run dev`, then open <http://127.0.0.1:3116/demos/webscene-selector/>.
 
-See [Demos](../../docs/demo.md) for a tour of the controls.
+## How scene switching works
+
+The flight component only flies. Choosing and loading scenes is the app's job,
+in [`lib/scene-activation-controller.ts`](lib/scene-activation-controller.ts):
+
+1. Stop the flight, which restores the camera.
+2. Replace the map, or the whole view when the coordinate system changes.
+3. Wait for the view, then start the flight again.
+
+If the new scene fails to load, the controller goes back to the previous one.
+
+A WebScene must be public and use Web Mercator, or a local projected
+coordinate system (see [supported scenes](../../docs/flight-concepts.md#supported-scenes)).
+The flight starts from the scene's initial camera, a little in front of it and
+150 m above the ground.
+
+See [Samples](../../docs/samples.md) for the other samples.

@@ -1,6 +1,7 @@
 /*
- * Documentation-site layout and component styling. The mobile rules below
- * collapse the desktop reading sidebar into the menu-button-controlled drawer.
+ * Documentation-site layout and component styling. Wide screens show the page
+ * list, the article, and an "On this page" column. The mobile rules below
+ * collapse the page list into the menu-button-controlled drawer.
  */
 :root {
   --ink: #253340;
@@ -44,7 +45,7 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 .nav-group a:hover { background: #eef4f8; }
 .nav-group a[aria-current="page"] { border-inline-start-color: var(--brand); background: #eaf5fc; color: #00619b; font-weight: 600; }
 .section-nav { margin: 8px 0 4px 12px; padding-left: 10px; border-inline-start: 1px solid var(--line); }
-.section-nav h2 { margin: 0 0 4px; color: var(--muted); font-size: 11px; font-weight: 600; }
+.section-nav h2 { margin: 0 0 4px; padding: 0; border: 0; color: var(--muted); font-size: 11px; font-weight: 600; }
 .section-nav ul { margin: 0; padding: 0; list-style: none; }
 .section-nav a { display: block; padding: 4px 6px; color: #526573; font-size: 12px; line-height: 1.4; text-decoration: none; }
 .section-nav a:hover { color: #004e7d; text-decoration: underline; }
@@ -74,14 +75,45 @@ tbody tr:nth-child(even) { background: #f8fafc; }
 code { border-radius: 3px; background: #eef4f8; color: #17577e; font-family: "Cascadia Code", Consolas, monospace; font-size: .88em; overflow-wrap: anywhere; }
 p code, li code, td code { padding: 2px 4px; }
 td code { white-space: nowrap; overflow-wrap: normal; }
-td:nth-child(3) { min-width: 220px; }
 .code-shell { position: relative; margin: 20px 0; }
 .code-shell pre { margin: 0; overflow: auto; padding: 40px 18px 18px; border: 1px solid #dce5ed; border-radius: 5px; background: var(--surface); line-height: 1.65; }
-.code-shell pre code { padding: 0; background: none; color: #284960; font-size: 13px; overflow-wrap: normal; }
+.code-shell pre code { padding: 0; background: none; color: #24292f; font-size: 13px; overflow-wrap: normal; }
+.code-label { position: absolute; top: 10px; left: 18px; color: var(--muted); font-size: 12px; font-weight: 600; }
 .copy-button { position: absolute; top: 8px; right: 8px; padding: 4px 8px; border: 1px solid #ccd9e3; border-radius: 3px; background: #fff; color: #476072; cursor: pointer; font: 12px var(--calcite-font-family); }
 .copy-button:hover { border-color: var(--brand); color: var(--brand); }
+/* Syntax colors, readable on the light code background. */
+.hljs-comment, .hljs-meta { color: #6e7781; font-style: italic; }
+.hljs-keyword, .hljs-literal { color: #cf222e; }
+.hljs-string { color: #0a3069; }
+.hljs-number, .hljs-attr, .hljs-attribute, .hljs-property { color: #0550ae; }
+.hljs-title, .hljs-title.function_, .hljs-title.class_ { color: #8250df; }
+.hljs-name, .hljs-selector-tag { color: #116329; }
+.hljs-variable, .hljs-built_in, .hljs-type, .hljs-params { color: #953800; }
+/* GitHub-style alerts: > [!NOTE], > [!TIP], > [!WARNING], ... */
+.callout { margin: 24px 0; padding: 12px 16px; border-left: 4px solid var(--callout, var(--brand)); border-radius: 0 5px 5px 0; background: var(--callout-bg, #eef7fd); }
+.callout p { margin: 6px 0; }
+.callout-title { color: var(--callout, var(--brand)); font-weight: 600; }
+.callout-tip { --callout: #287a33; --callout-bg: #eef8ef; }
+.callout-important { --callout: #7a4dbb; --callout-bg: #f4effb; }
+.callout-warning { --callout: #9a5b00; --callout-bg: #fdf4e5; }
+.callout-caution { --callout: #c0321f; --callout-bg: #fdeeec; }
 article img { display: block; width: 100%; height: auto; margin-block: 24px; border: 1px solid var(--line); border-radius: 5px; }
-.page-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+[data-page="samples"] article img { max-width: 720px; }
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 48px; }
+.pager a { display: grid; gap: 2px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 5px; font-weight: 600; text-decoration: none; }
+.pager a:hover { border-color: var(--brand); }
+.pager span { color: var(--muted); font-size: 12px; font-weight: 400; }
+.pager-next { text-align: right; }
+.page-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+/* The "On this page" column. On narrower screens the same links sit under the current page in the sidebar. */
+.toc { display: none; }
+@media (min-width: 1200px) {
+  .shell { grid-template-columns: var(--sidebar-width) minmax(0, 1fr) 220px; }
+  .toc { display: block; position: sticky; top: var(--header-height); height: calc(100dvh - var(--header-height)); overflow: auto; padding: 32px 16px 32px 0; }
+  .toc .section-nav { margin: 0; }
+  .toc .section-nav h2 { font-size: 12px; }
+  .sidebar .section-nav { display: none; }
+}
 @media (max-width: 860px) {
   .menu-button { display: block; }
   .shell { display: block; }
