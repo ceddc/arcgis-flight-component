@@ -1,0 +1,8 @@
+/*
+ * Reuses the shared scene information card while sizing the custom SceneView
+ * container to the viewport. The accent border identifies the Zurich panel.
+ */
+@import "../shared/scene-info.css";
+#scene { position: absolute; inset: 0; }
+#scene .esri-ui { background: transparent; }
+.enterprise-info { border-top: 3px solid #c17936; }

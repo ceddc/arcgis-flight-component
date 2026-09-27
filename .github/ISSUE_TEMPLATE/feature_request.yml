@@ -1,0 +1,28 @@
+name: Feature request
+description: Propose an in-scope component capability
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Integration problem
+      description: Explain the caller-owned ArcGIS scene use case this would solve.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed public API
+      description: Show the smallest attribute, property, method, or event contract that would solve it.
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope confirmation
+      options:
+        - label: This concerns aircraft rendering, flight input, camera tracking, terrain-aware navigation, or the optional flight controls.
+          required: true
+        - label: This does not require music, analytics, deployment, minimaps, or unrelated application UI.
+          required: true
