@@ -73,7 +73,7 @@ and recover buttons. It is hidden by default.
 ```
 
 `ui-controls` picks the buttons and their order: `power`, `pause`, `camera`,
-`recover`. `locale` sets the language: `en`, `de`, `fr`, `it`, or `es`. By
+`recover`. `locale` sets the language: `en`, `de`, `fr`, `it`, `es`, or `pt`. By
 default the toolbar follows the page language.
 
 ## Move or hide the touch joystick
