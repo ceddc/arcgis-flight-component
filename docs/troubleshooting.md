@@ -91,6 +91,13 @@ Check that `camera-roll-disabled` is not set, and look for `RenderNode` or
 WebGL warnings in the console. Without them, the horizon stays level and the
 flight continues normally.
 
+### Buildings appear late after a turn
+
+Turns favor a smooth frame rate over loading, so buildings revealed by a long
+turn can appear a moment later. They catch up in straight flight. In some
+scenes, the first turn after the page loads ends with a short pause; later
+turns do not.
+
 ### The plane disappears in a large local scene
 
 The camera's near clipping plane can hide the plane. Set

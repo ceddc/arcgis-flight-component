@@ -1,17 +1,14 @@
 /**
- * Check the camera cadence governor's time-based transitions.
- * Samples cover sustained pressure, recovery and invalid measurements so a
- * brief spike or incomplete data cannot spuriously change submission rate.
+ * Check the camera cadence governor's display-synchronization decisions.
+ * Samples cover ordinary and high-refresh displays, sustained frame pressure
+ * and invalid measurements, which must never change the submission rate.
  */
 import { describe, expect, it } from "vitest";
-import {
-  CAMERA_CADENCE_RECOVERY_MS,
-  CameraCadenceGovernor,
-} from "./camera-cadence";
+import { CameraCadenceGovernor } from "./camera-cadence";
 
 const HEALTHY = { averageFps: 60, p95FrameMs: 16.8 } as const;
 const HIGH_REFRESH = { averageFps: 90, p95FrameMs: 11.2 } as const;
-const PRESSURED = { averageFps: 49, p95FrameMs: 33.4 } as const;
+const PRESSURED = { averageFps: 38, p95FrameMs: 33.4 } as const;
 
 describe("Camera cadence governor", () => {
   it("synchronizes a healthy ordinary display to rendered frames", () => {
@@ -26,7 +23,6 @@ describe("Camera cadence governor", () => {
       targetHz: 60,
       intervalMs: 0,
       displaySynchronized: true,
-      degraded: false,
     });
   });
 
@@ -38,36 +34,33 @@ describe("Camera cadence governor", () => {
     });
   });
 
-  it("uses 30 Hz only after sustained combined pressure and then recovers", () => {
+  it("keeps every rendered frame under sustained frame pressure", () => {
     const governor = new CameraCadenceGovernor();
-    governor.update(PRESSURED, 1_000);
-    expect(governor.update(PRESSURED, 5_999).targetHz).toBe(60);
-    expect(governor.update(PRESSURED, 6_000)).toMatchObject({
-      targetHz: 30,
-      intervalMs: 1_000 / 30,
-      degraded: true,
-    });
 
-    governor.update(HEALTHY, 7_000);
-    expect(governor.update(HEALTHY, 7_000 + CAMERA_CADENCE_RECOVERY_MS)).toMatchObject({
+    for (let nowMs = 0; nowMs <= 30_000; nowMs += 500) governor.update(PRESSURED, nowMs);
+    expect(governor.diagnostics()).toMatchObject({
       targetHz: 60,
       intervalMs: 0,
       displaySynchronized: true,
-      degraded: false,
     });
   });
 
-  it("does not let invalid samples advance a pressure window", () => {
+  it("keeps the previous decision on missing, non-finite, or time-regressing samples", () => {
     const governor = new CameraCadenceGovernor();
-    governor.update(PRESSURED, 0);
+
+    governor.update(HEALTHY, 0);
     expect(governor.update({ averageFps: null, p95FrameMs: 30 }, 2_500)).toMatchObject({
-      targetHz: 60,
-      pressureSinceMs: null,
+      displaySynchronized: true,
       lastSampleValid: false,
-      invalidSampleCount: 1,
     });
-    governor.update(PRESSURED, 3_000);
-    expect(governor.update(PRESSURED, 7_999).targetHz).toBe(60);
-    expect(governor.update(PRESSURED, 8_000).targetHz).toBe(30);
+    governor.update(HIGH_REFRESH, 3_000);
+    expect(governor.update({ averageFps: Number.NaN, p95FrameMs: 30 }, 4_000)).toMatchObject({
+      intervalMs: 1_000 / 60,
+      displaySynchronized: false,
+      lastSampleValid: false,
+    });
+    governor.update(HEALTHY, 5_000);
+    expect(governor.update(HEALTHY, 4_999).lastSampleValid).toBe(false);
+    expect(governor.diagnostics().invalidSampleCount).toBe(3);
   });
 });
