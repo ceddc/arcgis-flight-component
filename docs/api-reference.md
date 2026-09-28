@@ -143,7 +143,7 @@ Where and how the plane starts. Read again at each start and restart.
 | `mode` | `"chase" \| "cockpit"` | `"chase"` | Behind the plane, or from the plane. |
 | `fovDeg` | `number` | `65` | Field of view in degrees, `58` to `76`. |
 | `bankedViewport` | `boolean` | `true` | Tilt the horizon in turns. |
-| `submissionHz` | `number` | `60` | Maximum camera updates per second, `30` to `60`. Drops to 30 automatically when rendering is slow. |
+| `submissionHz` | `number` | `60` | Maximum camera updates per second, `30` to `60`. Slow rendering does not lower it. |
 
 ### controls
 

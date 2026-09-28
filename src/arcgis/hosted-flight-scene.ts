@@ -53,6 +53,7 @@ import {
   FlightCameraController,
   type PresentedFlightCameraFrame,
 } from "./flight-camera";
+import { installFlightFrameBudget } from "./flight-frame-budget";
 import {
   createMeshMotionState,
 } from "./mesh-motion";
@@ -115,6 +116,7 @@ export interface HostedFlightSceneDebugSnapshot {
   leaseActive: boolean;
   cameraScheduler: ReturnType<CameraSubmissionScheduler["diagnostics"]>;
   cameraCadence: ReturnType<CameraCadenceGovernor["diagnostics"]>;
+  flightFrameBudget: ReturnType<ReturnType<typeof installFlightFrameBudget>["diagnostics"]>;
   sceneRoll: ReturnType<SceneRollController["diagnostics"]>;
   clipDistance: ReturnType<FlightClipDistanceController["diagnostics"]> | null;
 }
@@ -587,12 +589,16 @@ export async function initializeHostedFlightScene(
     if (clipDistance) {
       resources.add("clip distance", DISPOSAL_ORDER.navigation, () => clipDistance.restore());
     }
+    // Turns get ArcGIS's animation frame budget; unknown SDKs keep native scheduling.
+    const flightFrameBudget = installFlightFrameBudget(view, kernel.fullVersion ?? kernel.version);
+    resources.add("flight frame budget", DISPOSAL_ORDER.runtime, () => flightFrameBudget.remove());
     // Submit aircraft and camera together so reduced camera cadence never separates their poses.
     // This callback is the only place that writes a new public ArcGIS Camera.
     const scheduler = new CameraSubmissionScheduler<FlightPresentationFrame>({
       intervalMs: intervalForCadence(cameraCadence.diagnostics()),
       submit(frame) {
         if (destroyed) return;
+        flightFrameBudget.noteCameraSubmission(frame.heading);
         aircraftPresenter.update(
           frame.pose,
           frame.aircraftVisible,
@@ -808,6 +814,7 @@ export async function initializeHostedFlightScene(
           leaseActive: VIEW_LEASES.get(view) === lease,
           cameraScheduler: scheduler.diagnostics(),
           cameraCadence: cameraCadence.diagnostics(),
+          flightFrameBudget: flightFrameBudget.diagnostics(),
           sceneRoll: sceneRoll.diagnostics(),
           clipDistance: clipDistance?.diagnostics() ?? null,
         };
