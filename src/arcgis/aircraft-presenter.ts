@@ -43,6 +43,8 @@ export interface AircraftPresenter {
   /** Replace loaded mesh objects/tuning without replacing the presenter or scene. */
   setAircraft(options: Pick<AircraftPresenterOptions,
     "vehicle" | "propeller" | "boost" | "propellerAnchorM" | "visualPitchDeg">): void;
+  /** Draw tiny opaque/transparent plumes before flight to compile their shaders. */
+  prewarmExhaust(waitForDraw: () => Promise<boolean>): Promise<void>;
   /** Release reusable ArcGIS Points and cached exhaust symbols owned by this presenter. */
   destroy(): void;
   /** Report current visibility of the aircraft and its afterburner mesh. */
@@ -112,6 +114,14 @@ export function createAircraftPresenter(
   })) : [];
   let boostSymbols = createBoostSymbols(boost);
   let opacityStep = 0;
+  let warmupSymbol: MeshSymbol3D | null = null;
+  let warmupGeneration = 0;
+  let destroyed = false;
+  const warmedMeshes = new WeakSet<Mesh>();
+  let lastPose: VehicleRenderPose | null = null;
+  let lastVisible = true;
+  let lastPropellerAngle = 0;
+  let lastExhaust: AircraftExhaustFrame | null = null;
 
   return {
     /**
@@ -122,17 +132,22 @@ export function createAircraftPresenter(
      * attached to the aircraft while the effect grows.
      */
     update(pose, visible, propellerAngleDeg, exhaust): void {
+      if (destroyed) return;
+      lastPose = pose;
+      lastVisible = visible;
+      lastPropellerAngle = propellerAngleDeg;
+      lastExhaust = exhaust;
       const rotation = {
         x: pose.pitch + (visualPitchDeg ?? 0),
         y: pose.roll,
         z: -pose.bodyHeading,
       };
       aircraftVisible = visible;
-      boostVisible = visible && boost !== null && exhaust.visible;
+      boostVisible = boost !== null && (warmupSymbol !== null || (visible && exhaust.visible));
       vehicle.graphic.visible = visible;
       if (propeller) propeller.graphic.visible = visible;
       if (boost) boost.graphic.visible = boostVisible;
-      if (!visible) return;
+      if (!visible && !warmupSymbol) return;
 
       vehiclePoint.set({ ...flightToScenePosition(pose.position, metersPerUnit), spatialReference });
       updateMeshMotion(vehicle.mesh, vehicle.motion, {
@@ -167,11 +182,16 @@ export function createAircraftPresenter(
 
       if (boost && boostVisible) {
         const nextOpacityStep = Math.max(1, Math.min(opacitySteps, Math.round(exhaust.opacity * opacitySteps)));
-        if (opacityStep !== nextOpacityStep) {
+        if (warmupSymbol) {
+          boost.graphic.symbol = warmupSymbol;
+        } else if (opacityStep !== nextOpacityStep) {
           boost.graphic.symbol = boostSymbols[nextOpacityStep - 1];
           opacityStep = nextOpacityStep;
         }
-        boost.motion.transform.scale = [boostScale[0], boostScale[1] * exhaust.lengthScale, boostScale[2]];
+        // A real draw at 1/1000 scale compiles the material without a visible plume.
+        boost.motion.transform.scale = warmupSymbol
+          ? [boostScale[0] * 0.001, boostScale[1] * 0.001, boostScale[2] * 0.001]
+          : [boostScale[0], boostScale[1] * exhaust.lengthScale, boostScale[2]];
         const offset = transformMeshLocalOffset(boost.motion.baseRotation, rotation,
           { x: 0, y: exhaustAnchorOffset(outletForwardM, exhaust.lengthScale), z: 0 }, AIRCRAFT_ROTATION_ORDER);
         const horizontalScale = webMercator ? webMercatorGroundScale(pose.position.y) : 1;
@@ -190,6 +210,8 @@ export function createAircraftPresenter(
     },
     /** Replace mesh handles and attachment tuning while retaining allocated scene points. */
     setAircraft(next): void {
+      warmupGeneration += 1;
+      warmupSymbol = null;
       for (const symbol of boostSymbols) if (!symbol.destroyed) symbol.destroy();
       vehicle = next.vehicle;
       propeller = next.propeller;
@@ -201,8 +223,35 @@ export function createAircraftPresenter(
       opacityStep = 0;
       boostVisible = false;
     },
+    async prewarmExhaust(waitForDraw): Promise<void> {
+      if (destroyed || !boost || !lastPose || !lastExhaust || warmedMeshes.has(boost.mesh)) return;
+      const generation = ++warmupGeneration;
+      const mesh = boost.mesh;
+      let complete = true;
+      try {
+        // Opaque and translucent materials use different shader programs.
+        for (const symbol of [boostSymbols[opacitySteps - 1], boostSymbols[opacitySteps / 2 - 1]]) {
+          if (destroyed || generation !== warmupGeneration) return;
+          warmupSymbol = symbol;
+          this.update(lastPose, lastVisible, lastPropellerAngle, lastExhaust);
+          complete = await waitForDraw();
+          if (!complete) break;
+        }
+        if (complete && !destroyed && generation === warmupGeneration) warmedMeshes.add(mesh);
+      } finally {
+        // A newer selection owns the presenter; never redraw a superseded mesh.
+        if (!destroyed && generation === warmupGeneration) {
+          warmupSymbol = null;
+          opacityStep = 0;
+          this.update(lastPose, lastVisible, lastPropellerAngle, lastExhaust);
+        }
+      }
+    },
     /** Destroy presenter-owned SDK objects and cached symbols. */
     destroy(): void {
+      destroyed = true;
+      warmupGeneration += 1;
+      warmupSymbol = null;
       vehiclePoint.destroy();
       propellerPoint.destroy();
       boostPoint.destroy();

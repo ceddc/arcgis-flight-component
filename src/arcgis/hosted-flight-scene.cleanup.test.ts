@@ -190,6 +190,12 @@ vi.mock("./aircraft-finish", () => ({
   },
 }));
 
+// GPU draw waits have their own cancellation tests. Keep these ownership tests
+// deterministic while still exercising the real presenter's cleanup.
+vi.mock("./aircraft-shader-warmup", () => ({
+  prewarmAircraftExhaust: vi.fn(async () => {}),
+}));
+
 vi.mock("./camera-submission", () => ({
   CameraSubmissionScheduler: class MockCameraSubmissionScheduler<T> {
     private readonly submit: (frame: T) => void;

@@ -54,6 +54,8 @@ import {
   type PresentedFlightCameraFrame,
 } from "./flight-camera";
 import { installFlightFrameBudget } from "./flight-frame-budget";
+import { installTerrainDetailRetention } from "./terrain-detail-retention";
+import { prewarmAircraftExhaust } from "./aircraft-shader-warmup";
 import {
   createMeshMotionState,
 } from "./mesh-motion";
@@ -117,6 +119,7 @@ export interface HostedFlightSceneDebugSnapshot {
   cameraScheduler: ReturnType<CameraSubmissionScheduler["diagnostics"]>;
   cameraCadence: ReturnType<CameraCadenceGovernor["diagnostics"]>;
   flightFrameBudget: ReturnType<ReturnType<typeof installFlightFrameBudget>["diagnostics"]>;
+  terrainDetailRetention: ReturnType<ReturnType<typeof installTerrainDetailRetention>["diagnostics"]> | null;
   sceneRoll: ReturnType<SceneRollController["diagnostics"]>;
   clipDistance: ReturnType<FlightClipDistanceController["diagnostics"]> | null;
 }
@@ -592,6 +595,15 @@ export async function initializeHostedFlightScene(
     // Turns get ArcGIS's animation frame budget; unknown SDKs keep native scheduling.
     const flightFrameBudget = installFlightFrameBudget(view, kernel.fullVersion ?? kernel.version);
     resources.add("flight frame budget", DISPOSAL_ORDER.runtime, () => flightFrameBudget.remove());
+    // Reuse nearby terrain through turns instead of requesting the same tiles
+    // again. Keep out-of-view detail on desktop only, as measured upstream.
+    // Local scenes and hosts with terrain disabled keep native selection.
+    const terrainDetailRetention = config.terrain.enabled && view.viewingMode === "global"
+      ? installTerrainDetailRetention(view, kernel.fullVersion ?? kernel.version, {
+        radiusM: 6_000,
+        outOfView: !window.matchMedia("(pointer: coarse)").matches,
+      }) : null;
+    resources.add("terrain detail retention", DISPOSAL_ORDER.runtime, () => terrainDetailRetention?.remove());
     // Submit aircraft and camera together so reduced camera cadence never separates their poses.
     // This callback is the only place that writes a new public ArcGIS Camera.
     const scheduler = new CameraSubmissionScheduler<FlightPresentationFrame>({
@@ -720,6 +732,10 @@ export async function initializeHostedFlightScene(
     };
 
     present(initialPose, config.camera.fovDeg, 1 / 60, 0, true);
+    // Compile both exhaust passes before the flight loop starts. Stopping the
+    // scene also cancels this bounded wait before its graphics are destroyed.
+    await prewarmAircraftExhaust(view, layer, aircraftPresenter, aircraftLoadController.signal);
+    assertNotAborted();
 
     return {
       sceneElement,
@@ -783,7 +799,10 @@ export async function initializeHostedFlightScene(
         flightCamera.setAircraft(flight
           ? { ...AIRCRAFT[flight.model], maximumSpeed: flight.tuning.maximumSpeed }
           : undefined);
-        return true;
+        // Draw the new aircraft once before warming its exhaust material.
+        present(lastPose ?? initialPose, config.camera.fovDeg, 0, lastPresentationTick);
+        await prewarmAircraftExhaust(view, layer, aircraftPresenter, aircraftLoadController.signal);
+        return !destroyed && request === aircraftRequest;
       },
       /** Feed performance telemetry to the cadence governor and apply its new interval. */
       setFramePacing(sample): void {
@@ -815,6 +834,7 @@ export async function initializeHostedFlightScene(
           cameraScheduler: scheduler.diagnostics(),
           cameraCadence: cameraCadence.diagnostics(),
           flightFrameBudget: flightFrameBudget.diagnostics(),
+          terrainDetailRetention: terrainDetailRetention?.diagnostics() ?? null,
           sceneRoll: sceneRoll.diagnostics(),
           clipDistance: clipDistance?.diagnostics() ?? null,
         };
