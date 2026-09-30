@@ -36,6 +36,57 @@ function destroyMesh(aircraft: ActiveAircraftMesh): void {
 afterEach(() => vi.clearAllMocks());
 
 describe("aircraft presenter", () => {
+  it("warms opaque and transparent exhaust once per mesh and restores normal visibility", async () => {
+    const point = new Point({ x: 0, y: 0, z: 0, spatialReference: { wkid: 3857 } });
+    const vehicle = aircraftMesh();
+    const boost = aircraftMesh();
+    boost.motion.transform.scale = [2, 3, 4];
+    const presenter = createAircraftPresenter({ vehicle, propeller: null, boost, point, webMercator: true });
+    const pose: VehicleRenderPose = { position: { x: 0, y: 0, z: 500 },
+      bodyHeading: 0, travelHeading: 0, pitch: 0, roll: 0, speed: 100, interpolationAlpha: 0 };
+    presenter.update(pose, true, 0, { visible: false, opacity: 0.5, lengthScale: 1 });
+    const alphas: number[] = [];
+    const draw = vi.fn(async () => {
+      expect(boost.graphic.visible).toBe(true);
+      expect(boost.motion.transform.scale).toEqual([0.002, 0.003, 0.004]);
+      const symbol = boost.graphic.symbol as import("@arcgis/core/symbols/MeshSymbol3D.js").default;
+      alphas.push((symbol.symbolLayers.getItemAt(0) as import("@arcgis/core/symbols/FillSymbol3DLayer.js").default).material!.color!.a);
+      return true;
+    });
+    try {
+      await presenter.prewarmExhaust(draw);
+      expect(alphas).toEqual([1, 0.5]);
+      expect(boost.graphic.visible).toBe(false);
+      await presenter.prewarmExhaust(draw);
+      expect(draw).toHaveBeenCalledTimes(2);
+      // The first real Turbo frame restores full scale and its opacity symbol.
+      presenter.update(pose, true, 0, { visible: true, opacity: 1, lengthScale: 1.2 });
+      expect(boost.motion.transform.scale[0]).toBe(2);
+      expect(boost.motion.transform.scale[1]).toBeCloseTo(3.6);
+      expect(boost.motion.transform.scale[2]).toBe(4);
+    } finally { presenter.destroy(); point.destroy(); [vehicle, boost].forEach(destroyMesh); }
+  });
+
+  it("restores exhaust after a failed warm-up and never redraws after teardown", async () => {
+    const point = new Point({ x: 0, y: 0, z: 0, spatialReference: { wkid: 3857 } });
+    const vehicle = aircraftMesh();
+    const boost = aircraftMesh();
+    const presenter = createAircraftPresenter({ vehicle, propeller: null, boost, point, webMercator: true });
+    const pose: VehicleRenderPose = { position: { x: 0, y: 0, z: 500 },
+      bodyHeading: 0, travelHeading: 0, pitch: 0, roll: 0, speed: 100, interpolationAlpha: 0 };
+    presenter.update(pose, true, 0, { visible: false, opacity: 1, lengthScale: 1 });
+    try {
+      await expect(presenter.prewarmExhaust(async () => { throw new Error("Draw cancelled"); })).rejects.toThrow("Draw cancelled");
+      expect(boost.graphic.visible).toBe(false);
+      await presenter.prewarmExhaust(async () => {
+        presenter.destroy();
+        vi.mocked(updateMeshMotion).mockClear();
+        return true;
+      });
+      expect(updateMeshMotion).not.toHaveBeenCalled();
+    } finally { presenter.destroy(); point.destroy(); [vehicle, boost].forEach(destroyMesh); }
+  });
+
   it("releases every cloned SDK point while preserving the caller's point", () => {
     const point = new Point({ x: 10, y: 20, z: 30, spatialReference: { wkid: 3857 } });
     const clone = vi.spyOn(point, "clone");

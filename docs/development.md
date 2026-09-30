@@ -90,9 +90,18 @@ by one or call `goTo()` during the flight.
 samples, and reuse an old sample only while it is recent and nearby.
 
 **SDK.** Use public SDK APIs and keep the SDK external in the component builds.
-The one exception is `src/arcgis/aircraft-render-origin.ts`, a guarded fix for
-mesh precision in global scenes. It only runs on SDK versions it was checked
-against (5.1.21 and 5.1.24). Check it again when you update the SDK.
+Three isolated adapters use guarded SDK internals: `aircraft-render-origin.ts`
+fixes mesh precision on 5.1.21/5.1.24; `flight-frame-budget.ts` gives turns the
+animation budget on 5.1; `terrain-detail-retention.ts` keeps nearby terrain
+through turns on 5.1 global scenes. Other versions keep native behavior.
+Recheck these adapters when updating the SDK. Cleanup restores their hooks.
+
+**First-use stalls.** Exhaust materials draw once at a tiny scale, in opaque
+and transparent passes, before startup or an aircraft change finishes. The
+wait is cancellable and limited to two seconds. Desktop scenes also retain
+already loaded terrain behind the aircraft, while ArcGIS still controls
+refinement and memory pressure. Touch devices keep the native out-of-view
+terrain policy.
 
 **Reference recordings.** `src/ab/*.reference.json` hold two 720-frame
 recordings of flight and camera output. `npm run test:ab` compares against

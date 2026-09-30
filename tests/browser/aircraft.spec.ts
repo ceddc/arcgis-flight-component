@@ -19,6 +19,12 @@ test('Other aircraft controls change aircraft, buildings, weather, and save a pi
  const flight = page.locator('arcgis-plane-navigation');
  await expect(flight).toHaveAttribute('status', 'running', { timeout: 90_000 });
 
+ // The sample opens its aircraft selector on arrival. Close it before testing
+ // the toolbar behind it; aircraft selection is exercised below.
+ await expect(page.locator('#aircraft-panel')).toBeVisible();
+ await page.getByRole('button', { name: 'Close aircraft selector', exact: true }).click();
+ await expect(page.locator('#aircraft-panel')).toBeHidden();
+
  const buildingsButton = page.getByRole('button', { name: 'Show Esri 3D Buildings' });
  await expect(buildingsButton).toBeEnabled({ timeout: 90_000 });
  await buildingsButton.click();
