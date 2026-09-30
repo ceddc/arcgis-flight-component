@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="This guide builds a page with a 3D scene and a plane you can fly. It then shows how to set a start position, use your own SceneView, and remove the component.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Get started | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=9b251efbdf29">
+    <script type="module" src="doc-assets/docs-ui.js?v=9b251efbdf29"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light" data-page="getting-started">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html" aria-current="page">Get started</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#before-you-start">Before you start</a></li><li class="section-link level-2"><a href="#1-install">1. Install</a></li><li class="section-link level-2"><a href="#2-add-a-scene-and-the-component">2. Add a scene and the component</a></li><li class="section-link level-2"><a href="#3-fly">3. Fly</a></li><li class="section-link level-2"><a href="#4-choose-where-to-start">4. Choose where to start</a></li><li class="section-link level-2"><a href="#5-use-your-own-sceneview">5. Use your own SceneView</a></li><li class="section-link level-2"><a href="#6-remove-the-component">6. Remove the component</a></li><li class="section-link level-2"><a href="#next-steps">Next steps</a></li></ul></section></li><li><a href="samples.html">Samples</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Configure the flight</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="flight-concepts.html">How it works</a></li><li><a href="sdk-compatibility.html">SDK versions</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section><section class="nav-group"><h2>Contribute</h2><ul><li><a href="development.html">Development</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Get started</span></nav>
+        <article><h1 id="get-started">Get started<a class="heading-anchor" href="#get-started" aria-label="Link to this section">#</a></h1>
+<p>This guide builds a page with a 3D scene and a plane you can fly. It then
+shows how to set a start position, use your own <code>SceneView</code>, and remove the
+component.</p>
+<h2 id="before-you-start">Before you start<a class="heading-anchor" href="#before-you-start" aria-label="Link to this section">#</a></h2>
+<p>You need:</p>
+<ul>
+<li>Node.js 20 or later and a bundler, such as <a href="https://vite.dev/">Vite</a>.</li>
+<li>A browser with WebGL.</li>
+</ul>
+<p>The steps use ArcGIS Maps SDK for JavaScript 5.1. For SDK 4.30 to 5.0, or a
+page without a bundler, see <a href="sdk-compatibility.html">SDK versions</a>.</p>
+<h2 id="1-install">1. Install<a class="heading-anchor" href="#1-install" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><span class="code-label">Shell</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">npm install github:ceddc/arcgis-flight-component @arcgis/core@~5.1.24 @arcgis/map-components@~5.1.24</code></pre></div>
+<p>The component installs from GitHub. It is not published on npm.</p>
+<h2 id="2-add-a-scene-and-the-component">2. Add a scene and the component<a class="heading-anchor" href="#2-add-a-scene-and-the-component" aria-label="Link to this section">#</a></h2>
+<p>Create <code>index.html</code>:</p>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;utf-8&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;viewport&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;width=device-width, initial-scale=1&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Fly over the Alps<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="language-css">
+      <span class="hljs-selector-tag">html</span>, <span class="hljs-selector-tag">body</span> { <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>; <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>; }
+      arcgis-scene { <span class="hljs-attribute">display</span>: block; <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>; }
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;module&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./main.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">arcgis-scene</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;scene&quot;</span> <span class="hljs-attr">basemap</span>=<span class="hljs-string">&quot;satellite&quot;</span> <span class="hljs-attr">ground</span>=<span class="hljs-string">&quot;world-elevation&quot;</span>
+      <span class="hljs-attr">camera-position</span>=<span class="hljs-string">&quot;7.71, 46.01, 5600&quot;</span> <span class="hljs-attr">camera-heading</span>=<span class="hljs-string">&quot;235&quot;</span> <span class="hljs-attr">camera-tilt</span>=<span class="hljs-string">&quot;78&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-scene</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre></div>
+<p>Create <code>main.js</code>:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;@arcgis/map-components/components/arcgis-scene&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;@ceddc/arcgis-flight-component&quot;</span>;</code></pre></div>
+<p><code>reference-element</code> is the <code>id</code> of the scene to fly in. The plane appears and
+starts flying as soon as the scene is ready.</p>
+<h2 id="3-fly">3. Fly<a class="heading-anchor" href="#3-fly" aria-label="Link to this section">#</a></h2>
+<p>Click the scene first, so it receives your key presses.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Keyboard</th>
+<th>Gamepad</th>
+<th>Touch</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Nose down / up</td>
+<td>W / S or ↑ / ↓</td>
+<td>Left stick</td>
+<td>Joystick</td>
+</tr>
+<tr>
+<td>Turn left / right</td>
+<td>A / D or ← / →</td>
+<td>Left stick</td>
+<td>Joystick</td>
+</tr>
+<tr>
+<td>Rudder left / right</td>
+<td>Q / E</td>
+<td>LB / RB</td>
+<td></td>
+</tr>
+<tr>
+<td>Accelerate</td>
+<td>Shift</td>
+<td>RT</td>
+<td></td>
+</tr>
+<tr>
+<td>Brake</td>
+<td>Space</td>
+<td>LT</td>
+<td></td>
+</tr>
+<tr>
+<td>Pause and resume</td>
+<td>Esc</td>
+<td>Menu</td>
+<td></td>
+</tr>
+<tr>
+<td>Recover to a safe position</td>
+<td>Alt + R</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Slower / faster power mode</td>
+<td></td>
+<td>D-pad down / up</td>
+<td></td>
+</tr>
+<tr>
+<td>Look around the plane</td>
+<td>Drag the scene</td>
+<td></td>
+<td>Drag the scene</td>
+</tr>
+</tbody></table>
+<p>Pitch works like a flight stick: push forward (W or ↑) to dive. To reverse it,
+add <code>invert-pitch-disabled</code>. On phones and tablets, a joystick appears in the
+bottom-left corner. Gamepads must use the browser&#39;s standard mapping.</p>
+<h2 id="4-choose-where-to-start">4. Choose where to start<a class="heading-anchor" href="#4-choose-where-to-start" aria-label="Link to this section">#</a></h2>
+<p>By default, the plane starts at the center of the view, 300 m above the
+ground, and flies in the camera&#39;s direction. To pick the spot yourself, add
+start attributes:</p>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span>
+  <span class="hljs-attr">start-longitude</span>=<span class="hljs-string">&quot;7.71&quot;</span> <span class="hljs-attr">start-latitude</span>=<span class="hljs-string">&quot;46.01&quot;</span>
+  <span class="hljs-attr">start-altitude-m</span>=<span class="hljs-string">&quot;5200&quot;</span> <span class="hljs-attr">start-heading-deg</span>=<span class="hljs-string">&quot;235&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span></code></pre></div>
+<p>Set longitude and latitude together. Altitude is an absolute elevation in
+metres, not a height above the ground. Heading is in degrees clockwise from
+north.</p>
+<h2 id="5-use-your-own-sceneview">5. Use your own SceneView<a class="heading-anchor" href="#5-use-your-own-sceneview" aria-label="Link to this section">#</a></h2>
+<p>If your app already creates a <code>SceneView</code>, skip <code>&lt;arcgis-scene&gt;</code> and assign the
+view to the component&#39;s <code>view</code> property:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Map</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@arcgis/core/Map.js&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">SceneView</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@arcgis/core/views/SceneView.js&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;@arcgis/core/assets/esri/themes/light/main.css&quot;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;@ceddc/arcgis-flight-component&quot;</span>;
+
+<span class="hljs-keyword">const</span> view = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SceneView</span>({
+  <span class="hljs-attr">container</span>: <span class="hljs-string">&quot;viewDiv&quot;</span>,
+  <span class="hljs-attr">map</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>({ <span class="hljs-attr">basemap</span>: <span class="hljs-string">&quot;satellite&quot;</span>, <span class="hljs-attr">ground</span>: <span class="hljs-string">&quot;world-elevation&quot;</span> }),
+});
+
+<span class="hljs-keyword">const</span> flight = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;arcgis-plane-navigation&quot;</span>);
+flight.<span class="hljs-property">config</span> = {
+  <span class="hljs-attr">start</span>: { <span class="hljs-attr">longitude</span>: <span class="hljs-number">7.71</span>, <span class="hljs-attr">latitude</span>: <span class="hljs-number">46.01</span>, <span class="hljs-attr">altitudeM</span>: <span class="hljs-number">5200</span>, <span class="hljs-attr">headingDeg</span>: <span class="hljs-number">235</span> },
+};
+flight.<span class="hljs-property">view</span> = view;
+<span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">append</span>(flight);</code></pre></div>
+<p>This setup does not need <code>@arcgis/map-components</code>. The view must be a 3D
+<code>SceneView</code>; a 2D <code>MapView</code> does not work.</p>
+<p>The same code works with a WebScene from ArcGIS Online or ArcGIS Enterprise.
+Load it the usual way and sign in before loading private content. The component
+uses your app&#39;s sign-in and never asks for credentials.</p>
+<h2 id="6-remove-the-component">6. Remove the component<a class="heading-anchor" href="#6-remove-the-component" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">remove</span>();</code></pre></div>
+<p>Removing the element stops the flight, removes the plane, and gives the camera
+back to your app. Your scene, map, and layers stay as they are. To stop only
+for a moment, use <code>flight.pause()</code> and <code>flight.resume()</code>.</p>
+<h2 id="next-steps">Next steps<a class="heading-anchor" href="#next-steps" aria-label="Link to this section">#</a></h2>
+<ul>
+<li><a href="samples.html">Samples</a>: complete apps to copy from.</li>
+<li><a href="configuration-recipes.html">Configure the flight</a>: camera, controls, toolbar, and more.</li>
+<li><a href="api-reference.html">API reference</a>: every property, method, and event.</li>
+</ul>
+</article>
+        <nav class="pager" aria-label="Previous and next pages"><a class="pager-prev" href="index.html" rel="prev"><span>Previous</span>Overview</a><a class="pager-next" href="samples.html" rel="next"><span>Next</span>Samples</a></nav>
+        <footer class="page-footer">
+          <span>Source: <code>docs/getting-started.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/edit/main/docs/getting-started.md">Edit this page on GitHub</a>
+        </footer>
+      </main>
+      <aside class="toc"><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#before-you-start">Before you start</a></li><li class="section-link level-2"><a href="#1-install">1. Install</a></li><li class="section-link level-2"><a href="#2-add-a-scene-and-the-component">2. Add a scene and the component</a></li><li class="section-link level-2"><a href="#3-fly">3. Fly</a></li><li class="section-link level-2"><a href="#4-choose-where-to-start">4. Choose where to start</a></li><li class="section-link level-2"><a href="#5-use-your-own-sceneview">5. Use your own SceneView</a></li><li class="section-link level-2"><a href="#6-remove-the-component">6. Remove the component</a></li><li class="section-link level-2"><a href="#next-steps">Next steps</a></li></ul></section></aside>
+    </div>
+  </body>
+</html>

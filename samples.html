@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Each sample is a small app you can open in the browser and read in full on GitHub. Start with Basic flight: it is a single HTML file.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Samples | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=9b251efbdf29">
+    <script type="module" src="doc-assets/docs-ui.js?v=9b251efbdf29"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light" data-page="samples">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Get started</a></li><li><a href="samples.html" aria-current="page">Samples</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#basic-flight">Basic flight</a></li><li class="section-link level-2"><a href="#flight-controls">Flight controls</a></li><li class="section-link level-2"><a href="#zurich-local-scene">Zurich local scene</a></li><li class="section-link level-2"><a href="#other-aircraft">Other aircraft</a></li><li class="section-link level-2"><a href="#scene-explorer">Scene explorer</a></li><li class="section-link level-2"><a href="#run-the-samples-locally">Run the samples locally</a></li></ul></section></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Configure the flight</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="flight-concepts.html">How it works</a></li><li><a href="sdk-compatibility.html">SDK versions</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section><section class="nav-group"><h2>Contribute</h2><ul><li><a href="development.html">Development</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Samples</span></nav>
+        <article><h1 id="samples">Samples<a class="heading-anchor" href="#samples" aria-label="Link to this section">#</a></h1>
+<p>Each sample is a small app you can open in the browser and read in full on
+GitHub. Start with Basic flight: it is a single HTML file.</p>
+<p>To run them on your machine, see <a href="#run-the-samples-locally">Run the samples locally</a>.</p>
+<h2 id="basic-flight">Basic flight<a class="heading-anchor" href="#basic-flight" aria-label="Link to this section">#</a></h2>
+<p><a href="demos/simple/"><img src="images/sample-basic-flight.jpg" alt="Basic flight sample"></a></p>
+<p>Fly toward the Matterhorn. The page is a scene and the flight component,
+configured with HTML attributes only.</p>
+<p><a href="demos/simple/">Open the sample</a> · <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/simple/index.html">View the source</a></p>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">arcgis-scene</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;scene&quot;</span> <span class="hljs-attr">basemap</span>=<span class="hljs-string">&quot;satellite&quot;</span> <span class="hljs-attr">ground</span>=<span class="hljs-string">&quot;world-elevation&quot;</span>
+  <span class="hljs-attr">camera-position</span>=<span class="hljs-string">&quot;7.71, 46.01, 5600&quot;</span> <span class="hljs-attr">camera-heading</span>=<span class="hljs-string">&quot;235&quot;</span> <span class="hljs-attr">camera-tilt</span>=<span class="hljs-string">&quot;78&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-scene</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span>
+  <span class="hljs-attr">start-longitude</span>=<span class="hljs-string">&quot;7.71&quot;</span> <span class="hljs-attr">start-latitude</span>=<span class="hljs-string">&quot;46.01&quot;</span>
+  <span class="hljs-attr">start-altitude-m</span>=<span class="hljs-string">&quot;5200&quot;</span> <span class="hljs-attr">start-heading-deg</span>=<span class="hljs-string">&quot;235&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span></code></pre></div>
+<h2 id="flight-controls">Flight controls<a class="heading-anchor" href="#flight-controls" aria-label="Link to this section">#</a></h2>
+<p><a href="demos/simple-controls/"><img src="images/sample-flight-controls.jpg" alt="Flight controls sample"></a></p>
+<p>Fly over Geneva with imagery, terrain, and 3D buildings from
+<a href="https://sitg.ge.ch/">SITG</a>, Geneva&#39;s GIS. The app builds its map from ArcGIS
+Enterprise and ArcGIS Online service URLs, then hands the scene to the
+component. Its toolbar calls <code>setPowerMode()</code>, <code>pause()</code>, <code>setCameraMode()</code>,
+and <code>recover()</code>.</p>
+<p><a href="demos/simple-controls/">Open the sample</a> · <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/simple-controls/main.ts">View the source</a></p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">const</span> map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>({
+  <span class="hljs-attr">basemap</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Basemap</span>({ <span class="hljs-attr">baseLayers</span>: [<span class="hljs-keyword">new</span> <span class="hljs-title class_">TileLayer</span>({ <span class="hljs-attr">url</span>: imageryUrl })] }),
+  <span class="hljs-attr">ground</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Ground</span>({ <span class="hljs-attr">layers</span>: [<span class="hljs-keyword">new</span> <span class="hljs-title class_">ElevationLayer</span>({ <span class="hljs-attr">url</span>: terrainUrl })] }),
+  <span class="hljs-attr">layers</span>: [<span class="hljs-keyword">new</span> <span class="hljs-title class_">SceneLayer</span>({ <span class="hljs-attr">url</span>: buildingsUrl })],
+});
+
+scene.<span class="hljs-property">map</span> = map;
+<span class="hljs-keyword">await</span> scene.<span class="hljs-title function_">viewOnReady</span>();
+flight.<span class="hljs-property">referenceElement</span> = scene;</code></pre></div>
+<h2 id="zurich-local-scene">Zurich local scene<a class="heading-anchor" href="#zurich-local-scene" aria-label="Link to this section">#</a></h2>
+<p><a href="demos/zurich/"><img src="images/sample-zurich.jpg" alt="Zurich local scene sample"></a></p>
+<p>Fly over a <a href="https://www.arcgis.com/home/item.html?id=067ada556ed84bb3aa5c65b4f2a7c15d">WebScene</a>
+that uses a local coordinate system, Swiss LV95 (EPSG:2056). The app creates
+its own <code>SceneView</code> and assigns it to the component.</p>
+<p><a href="demos/zurich/">Open the sample</a> · <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/zurich/main.ts">View the source</a></p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">const</span> webscene = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WebScene</span>({ <span class="hljs-attr">portalItem</span>: { <span class="hljs-attr">id</span>: <span class="hljs-string">&quot;067ada556ed84bb3aa5c65b4f2a7c15d&quot;</span> } });
+<span class="hljs-keyword">const</span> view = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SceneView</span>({ <span class="hljs-attr">container</span>: <span class="hljs-string">&quot;scene&quot;</span>, <span class="hljs-attr">map</span>: webscene });
+<span class="hljs-keyword">await</span> view.<span class="hljs-title function_">when</span>();
+
+flight.<span class="hljs-property">config</span> = {
+  <span class="hljs-attr">start</span>: { <span class="hljs-attr">longitude</span>: <span class="hljs-number">8.54</span>, <span class="hljs-attr">latitude</span>: <span class="hljs-number">47.37</span>, <span class="hljs-attr">altitudeM</span>: <span class="hljs-number">650</span>, <span class="hljs-attr">headingDeg</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">speedMps</span>: <span class="hljs-number">70</span> },
+};
+flight.<span class="hljs-property">view</span> = view;</code></pre></div>
+<h2 id="other-aircraft">Other aircraft<a class="heading-anchor" href="#other-aircraft" aria-label="Link to this section">#</a></h2>
+<p><a href="demos/aircraft/"><img src="images/sample-other-aircraft.png" alt="Other aircraft sample"></a></p>
+<p>Switch between five aircraft (Classic, Super Jet, Space Jet, Paraglider, and
+Airliner) over the Grand Canyon without reloading the scene. The sample also
+toggles Esri 3D buildings, changes the weather and time of day, and saves a photo.</p>
+<p><a href="demos/aircraft/">Open the sample</a> · <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/aircraft/main.ts">View the source</a></p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">await</span> flight.<span class="hljs-title function_">setAircraft</span>({
+  <span class="hljs-attr">flight</span>: { <span class="hljs-attr">model</span>: <span class="hljs-string">&quot;super-jet&quot;</span> },
+  <span class="hljs-attr">assets</span>: {
+    <span class="hljs-attr">bodyUrl</span>: <span class="hljs-string">&quot;models/fleet/super-jet.glb&quot;</span>,
+    <span class="hljs-attr">boostUrl</span>: <span class="hljs-string">&quot;models/fleet/super-jet-boost.glb&quot;</span>,
+    <span class="hljs-attr">propellerUrl</span>: <span class="hljs-literal">null</span>,
+  },
+});</code></pre></div>
+<p>The models are in <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/public/models/fleet/SOURCE.md"><code>public/models/fleet</code></a>.
+See <a href="custom-aircraft.html">Custom aircraft</a> to use your own.</p>
+<h2 id="scene-explorer">Scene explorer<a class="heading-anchor" href="#scene-explorer" aria-label="Link to this section">#</a></h2>
+<p><a href="demos/webscene-selector/"><img src="images/sample-scene-explorer.jpg" alt="Scene explorer sample"></a></p>
+<p>A larger app. Pick a place, search for an address, or load any public
+WebScene from ArcGIS Online. It shows how to switch scenes while flying: stop
+the flight, change the map, then start again.</p>
+<p><a href="demos/webscene-selector/">Open the sample</a> · <a href="https://github.com/ceddc/arcgis-flight-component/blob/main/demos/webscene-selector/main.ts">View the source</a></p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">stop</span>();                       <span class="hljs-comment">// puts the camera back</span>
+scene.<span class="hljs-property">map</span> = nextWebScene;
+<span class="hljs-keyword">await</span> scene.<span class="hljs-title function_">viewOnReady</span>();
+
+flight.<span class="hljs-title function_">updateConfig</span>({ <span class="hljs-attr">start</span>: nextStart });
+<span class="hljs-keyword">await</span> flight.<span class="hljs-title function_">start</span>();</code></pre></div>
+<h2 id="run-the-samples-locally">Run the samples locally<a class="heading-anchor" href="#run-the-samples-locally" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><span class="code-label">Shell</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">git <span class="hljs-built_in">clone</span> https://github.com/ceddc/arcgis-flight-component.git
+<span class="hljs-built_in">cd</span> arcgis-flight-component
+npm ci
+npm run dev</code></pre></div>
+<p>Open <a href="http://127.0.0.1:3116/">http://127.0.0.1:3116/</a> and pick a sample from the menu. If port 3116 is
+busy, Vite prints another address. The samples load the component from <code>src/</code>,
+so your changes to the component show up right away.</p>
+</article>
+        <nav class="pager" aria-label="Previous and next pages"><a class="pager-prev" href="getting-started.html" rel="prev"><span>Previous</span>Get started</a><a class="pager-next" href="configuration-recipes.html" rel="next"><span>Next</span>Configure the flight</a></nav>
+        <footer class="page-footer">
+          <span>Source: <code>docs/samples.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/edit/main/docs/samples.md">Edit this page on GitHub</a>
+        </footer>
+      </main>
+      <aside class="toc"><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#basic-flight">Basic flight</a></li><li class="section-link level-2"><a href="#flight-controls">Flight controls</a></li><li class="section-link level-2"><a href="#zurich-local-scene">Zurich local scene</a></li><li class="section-link level-2"><a href="#other-aircraft">Other aircraft</a></li><li class="section-link level-2"><a href="#scene-explorer">Scene explorer</a></li><li class="section-link level-2"><a href="#run-the-samples-locally">Run the samples locally</a></li></ul></section></aside>
+    </div>
+  </body>
+</html>

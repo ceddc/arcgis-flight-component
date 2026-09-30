@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The component works with ArcGIS Maps SDK for JavaScript 4.30 to 5.1. It does not include the SDK: your app loads it, and the component uses the same copy.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>SDK versions | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=9b251efbdf29">
+    <script type="module" src="doc-assets/docs-ui.js?v=9b251efbdf29"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light" data-page="sdk-compatibility">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Get started</a></li><li><a href="samples.html">Samples</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Configure the flight</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="flight-concepts.html">How it works</a></li><li><a href="sdk-compatibility.html" aria-current="page">SDK versions</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#choose-an-import">Choose an import</a></li><li class="section-link level-2"><a href="#with-a-bundler">With a bundler</a></li><li class="section-link level-2"><a href="#with-the-amd-loader">With the AMD loader</a></li><li class="section-link level-2"><a href="#without-a-bundler">Without a bundler</a></li></ul></section></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section><section class="nav-group"><h2>Contribute</h2><ul><li><a href="development.html">Development</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>SDK versions</span></nav>
+        <article><h1 id="sdk-versions">SDK versions<a class="heading-anchor" href="#sdk-versions" aria-label="Link to this section">#</a></h1>
+<p>The component works with ArcGIS Maps SDK for JavaScript 4.30 to 5.1. It does
+not include the SDK: your app loads it, and the component uses the same copy.</p>
+<h2 id="choose-an-import">Choose an import<a class="heading-anchor" href="#choose-an-import" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Your app uses</th>
+<th>Import</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SDK 5.1 with a bundler</td>
+<td><code>@ceddc/arcgis-flight-component</code></td>
+</tr>
+<tr>
+<td>SDK 4.32 to 5.0 with a bundler</td>
+<td><code>@ceddc/arcgis-flight-component/sdk-4.32</code></td>
+</tr>
+<tr>
+<td>SDK 4.30 or 4.31 with a bundler</td>
+<td><code>@ceddc/arcgis-flight-component/sdk-4.30</code></td>
+</tr>
+<tr>
+<td>The ArcGIS AMD loader (<code>require([...])</code>)</td>
+<td><code>arcgis-flight-component.amd.js</code></td>
+</tr>
+<tr>
+<td>No bundler, plain HTML</td>
+<td>The standalone browser build, which includes the SDK</td>
+</tr>
+</tbody></table>
+<p>Each SDK version range has its own build because the SDK added and removed
+modules along the way. The wrong build shows up as a bundler error about
+<code>projectOperator</code>, <code>projection</code>, or <code>meshUtils</code>.</p>
+<p><code>@arcgis/map-components</code> is only needed if you use <code>&lt;arcgis-scene&gt;</code>.</p>
+<h2 id="with-a-bundler">With a bundler<a class="heading-anchor" href="#with-a-bundler" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><span class="code-label">Shell</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">npm install github:ceddc/arcgis-flight-component</code></pre></div>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-comment">// SDK 4.32 to 5.0</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;@ceddc/arcgis-flight-component/sdk-4.32&quot;</span>;
+
+<span class="hljs-keyword">const</span> flight = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;arcgis-plane-navigation&quot;</span>);
+flight.<span class="hljs-property">view</span> = view;
+<span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">append</span>(flight);</code></pre></div>
+<p>Installing from GitHub builds the component automatically.</p>
+<h2 id="with-the-amd-loader">With the AMD loader<a class="heading-anchor" href="#with-the-amd-loader" aria-label="Link to this section">#</a></h2>
+<p>Build the files, then copy <code>dist/component/arcgis-flight-component.amd.js</code>
+into your app:</p>
+<div class="code-shell"><span class="code-label">Shell</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">npm run build:component</code></pre></div>
+<p>Load it with the same <code>require</code> you use for ArcGIS modules. It gets its
+<code>esri/*</code> modules from your loader. Then create the element and assign your view
+as above.</p>
+<h2 id="without-a-bundler">Without a bundler<a class="heading-anchor" href="#without-a-bundler" aria-label="Link to this section">#</a></h2>
+<p>The standalone build includes SDK 5.1.24 and <code>&lt;arcgis-scene&gt;</code>. Build the site
+and host the whole <code>dist/pages/</code> folder:</p>
+<div class="code-shell"><span class="code-label">Shell</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">npm run build:pages</code></pre></div>
+<p>Then add the stylesheet and script to your page:</p>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;./browser/arcgis-flight-component.css&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;module&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./browser/arcgis-flight-component.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">arcgis-scene</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;scene&quot;</span> <span class="hljs-attr">basemap</span>=<span class="hljs-string">&quot;satellite&quot;</span> <span class="hljs-attr">ground</span>=<span class="hljs-string">&quot;world-elevation&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-scene</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span></code></pre></div>
+<p>Keep the <code>browser/</code>, <code>component/</code>, and <code>assets/</code> folders together; the script
+loads files from all three.</p>
+<aside class="callout callout-warning"><p class="callout-title">Warning</p><p>Do not add the standalone build to a page that already loads the ArcGIS SDK.
+The page would run two copies of the SDK. Use one of the imports above instead.</p>
+</aside>
+</article>
+        <nav class="pager" aria-label="Previous and next pages"><a class="pager-prev" href="flight-concepts.html" rel="prev"><span>Previous</span>How it works</a><a class="pager-next" href="api-reference.html" rel="next"><span>Next</span>API reference</a></nav>
+        <footer class="page-footer">
+          <span>Source: <code>docs/sdk-compatibility.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/edit/main/docs/sdk-compatibility.md">Edit this page on GitHub</a>
+        </footer>
+      </main>
+      <aside class="toc"><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#choose-an-import">Choose an import</a></li><li class="section-link level-2"><a href="#with-a-bundler">With a bundler</a></li><li class="section-link level-2"><a href="#with-the-amd-loader">With the AMD loader</a></li><li class="section-link level-2"><a href="#without-a-bundler">Without a bundler</a></li></ul></section></aside>
+    </div>
+  </body>
+</html>

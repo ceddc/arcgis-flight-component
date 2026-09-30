@@ -1,0 +1,1 @@
+import{a$ as i,b1 as c,eq as h,ca as o,aP as d}from"./arcgis-scene-C3i20sGt.js";const f=s=>{const r=s;let e=class extends r{initialize(){this.addHandles(h(()=>this.layer,"refresh",t=>{this.doRefresh(t.dataChanged).catch(a=>{o(a)||d.getLogger(this).error(a)})}),"RefreshableLayerView")}};return e=i([c("esri.views.layers.RefreshableLayerView")],e),e};export{f as i};

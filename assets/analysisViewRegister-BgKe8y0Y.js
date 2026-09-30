@@ -1,0 +1,1 @@
+import{aO as f,di as i}from"./arcgis-scene-C3i20sGt.js";function d(){const r=new WeakMap,a=(e,o)=>{const t=r.get(e);t&&(t.delete(o),t.size===0&&r.delete(e))};return{register:(e,o)=>(f(r,e,()=>new Set).add(o),i(()=>a(e,o))),forEveryOther(e,o,t){const n=r.get(e);if(n)for(const s of n)s!==o&&t(s)}}}export{d as o};
