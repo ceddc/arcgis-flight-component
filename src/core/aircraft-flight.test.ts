@@ -71,6 +71,12 @@ describe('aircraft flight profiles', () => {
     expect(glider.start.speedMps).toBe(50 / 3.6);
     expect(mergePlaneNavigationConfig(glider, { camera: { mode: 'cockpit' } }).flight).toEqual(glider.flight);
   });
+  it('still accepts the airliner under its earlier id', () => {
+    const legacy = normalizeAircraftFlight({ model: 'swiss-airliner' as never });
+    expect(legacy).toEqual(normalizeAircraftFlight({ model: 'airliner' }));
+    expect(legacy.model).toBe('airliner');
+    expect(() => normalizeAircraftFlight({ model: 'unknown' as never })).toThrow('Unknown flight.model.');
+  });
   it('rejects invalid speeds and non-finite tuning', () => {
     expect(() => normalizeAircraftFlight({ model: 'classic', tuning: { cruiseSpeed: 0 } })).toThrow();
     expect(() => normalizeAircraftFlight({ model: 'classic', tuning: { bankResponse: NaN } })).toThrow();

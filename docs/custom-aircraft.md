@@ -20,7 +20,7 @@ flight.config = { flight: { model: "super-jet" } };
 | `super-jet` | 1,026 km/h | 3,240 km/h | Wider turns at speed; brake to turn tighter |
 | `space-jet` | 2,340 km/h | 36,000 km/h | Up and down control vertical thrust; climbs up to 200 km |
 | `paraglider` | 50 km/h | 80 km/h | No engine: Shift is the speed bar, Space brakes |
-| `swiss-airliner` | 830 km/h | 1,820 km/h | Steady passenger jet with wide turns |
+| `airliner` | 830 km/h | 1,820 km/h | Steady passenger jet with wide turns |
 
 Top speed is reached in turbo mode. These profiles are made for exploring
 maps, not for realistic flight.

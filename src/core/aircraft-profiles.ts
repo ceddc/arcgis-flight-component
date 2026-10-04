@@ -10,7 +10,7 @@ import { PARAGLIDER_HANDLING, PARAGLIDER_SPEEDS } from "./paraglider-flight";
 
 
 /** Stable identifiers accepted by the public `flight.model` option. */
-export const AIRCRAFT_IDS = ["classic", "super-jet", "space-jet", "paraglider", "swiss-airliner"] as const;
+export const AIRCRAFT_IDS = ["classic", "super-jet", "space-jet", "paraglider", "airliner"] as const;
 /** Union of built-in aircraft identifiers. */
 export type AircraftId = typeof AIRCRAFT_IDS[number];
 
@@ -81,8 +81,8 @@ export const AIRCRAFT: Readonly<Record<AircraftId, AircraftProfile>> = {
       glideSink: 1.1,
     },
   },
-  "swiss-airliner": {
-    id: "swiss-airliner", propeller: false, exhaust: true,
+  "airliner": {
+    id: "airliner", propeller: false, exhaust: true,
     cruiseExhaustIntensity: 0,
     cameraDistanceScale: 1.05, cameraHeightOffset: .55,
     tuning: {

@@ -24,7 +24,7 @@ const aircraftCopy: Record<AircraftId, { name: string; kind: string; description
   'super-jet': { name: 'Super Jet', kind: 'Fast touring', description: 'More momentum and wider turns at speed.', controls: 'Brake into a turn to tighten the arc.' },
   'space-jet': { name: 'Space Jet', kind: 'Vertical thrusters', description: 'Independent vertical thrust with a 200 km altitude ceiling.', controls: 'Up/down control vertical thrust. Shift accelerates.' },
   paraglider: { name: 'Paraglider', kind: 'Unpowered flight', description: 'An assisted glider with gentle banks and natural sink.', controls: 'Shift applies speed bar. Space brakes and flares.' },
-  'swiss-airliner': { name: 'Airliner', kind: 'Passenger jet', description: 'A fast, steady cruise with wide turns and double-speed turbo.', controls: 'Bank early for turns. Shift accelerates; Space brakes.' },
+  airliner: { name: 'Airliner', kind: 'Passenger jet', description: 'A fast, steady cruise with wide turns and double-speed turbo.', controls: 'Bank early for turns. Shift accelerates; Space brakes.' },
 };
 
 const weatherPresets = {

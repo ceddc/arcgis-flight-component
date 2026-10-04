@@ -189,7 +189,7 @@ The flight profile. `null` (default) uses the original propeller-plane model.
 flight.config = { flight: { model: "super-jet", tuning: { maximumBankDeg: 45 } } };
 ```
 
-`model` is `"classic"`, `"super-jet"`, `"space-jet"`, `"paraglider"`, or `"swiss-airliner"`.
+`model` is `"classic"`, `"super-jet"`, `"space-jet"`, `"paraglider"`, or `"airliner"`.
 `tuning` overrides profile values. Unlike other groups, `flight` replaces the
 previous value instead of merging. See
 [Custom aircraft](custom-aircraft.md#pick-a-flight-profile).
