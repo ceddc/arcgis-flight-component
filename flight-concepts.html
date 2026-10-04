@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The component adds a plane to a 3D scene that your app already owns. This page explains what it controls, what it leaves alone, and which scenes it supports.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>How it works | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=9b251efbdf29">
+    <script type="module" src="doc-assets/docs-ui.js?v=9b251efbdf29"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light" data-page="flight-concepts">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Get started</a></li><li><a href="samples.html">Samples</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Configure the flight</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="flight-concepts.html" aria-current="page">How it works</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#your-app-and-the-component">Your app and the component</a></li><li class="section-link level-2"><a href="#default-behavior">Default behavior</a></li><li class="section-link level-2"><a href="#the-camera">The camera</a></li><li class="section-link level-2"><a href="#ground-clearance">Ground clearance</a></li><li class="section-link level-2"><a href="#supported-scenes">Supported scenes</a></li><li class="section-link level-2"><a href="#units">Units</a></li><li class="section-link level-2"><a href="#arcgis-enterprise-and-private-content">ArcGIS Enterprise and private content</a></li></ul></section></li><li><a href="sdk-compatibility.html">SDK versions</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section><section class="nav-group"><h2>Contribute</h2><ul><li><a href="development.html">Development</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>How it works</span></nav>
+        <article><h1 id="how-it-works">How it works<a class="heading-anchor" href="#how-it-works" aria-label="Link to this section">#</a></h1>
+<p>The component adds a plane to a 3D scene that your app already owns. This page
+explains what it controls, what it leaves alone, and which scenes it supports.</p>
+<h2 id="your-app-and-the-component">Your app and the component<a class="heading-anchor" href="#your-app-and-the-component" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Your app owns</th>
+<th>The component adds</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The <code>SceneView</code> or <code>&lt;arcgis-scene&gt;</code></td>
+<td>A graphics layer with the aircraft</td>
+</tr>
+<tr>
+<td>The map, ground, and layers</td>
+<td>Keyboard, gamepad, and touch input</td>
+</tr>
+<tr>
+<td>Sign-in and access to private content</td>
+<td>Camera movement that follows the plane</td>
+</tr>
+<tr>
+<td>The page layout and your own UI</td>
+<td>The optional toolbar and joystick</td>
+</tr>
+</tbody></table>
+<p>While flying, the component takes over the camera and the scene&#39;s mouse and
+touch navigation. When the flight stops, it removes everything it added and
+restores the camera and navigation settings. It never destroys your view, map,
+or layers.</p>
+<p>Only one flight can run in a view at a time.</p>
+<h2 id="default-behavior">Default behavior<a class="heading-anchor" href="#default-behavior" aria-label="Link to this section">#</a></h2>
+<p>With no options set:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Start</td>
+<td>Center of the view, 300 m above the ground, in the camera&#39;s direction</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>360 km/h, normal power mode</td>
+</tr>
+<tr>
+<td>Camera</td>
+<td>Chase view behind the plane, 65° field of view, horizon tilts in turns</td>
+</tr>
+<tr>
+<td>Input</td>
+<td>Keyboard and gamepad on, sensitivity <code>0.8</code>, pitch inverted like a flight stick</td>
+</tr>
+<tr>
+<td>Touch</td>
+<td>Joystick on touch screens only</td>
+</tr>
+<tr>
+<td>Ground</td>
+<td>Stays at least 2.8 m above the ground, at most 50 km above it</td>
+</tr>
+<tr>
+<td>Toolbar</td>
+<td>Hidden</td>
+</tr>
+<tr>
+<td>Start time</td>
+<td>As soon as the scene is ready</td>
+</tr>
+</tbody></table>
+<h2 id="the-camera">The camera<a class="heading-anchor" href="#the-camera" aria-label="Link to this section">#</a></h2>
+<p><strong>Chase</strong> view follows behind the plane. Drag the scene with the mouse or one
+finger to look around; release to swing back behind the plane.</p>
+<p><strong>Cockpit</strong> view puts the camera at the plane&#39;s position and hides the model.
+There is no instrument panel.</p>
+<p>In turns, the horizon tilts with the plane. This uses an ArcGIS
+<a href="https://developers.arcgis.com/javascript/latest/references/core/views/3d/webgl/RenderNode/"><code>RenderNode</code></a>.
+If it is not available, or you set <code>camera-roll-disabled</code>, the horizon stays
+level and everything else works the same.</p>
+<h2 id="ground-clearance">Ground clearance<a class="heading-anchor" href="#ground-clearance" aria-label="Link to this section">#</a></h2>
+<p>The component reads the ground height from the scene&#39;s elevation data:</p>
+<ul>
+<li>Below <code>terrain.minimumClearanceM</code> above the ground, it lifts the plane and
+raises its nose.</li>
+<li>Above <code>terrain.maximumAglM</code>, it caps the altitude.</li>
+</ul>
+<p>AGL means <em>above ground level</em>: a plane at 1,300 m altitude over ground at
+1,000 m is 300 m AGL.</p>
+<p>These checks use the plane&#39;s position and the ground surface only. Buildings,
+trees, and bridges are not obstacles, and the wing tips can touch a slope. When
+elevation data is still loading, the checks wait. The component never treats
+missing ground as sea level.</p>
+<p>Without <code>start.altitudeM</code>, the start needs a ground height. If the scene cannot
+supply one, the component reports an error.</p>
+<h2 id="supported-scenes">Supported scenes<a class="heading-anchor" href="#supported-scenes" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scene</th>
+<th>Supported</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Global, Web Mercator</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Local, Web Mercator</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Local, projected coordinate system in metres or feet (for example LV95 or a State Plane system)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Local, geographic coordinates (WGS84)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>2D <code>MapView</code></td>
+<td>No</td>
+</tr>
+</tbody></table>
+<p>For a local scene, set the coordinate system when you create the view. Your
+layers must use it too:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">const</span> view = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SceneView</span>({
+  <span class="hljs-attr">container</span>: <span class="hljs-string">&quot;viewDiv&quot;</span>,
+  map,
+  <span class="hljs-attr">viewingMode</span>: <span class="hljs-string">&quot;local&quot;</span>,
+  <span class="hljs-attr">spatialReference</span>: { <span class="hljs-attr">wkid</span>: <span class="hljs-number">2263</span> }, <span class="hljs-comment">// New York Long Island, US feet</span>
+});</code></pre></div>
+<p>Start longitude and latitude are always WGS84 degrees. The component projects
+them into the scene. The <a href="demos/zurich/">Zurich sample</a> shows a local scene
+in Swiss LV95.</p>
+<aside class="callout callout-tip"><p class="callout-title">Tip</p><p>In a large local scene, the plane can disappear behind the camera&#39;s near
+clipping plane. Set <code>view.constraints.clipDistance</code> in your app. The component
+manages clipping only in global scenes.</p>
+</aside>
+<h2 id="units">Units<a class="heading-anchor" href="#units" aria-label="Link to this section">#</a></h2>
+<p>Configuration always uses metres, metres per second, and degrees, whatever the
+scene&#39;s units.</p>
+<ul>
+<li><strong>Local scenes:</strong> positions and speeds in snapshots are in metres and metres
+per second, converted from the scene&#39;s units.</li>
+<li><strong>Global scenes:</strong> horizontal positions and speeds stay in Web Mercator
+units. Web Mercator stretches distances away from the equator, so the
+displayed km/h is a game speed, not a true ground speed. Compute real
+distances from longitude and latitude if you need them.</li>
+</ul>
+<p>Altitude and height above the ground are always in metres.</p>
+<h2 id="arcgis-enterprise-and-private-content">ArcGIS Enterprise and private content<a class="heading-anchor" href="#arcgis-enterprise-and-private-content" aria-label="Link to this section">#</a></h2>
+<p>The component uses whatever your view loads. To fly over ArcGIS Enterprise or
+private content, sign in and load the scene in your app first, the way you
+normally would. The services must allow requests from your domain (CORS).</p>
+<p>The <a href="demos/simple-controls/">Flight controls sample</a> loads imagery and terrain
+directly from an ArcGIS Enterprise server.</p>
+</article>
+        <nav class="pager" aria-label="Previous and next pages"><a class="pager-prev" href="custom-aircraft.html" rel="prev"><span>Previous</span>Custom aircraft</a><a class="pager-next" href="sdk-compatibility.html" rel="next"><span>Next</span>SDK versions</a></nav>
+        <footer class="page-footer">
+          <span>Source: <code>docs/flight-concepts.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/edit/main/docs/flight-concepts.md">Edit this page on GitHub</a>
+        </footer>
+      </main>
+      <aside class="toc"><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#your-app-and-the-component">Your app and the component</a></li><li class="section-link level-2"><a href="#default-behavior">Default behavior</a></li><li class="section-link level-2"><a href="#the-camera">The camera</a></li><li class="section-link level-2"><a href="#ground-clearance">Ground clearance</a></li><li class="section-link level-2"><a href="#supported-scenes">Supported scenes</a></li><li class="section-link level-2"><a href="#units">Units</a></li><li class="section-link level-2"><a href="#arcgis-enterprise-and-private-content">ArcGIS Enterprise and private content</a></li></ul></section></aside>
+    </div>
+  </body>
+</html>

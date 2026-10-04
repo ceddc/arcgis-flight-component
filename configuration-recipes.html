@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Short recipes for common changes. Each one works with the page from Get started. In the JavaScript examples, flight is the arcgis-plane-navigation element:">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Configure the flight | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=9b251efbdf29">
+    <script type="module" src="doc-assets/docs-ui.js?v=9b251efbdf29"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light" data-page="configuration-recipes">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Get started</a></li><li><a href="samples.html">Samples</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html" aria-current="page">Configure the flight</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#set-the-start-position">Set the start position</a></li><li class="section-link level-2"><a href="#change-the-camera">Change the camera</a></li><li class="section-link level-2"><a href="#adjust-the-controls">Adjust the controls</a></li><li class="section-link level-2"><a href="#show-the-toolbar">Show the toolbar</a></li><li class="section-link level-2"><a href="#move-or-hide-the-touch-joystick">Move or hide the touch joystick</a></li><li class="section-link level-2"><a href="#change-speed">Change speed</a></li><li class="section-link level-2"><a href="#keep-the-plane-above-the-ground">Keep the plane above the ground</a></li><li class="section-link level-2"><a href="#start-flying-on-demand">Start flying on demand</a></li><li class="section-link level-2"><a href="#show-flight-data-in-your-own-ui">Show flight data in your own UI</a></li><li class="section-link level-2"><a href="#drive-the-plane-from-code">Drive the plane from code</a></li><li class="section-link level-2"><a href="#handle-errors">Handle errors</a></li><li class="section-link level-2"><a href="#which-changes-restart-the-flight">Which changes restart the flight</a></li></ul></section></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="flight-concepts.html">How it works</a></li><li><a href="sdk-compatibility.html">SDK versions</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section><section class="nav-group"><h2>Contribute</h2><ul><li><a href="development.html">Development</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Configure the flight</span></nav>
+        <article><h1 id="configure-the-flight">Configure the flight<a class="heading-anchor" href="#configure-the-flight" aria-label="Link to this section">#</a></h1>
+<p>Short recipes for common changes. Each one works with the page from
+<a href="getting-started.html">Get started</a>. In the JavaScript examples, <code>flight</code> is the
+<code>&lt;arcgis-plane-navigation&gt;</code> element:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">const</span> flight = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;arcgis-plane-navigation&quot;</span>);</code></pre></div>
+<p>Most options exist both as an HTML attribute and as a field of the <code>config</code>
+property. The <a href="api-reference.html">API reference</a> lists them all.</p>
+<h2 id="set-the-start-position">Set the start position<a class="heading-anchor" href="#set-the-start-position" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span>
+  <span class="hljs-attr">start-longitude</span>=<span class="hljs-string">&quot;8.256&quot;</span> <span class="hljs-attr">start-latitude</span>=<span class="hljs-string">&quot;46.979&quot;</span>
+  <span class="hljs-attr">start-altitude-m</span>=<span class="hljs-string">&quot;2750&quot;</span> <span class="hljs-attr">start-heading-deg</span>=<span class="hljs-string">&quot;118&quot;</span> <span class="hljs-attr">start-speed-mps</span>=<span class="hljs-string">&quot;60&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span></code></pre></div>
+<p>Or in JavaScript, before the flight starts:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-property">config</span> = {
+  <span class="hljs-attr">start</span>: { <span class="hljs-attr">longitude</span>: <span class="hljs-number">8.256</span>, <span class="hljs-attr">latitude</span>: <span class="hljs-number">46.979</span>, <span class="hljs-attr">altitudeM</span>: <span class="hljs-number">2750</span>, <span class="hljs-attr">headingDeg</span>: <span class="hljs-number">118</span>, <span class="hljs-attr">speedMps</span>: <span class="hljs-number">60</span> },
+};</code></pre></div>
+<p>Leave out any value to use its default: the view center, 300 m above the
+ground, the camera&#39;s heading, and the aircraft&#39;s cruise speed.</p>
+<h2 id="change-the-camera">Change the camera<a class="heading-anchor" href="#change-the-camera" aria-label="Link to this section">#</a></h2>
+<p>Start in the cockpit, narrow the field of view, and keep the horizon level in
+turns:</p>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span>
+  <span class="hljs-attr">camera-mode</span>=<span class="hljs-string">&quot;cockpit&quot;</span> <span class="hljs-attr">fov-deg</span>=<span class="hljs-string">&quot;60&quot;</span> <span class="hljs-attr">camera-roll-disabled</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span></code></pre></div>
+<p>Camera changes apply immediately, even during a flight:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">setCameraMode</span>(<span class="hljs-string">&quot;chase&quot;</span>);
+flight.<span class="hljs-title function_">updateConfig</span>({ <span class="hljs-attr">camera</span>: { <span class="hljs-attr">fovDeg</span>: <span class="hljs-number">70</span>, <span class="hljs-attr">bankedViewport</span>: <span class="hljs-literal">true</span> } });</code></pre></div>
+<h2 id="adjust-the-controls">Adjust the controls<a class="heading-anchor" href="#adjust-the-controls" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span>
+  <span class="hljs-attr">sensitivity</span>=<span class="hljs-string">&quot;1.2&quot;</span> <span class="hljs-attr">invert-pitch-disabled</span> <span class="hljs-attr">gamepad-disabled</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span></code></pre></div>
+<p><code>sensitivity</code> goes from <code>0.5</code> to <code>2</code> (default <code>0.8</code>). <code>invert-pitch-disabled</code>
+makes W and ↑ raise the nose. <code>keyboard-disabled</code> and <code>gamepad-disabled</code> turn
+off an input.</p>
+<h2 id="show-the-toolbar">Show the toolbar<a class="heading-anchor" href="#show-the-toolbar" aria-label="Link to this section">#</a></h2>
+<p>The component has a small built-in toolbar with speed, power, pause, camera,
+and recover buttons. It is hidden by default.</p>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span>
+  <span class="hljs-attr">show-controls</span> <span class="hljs-attr">show-speed</span> <span class="hljs-attr">ui-position</span>=<span class="hljs-string">&quot;bottom-end&quot;</span> <span class="hljs-attr">ui-controls</span>=<span class="hljs-string">&quot;power pause&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span></code></pre></div>
+<p><code>ui-controls</code> picks the buttons and their order: <code>power</code>, <code>pause</code>, <code>camera</code>,
+<code>recover</code>. <code>locale</code> sets the language: <code>en</code>, <code>de</code>, <code>fr</code>, <code>it</code>, <code>es</code>, or <code>pt</code>. By
+default the toolbar follows the page language.</p>
+<h2 id="move-or-hide-the-touch-joystick">Move or hide the touch joystick<a class="heading-anchor" href="#move-or-hide-the-touch-joystick" aria-label="Link to this section">#</a></h2>
+<p>The joystick appears on touch screens only. You can move it, always show it,
+or hide it and build your own:</p>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span>
+  <span class="hljs-attr">joystick</span>=<span class="hljs-string">&quot;always&quot;</span> <span class="hljs-attr">joystick-position</span>=<span class="hljs-string">&quot;bottom-right&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span></code></pre></div>
+<p><code>joystick</code> accepts <code>auto</code> (default), <code>always</code>, or <code>never</code>.</p>
+<h2 id="change-speed">Change speed<a class="heading-anchor" href="#change-speed" aria-label="Link to this section">#</a></h2>
+<p>Switch between the three power modes. <code>slow</code> brakes, <code>normal</code> cruises, and
+<code>turbo</code> speeds up to the top speed:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">setPowerMode</span>(<span class="hljs-string">&quot;turbo&quot;</span>);</code></pre></div>
+<p>To change the speed limits themselves, use a
+<a href="custom-aircraft.html#change-speed-and-handling">flight profile</a>.</p>
+<h2 id="keep-the-plane-above-the-ground">Keep the plane above the ground<a class="heading-anchor" href="#keep-the-plane-above-the-ground" aria-label="Link to this section">#</a></h2>
+<p>The component samples the scene&#39;s elevation and pushes the plane up when it
+gets too close to the ground. It also caps the height above the ground.</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">updateConfig</span>({
+  <span class="hljs-attr">terrain</span>: { <span class="hljs-attr">minimumClearanceM</span>: <span class="hljs-number">20</span>, <span class="hljs-attr">maximumAglM</span>: <span class="hljs-number">3000</span> },
+});</code></pre></div>
+<p>These checks use the ground surface only. Buildings, trees, and bridges are
+not obstacles. Set <code>terrain.enabled</code> to <code>false</code> to turn the checks off.</p>
+<h2 id="start-flying-on-demand">Start flying on demand<a class="heading-anchor" href="#start-flying-on-demand" aria-label="Link to this section">#</a></h2>
+<p>By default, the flight starts as soon as the scene is ready. Add
+<code>auto-start-disabled</code> to wait, then call <code>start()</code>:</p>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span> <span class="hljs-attr">auto-start-disabled</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;fly&quot;</span>&gt;</span>Take off<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre></div>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;#fly&quot;</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;click&quot;</span>, <span class="hljs-function">() =&gt;</span> flight.<span class="hljs-title function_">start</span>());</code></pre></div>
+<h2 id="show-flight-data-in-your-own-ui">Show flight data in your own UI<a class="heading-anchor" href="#show-flight-data-in-your-own-ui" aria-label="Link to this section">#</a></h2>
+<p>Listen to <code>arcgisPlaneNavigationSnapshot</code>. It fires on every state change and
+up to 20 times a second during flight.</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;arcgisPlaneNavigationSnapshot&quot;</span>, <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> { vehicle, aglM, phase } = event.<span class="hljs-property">detail</span>.<span class="hljs-property">snapshot</span>;
+  <span class="hljs-keyword">const</span> speedKmh = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(vehicle.<span class="hljs-property">speed</span> * <span class="hljs-number">3.6</span>);
+  <span class="hljs-keyword">const</span> height = aglM === <span class="hljs-literal">null</span> ? <span class="hljs-string">&quot;?&quot;</span> : <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(aglM);
+  label.<span class="hljs-property">textContent</span> = <span class="hljs-string">`<span class="hljs-subst">${phase}</span>: <span class="hljs-subst">${speedKmh}</span> km/h, <span class="hljs-subst">${height}</span> m above ground`</span>;
+});</code></pre></div>
+<p>To read the state once, call <code>flight.snapshot()</code>.</p>
+<h2 id="drive-the-plane-from-code">Drive the plane from code<a class="heading-anchor" href="#drive-the-plane-from-code" aria-label="Link to this section">#</a></h2>
+<p><code>setControlPatch()</code> overrides the keyboard and gamepad. Use it for an
+autopilot, your own buttons, or a scripted tour:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-comment">// Gentle right turn with full throttle</span>
+flight.<span class="hljs-title function_">setControlPatch</span>({ <span class="hljs-attr">bank</span>: <span class="hljs-number">0.4</span>, <span class="hljs-attr">accelerate</span>: <span class="hljs-number">1</span> });
+
+<span class="hljs-comment">// Give control back to the user</span>
+flight.<span class="hljs-title function_">clearControlPatch</span>();</code></pre></div>
+<p><code>pitch</code>, <code>bank</code>, and <code>yaw</code> go from <code>-1</code> to <code>1</code>. <code>accelerate</code> and <code>brake</code> go
+from <code>0</code> to <code>1</code>.</p>
+<h2 id="handle-errors">Handle errors<a class="heading-anchor" href="#handle-errors" aria-label="Link to this section">#</a></h2>
+<p>The component fires <code>arcgisPlaneNavigationError</code> if it cannot start, for
+example when a model URL is wrong or the scene has no elevation data:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;arcgisPlaneNavigationError&quot;</span>, <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&quot;Flight could not start:&quot;</span>, event.<span class="hljs-property">detail</span>.<span class="hljs-property">error</span>);
+});</code></pre></div>
+<h2 id="which-changes-restart-the-flight">Which changes restart the flight<a class="heading-anchor" href="#which-changes-restart-the-flight" aria-label="Link to this section">#</a></h2>
+<p>Changing the start position, the terrain settings, the aircraft, or
+<code>autoStart</code> restarts the flight from its start position. Most other changes,
+such as camera, controls, toolbar, and power, apply immediately. The scene
+itself is never reloaded. The <a href="api-reference.html#live-updates">API reference</a>
+has the full list.</p>
+<p>To change the aircraft without a restart, use
+<a href="custom-aircraft.html#swap-the-aircraft-during-a-flight"><code>setAircraft()</code></a>.</p>
+</article>
+        <nav class="pager" aria-label="Previous and next pages"><a class="pager-prev" href="samples.html" rel="prev"><span>Previous</span>Samples</a><a class="pager-next" href="custom-aircraft.html" rel="next"><span>Next</span>Custom aircraft</a></nav>
+        <footer class="page-footer">
+          <span>Source: <code>docs/configuration-recipes.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/edit/main/docs/configuration-recipes.md">Edit this page on GitHub</a>
+        </footer>
+      </main>
+      <aside class="toc"><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#set-the-start-position">Set the start position</a></li><li class="section-link level-2"><a href="#change-the-camera">Change the camera</a></li><li class="section-link level-2"><a href="#adjust-the-controls">Adjust the controls</a></li><li class="section-link level-2"><a href="#show-the-toolbar">Show the toolbar</a></li><li class="section-link level-2"><a href="#move-or-hide-the-touch-joystick">Move or hide the touch joystick</a></li><li class="section-link level-2"><a href="#change-speed">Change speed</a></li><li class="section-link level-2"><a href="#keep-the-plane-above-the-ground">Keep the plane above the ground</a></li><li class="section-link level-2"><a href="#start-flying-on-demand">Start flying on demand</a></li><li class="section-link level-2"><a href="#show-flight-data-in-your-own-ui">Show flight data in your own UI</a></li><li class="section-link level-2"><a href="#drive-the-plane-from-code">Drive the plane from code</a></li><li class="section-link level-2"><a href="#handle-errors">Handle errors</a></li><li class="section-link level-2"><a href="#which-changes-restart-the-flight">Which changes restart the flight</a></li></ul></section></aside>
+    </div>
+  </body>
+</html>

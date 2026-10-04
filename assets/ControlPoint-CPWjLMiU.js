@@ -1,0 +1,1 @@
+import{hG as e,a$ as t,b0 as s,cr as p,b1 as a}from"./arcgis-scene-C3i20sGt.js";let o=class extends e{constructor(r){super(r),this.sourcePoint=null,this.mapPoint=null}};t([s()],o.prototype,"sourcePoint",void 0),t([s({type:p})],o.prototype,"mapPoint",void 0),o=t([a("esri.layers.support.ControlPoint")],o);export{o as p};

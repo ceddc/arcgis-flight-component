@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="How to run the project, find your way in the code, and check your changes. To use the component in an app, see Get started instead.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Development | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=9b251efbdf29">
+    <script type="module" src="doc-assets/docs-ui.js?v=9b251efbdf29"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light" data-page="development">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Get started</a></li><li><a href="samples.html">Samples</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Configure the flight</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="flight-concepts.html">How it works</a></li><li><a href="sdk-compatibility.html">SDK versions</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section><section class="nav-group"><h2>Contribute</h2><ul><li><a href="development.html" aria-current="page">Development</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#set-up">Set up</a></li><li class="section-link level-2"><a href="#commands">Commands</a></li><li class="section-link level-2"><a href="#code-map">Code map</a></li><li class="section-link level-3"><a href="#where-to-start">Where to start</a></li><li class="section-link level-2"><a href="#rules-to-keep">Rules to keep</a></li><li class="section-link level-2"><a href="#debugging">Debugging</a></li><li class="section-link level-2"><a href="#build-and-publish">Build and publish</a></li></ul></section></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Development</span></nav>
+        <article><h1 id="development">Development<a class="heading-anchor" href="#development" aria-label="Link to this section">#</a></h1>
+<p>How to run the project, find your way in the code, and check your changes.
+To use the component in an app, see <a href="getting-started.html">Get started</a> instead.</p>
+<h2 id="set-up">Set up<a class="heading-anchor" href="#set-up" aria-label="Link to this section">#</a></h2>
+<div class="code-shell"><span class="code-label">Shell</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">git <span class="hljs-built_in">clone</span> https://github.com/ceddc/arcgis-flight-component.git
+<span class="hljs-built_in">cd</span> arcgis-flight-component
+npm ci
+npm run dev</code></pre></div>
+<p>Open <a href="http://127.0.0.1:3116/">http://127.0.0.1:3116/</a>. The site serves the docs and the samples, which
+load the component straight from <code>src/</code>.</p>
+<h2 id="commands">Commands<a class="heading-anchor" href="#commands" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>npm run dev</code></td>
+<td>Build the docs and start the local site.</td>
+</tr>
+<tr>
+<td><code>npm test</code></td>
+<td>Run the unit tests. Add a path to run one file: <code>npm test -- src/core/flight.test.ts</code>.</td>
+</tr>
+<tr>
+<td><code>npm run test:ab</code></td>
+<td>Compare flight and camera math with the reference recordings.</td>
+</tr>
+<tr>
+<td><code>npm run test:browser</code></td>
+<td>Run the samples in a real browser with Playwright. Run <code>npx playwright install chromium</code> once first.</td>
+</tr>
+<tr>
+<td><code>npm run test:sdk</code></td>
+<td>Test the builds against each supported SDK version.</td>
+</tr>
+<tr>
+<td><code>npm run typecheck</code></td>
+<td>Check the TypeScript types.</td>
+</tr>
+<tr>
+<td><code>npm run docs:build</code></td>
+<td>Build the docs into <code>dist/docs-site/</code>.</td>
+</tr>
+<tr>
+<td><code>npm run verify</code></td>
+<td>Tests, type check, and all builds. Run it before a pull request.</td>
+</tr>
+</tbody></table>
+<p>For visual changes, also fly in the affected sample. Tests cannot tell you if
+the scene looks right.</p>
+<h2 id="code-map">Code map<a class="heading-anchor" href="#code-map" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Folder</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>src/components/</code></td>
+<td>The <code>&lt;arcgis-plane-navigation&gt;</code> element, its attributes, and the built-in toolbar and joystick.</td>
+</tr>
+<tr>
+<td><code>src/controller/</code></td>
+<td>The flight session: input, simulation, pause, recover, and snapshots.</td>
+</tr>
+<tr>
+<td><code>src/core/</code></td>
+<td>Flight and camera math. No ArcGIS or DOM code, so it is easy to test.</td>
+</tr>
+<tr>
+<td><code>src/arcgis/</code></td>
+<td>Everything that talks to ArcGIS: aircraft graphics, camera, terrain, and cleanup.</td>
+</tr>
+<tr>
+<td><code>src/input/</code></td>
+<td>Keyboard, gamepad, and touch input.</td>
+</tr>
+<tr>
+<td><code>src/i18n/</code></td>
+<td>Toolbar translations.</td>
+</tr>
+<tr>
+<td><code>src/config.ts</code></td>
+<td>Configuration types, defaults, and validation.</td>
+</tr>
+<tr>
+<td><code>src/index.ts</code></td>
+<td>The package entry point. <code>src/browser.ts</code> adds the SDK for the standalone build.</td>
+</tr>
+<tr>
+<td><code>demos/</code></td>
+<td>The samples. Shared UI is in <code>demos/shared/</code>.</td>
+</tr>
+<tr>
+<td><code>docs/</code></td>
+<td>These pages. <code>docs/site/</code> holds the site&#39;s CSS and JavaScript.</td>
+</tr>
+<tr>
+<td><code>scripts/</code></td>
+<td>Build scripts for the component, the docs site, and GitHub Pages.</td>
+</tr>
+<tr>
+<td><code>tests/</code></td>
+<td>Browser and SDK tests. Unit tests sit next to the code as <code>*.test.ts</code>.</td>
+</tr>
+</tbody></table>
+<p>Each frame flows through the layers in one direction:</p>
+<div class="code-shell"><button class="copy-button" type="button">Copy</button><pre><code class="hljs">input (keyboard, gamepad, touch, setControlPatch)
+  -&gt; fixed-step physics at 60 Hz (src/core)
+  -&gt; smoothed aircraft pose and camera
+  -&gt; one presentation frame (src/arcgis)
+  -&gt; aircraft graphics + SceneView.camera + optional horizon roll</code></pre></div>
+<h3 id="where-to-start">Where to start<a class="heading-anchor" href="#where-to-start" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>To change</th>
+<th>Start in</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A configuration option or attribute</td>
+<td><code>src/config.ts</code>, <code>src/components/plane-navigation-config.ts</code>, then update the <a href="api-reference.html">API reference</a></td>
+</tr>
+<tr>
+<td>How a built-in aircraft flies</td>
+<td><code>src/core/aircraft-profiles.ts</code> and <code>src/core/profile-flight.ts</code></td>
+</tr>
+<tr>
+<td>The default plane&#39;s physics</td>
+<td><code>src/core/flight.ts</code></td>
+</tr>
+<tr>
+<td>The Paraglider or Space Jet</td>
+<td><code>src/core/paraglider-flight.ts</code> or <code>src/core/space-flight.ts</code></td>
+</tr>
+<tr>
+<td>Chase or cockpit camera</td>
+<td><code>src/core/camera-rig.ts</code> and <code>src/arcgis/flight-camera.ts</code></td>
+</tr>
+<tr>
+<td>Keyboard, gamepad, or touch</td>
+<td><code>src/input/flight-input.ts</code> or <code>src/input/touch-flight-stick.ts</code></td>
+</tr>
+<tr>
+<td>Aircraft rendering, propeller, exhaust</td>
+<td><code>src/arcgis/aircraft-presenter.ts</code></td>
+</tr>
+<tr>
+<td>Terrain, start-up, or cleanup</td>
+<td><code>src/arcgis/hosted-flight-scene.ts</code></td>
+</tr>
+<tr>
+<td>SDK version support</td>
+<td><code>src/arcgis/sdk-compatibility.ts</code> and <code>scripts/build-component-distributions.mjs</code></td>
+</tr>
+<tr>
+<td>Toolbar text or a new language</td>
+<td><code>src/i18n/catalogs.ts</code></td>
+</tr>
+<tr>
+<td>A sample</td>
+<td>Its <code>demos/&lt;name&gt;/main.ts</code></td>
+</tr>
+</tbody></table>
+<h2 id="rules-to-keep">Rules to keep<a class="heading-anchor" href="#rules-to-keep" aria-label="Link to this section">#</a></h2>
+<p><strong>Cleanup.</strong> The app owns the view, map, and layers; the component never
+destroys them. Everything the component adds must be removed on stop,
+disconnect, restart, or a failed start, including when it happens halfway
+through loading. The saved camera and navigation settings are restored only if
+the app has not changed them in the meantime.</p>
+<p><strong>Camera.</strong> Update the aircraft and the camera in the same presentation frame.
+Assign a complete <code>Camera</code> to <code>view.camera</code>; do not change its properties one
+by one or call <code>goTo()</code> during the flight.</p>
+<p><strong>Terrain.</strong> Never treat missing elevation as zero. Reject <code>NaN</code> and no-data
+samples, and reuse an old sample only while it is recent and nearby.</p>
+<p><strong>SDK.</strong> Use public SDK APIs and keep the SDK external in the component builds.
+Three isolated adapters use guarded SDK internals: <code>aircraft-render-origin.ts</code>
+fixes mesh precision on 5.1.21/5.1.24; <code>flight-frame-budget.ts</code> gives turns the
+animation budget on 5.1; <code>terrain-detail-retention.ts</code> keeps nearby terrain
+through turns on 5.1 global scenes. Other versions keep native behavior.
+Recheck these adapters when updating the SDK. Cleanup restores their hooks.</p>
+<p><strong>First-use stalls.</strong> Exhaust materials draw once at a tiny scale, in opaque
+and transparent passes, before startup or an aircraft change finishes. The
+wait is cancellable and limited to two seconds. Desktop scenes also retain
+already loaded terrain behind the aircraft, while ArcGIS still controls
+refinement and memory pressure. Touch devices keep the native out-of-view
+terrain policy.</p>
+<p><strong>Reference recordings.</strong> <code>src/ab/*.reference.json</code> hold two 720-frame
+recordings of flight and camera output. <code>npm run test:ab</code> compares against
+them. Update them only for an intended, reviewed change in flight behavior.</p>
+<h2 id="debugging">Debugging<a class="heading-anchor" href="#debugging" aria-label="Link to this section">#</a></h2>
+<ol>
+<li>Log the first <code>arcgisPlaneNavigationError</code> and check <code>flight.status</code>.</li>
+<li>Use <code>flight.snapshot()</code> for the flight state, and <code>flight.debugSnapshot()</code> for
+layers, camera timing, terrain sampling, and horizon roll.</li>
+<li>If the problem appears after the app replaced its map or view, check that the
+app assigned the new <code>flight.view</code> or removed the old element.</li>
+<li>Reproduce it in the smallest sample with a public scene before changing
+lifecycle code.</li>
+</ol>
+<h2 id="build-and-publish">Build and publish<a class="heading-anchor" href="#build-and-publish" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>npm run build:component</code></td>
+<td><code>dist/component/</code>: one ES module per SDK range, plus an AMD file. The aircraft models and styles are embedded.</td>
+</tr>
+<tr>
+<td><code>npm run build:pages</code></td>
+<td><code>dist/pages/</code>: the docs, the samples, and the standalone browser build.</td>
+</tr>
+<tr>
+<td><code>npm run deploy:pages</code></td>
+<td>Builds and publishes <code>dist/pages/</code> to the <code>gh-pages</code> branch.</td>
+</tr>
+</tbody></table>
+<p>Installing the package from GitHub runs <code>build:component</code> automatically.</p>
+<p>The published site counts page views with Matomo, without cookies. The
+tracking code is not in the repository: <code>deploy:pages</code> adds it only when a
+local, git-ignored <code>site-analytics.local.html</code> file exists. Local builds and
+the component itself contain no analytics.</p>
+</article>
+        <nav class="pager" aria-label="Previous and next pages"><a class="pager-prev" href="troubleshooting.html" rel="prev"><span>Previous</span>Troubleshooting</a><span></span></nav>
+        <footer class="page-footer">
+          <span>Source: <code>docs/development.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/edit/main/docs/development.md">Edit this page on GitHub</a>
+        </footer>
+      </main>
+      <aside class="toc"><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#set-up">Set up</a></li><li class="section-link level-2"><a href="#commands">Commands</a></li><li class="section-link level-2"><a href="#code-map">Code map</a></li><li class="section-link level-3"><a href="#where-to-start">Where to start</a></li><li class="section-link level-2"><a href="#rules-to-keep">Rules to keep</a></li><li class="section-link level-2"><a href="#debugging">Debugging</a></li><li class="section-link level-2"><a href="#build-and-publish">Build and publish</a></li></ul></section></aside>
+    </div>
+  </body>
+</html>

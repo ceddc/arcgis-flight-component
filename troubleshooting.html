@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Start by logging the error. Add this listener before the flight starts:">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>Troubleshooting | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=9b251efbdf29">
+    <script type="module" src="doc-assets/docs-ui.js?v=9b251efbdf29"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light" data-page="troubleshooting">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Get started</a></li><li><a href="samples.html">Samples</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Configure the flight</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="flight-concepts.html">How it works</a></li><li><a href="sdk-compatibility.html">SDK versions</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="api-reference.html">API reference</a></li><li><a href="troubleshooting.html" aria-current="page">Troubleshooting</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#setup">Setup</a></li><li class="section-link level-3"><a href="#nothing-happens-and-status-stays-idle">Nothing happens and status stays idle</a></li><li class="section-link level-3"><a href="#the-referenced-arcgis-scene-has-no-map">&quot;The referenced ArcGIS scene has no map&quot;</a></li><li class="section-link level-3"><a href="#the-bundler-cannot-resolve-projectoperator-projection-or-meshutils">The bundler cannot resolve projectOperator, projection, or meshUtils</a></li><li class="section-link level-3"><a href="#the-page-loads-the-sdk-twice">The page loads the SDK twice</a></li><li class="section-link level-3"><a href="#import-fails-during-server-side-rendering">Import fails during server-side rendering</a></li><li class="section-link level-3"><a href="#the-error-mentions-promise-withresolvers-or-abortsignal">The error mentions Promise.withResolvers or AbortSignal</a></li><li class="section-link level-2"><a href="#flying">Flying</a></li><li class="section-link level-3"><a href="#the-keys-do-nothing">The keys do nothing</a></li><li class="section-link level-3"><a href="#the-gamepad-does-nothing">The gamepad does nothing</a></li><li class="section-link level-3"><a href="#i-can-39-t-pan-or-zoom-the-map-while-flying">I can't pan or zoom the map while flying</a></li><li class="section-link level-3"><a href="#the-plane-starts-in-the-wrong-place">The plane starts in the wrong place</a></li><li class="section-link level-3"><a href="#the-flight-fails-at-the-start-with-an-elevation-error">The flight fails at the start with an elevation error</a></li><li class="section-link level-3"><a href="#the-plane-flies-through-buildings">The plane flies through buildings</a></li><li class="section-link level-3"><a href="#the-horizon-does-not-tilt-in-turns">The horizon does not tilt in turns</a></li><li class="section-link level-3"><a href="#buildings-appear-late-after-a-turn">Buildings appear late after a turn</a></li><li class="section-link level-3"><a href="#the-plane-disappears-in-a-large-local-scene">The plane disappears in a large local scene</a></li><li class="section-link level-3"><a href="#the-aircraft-model-does-not-load">The aircraft model does not load</a></li><li class="section-link level-3"><a href="#a-second-flight-component-is-rejected">A second flight component is rejected</a></li><li class="section-link level-3"><a href="#the-camera-jumps-back-when-the-flight-stops">The camera jumps back when the flight stops</a></li><li class="section-link level-2"><a href="#report-a-problem">Report a problem</a></li></ul></section></li></ul></section><section class="nav-group"><h2>Contribute</h2><ul><li><a href="development.html">Development</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>Troubleshooting</span></nav>
+        <article><h1 id="troubleshooting">Troubleshooting<a class="heading-anchor" href="#troubleshooting" aria-label="Link to this section">#</a></h1>
+<p>Start by logging the error. Add this listener before the flight starts:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;arcgisPlaneNavigationError&quot;</span>, <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(event.<span class="hljs-property">detail</span>.<span class="hljs-property">error</span>);
+});</code></pre></div>
+<p>Also look at the browser console for ArcGIS layer or network errors.</p>
+<h2 id="setup">Setup<a class="heading-anchor" href="#setup" aria-label="Link to this section">#</a></h2>
+<h3 id="nothing-happens-and-status-stays-idle">Nothing happens and <code>status</code> stays <code>idle</code><a class="heading-anchor" href="#nothing-happens-and-status-stays-idle" aria-label="Link to this section">#</a></h3>
+<p>The component has no scene to fly in. Either:</p>
+<ul>
+<li>set <code>reference-element</code> to the <code>id</code> of an <code>&lt;arcgis-scene&gt;</code> on the same page, or</li>
+<li>assign a 3D <code>SceneView</code> to <code>flight.view</code>.</li>
+</ul>
+<p>A 2D <code>MapView</code> does not work.</p>
+<h3 id="the-referenced-arcgis-scene-has-no-map">&quot;The referenced ArcGIS scene has no map&quot;<a class="heading-anchor" href="#the-referenced-arcgis-scene-has-no-map" aria-label="Link to this section">#</a></h3>
+<p>Give the scene a map before the flight starts: an <code>item-id</code>, a <code>basemap</code>, or
+assign <code>scene.map</code> in JavaScript.</p>
+<h3 id="the-bundler-cannot-resolve-projectoperator-projection-or-meshutils">The bundler cannot resolve <code>projectOperator</code>, <code>projection</code>, or <code>meshUtils</code><a class="heading-anchor" href="#the-bundler-cannot-resolve-projectoperator-projection-or-meshutils" aria-label="Link to this section">#</a></h3>
+<p>The component build does not match your SDK version. Pick the right import in
+<a href="sdk-compatibility.html#choose-an-import">SDK versions</a>.</p>
+<h3 id="the-page-loads-the-sdk-twice">The page loads the SDK twice<a class="heading-anchor" href="#the-page-loads-the-sdk-twice" aria-label="Link to this section">#</a></h3>
+<p>The standalone <code>browser/</code> build includes the SDK. In an app that already loads
+the SDK, import the component from the package instead.</p>
+<h3 id="import-fails-during-server-side-rendering">Import fails during server-side rendering<a class="heading-anchor" href="#import-fails-during-server-side-rendering" aria-label="Link to this section">#</a></h3>
+<p>The component needs a browser. In frameworks such as Next.js, import it on the
+client only:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">window</span> !== <span class="hljs-string">&quot;undefined&quot;</span>) {
+  <span class="hljs-keyword">await</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&quot;@ceddc/arcgis-flight-component&quot;</span>);
+}</code></pre></div>
+<h3 id="the-error-mentions-promise-withresolvers-or-abortsignal">The error mentions <code>Promise.withResolvers</code> or <code>AbortSignal</code><a class="heading-anchor" href="#the-error-mentions-promise-withresolvers-or-abortsignal" aria-label="Link to this section">#</a></h3>
+<p>The browser is too old. Update it.</p>
+<h2 id="flying">Flying<a class="heading-anchor" href="#flying" aria-label="Link to this section">#</a></h2>
+<h3 id="the-keys-do-nothing">The keys do nothing<a class="heading-anchor" href="#the-keys-do-nothing" aria-label="Link to this section">#</a></h3>
+<p>Click the scene first, so it has keyboard focus. Text fields keep their normal
+typing, and buttons keep Space and the arrow keys.</p>
+<h3 id="the-gamepad-does-nothing">The gamepad does nothing<a class="heading-anchor" href="#the-gamepad-does-nothing" aria-label="Link to this section">#</a></h3>
+<p>Click the scene, then move both sticks back to the center once. The browser must
+report the gamepad with the <code>standard</code> mapping. Check <code>flight.snapshot().gamepad</code>
+to see which controller is in use.</p>
+<h3 id="i-can-39-t-pan-or-zoom-the-map-while-flying">I can&#39;t pan or zoom the map while flying<a class="heading-anchor" href="#i-can-39-t-pan-or-zoom-the-map-while-flying" aria-label="Link to this section">#</a></h3>
+<p>That is on purpose: the component replaces the scene&#39;s navigation during a
+flight. To keep it, add <code>capture-scene-navigation-disabled</code>.</p>
+<h3 id="the-plane-starts-in-the-wrong-place">The plane starts in the wrong place<a class="heading-anchor" href="#the-plane-starts-in-the-wrong-place" aria-label="Link to this section">#</a></h3>
+<p>Without start coordinates, the plane starts at the center of the view. Set
+<code>start-longitude</code> and <code>start-latitude</code> together; see
+<a href="configuration-recipes.html#set-the-start-position">Set the start position</a>.</p>
+<h3 id="the-flight-fails-at-the-start-with-an-elevation-error">The flight fails at the start with an elevation error<a class="heading-anchor" href="#the-flight-fails-at-the-start-with-an-elevation-error" aria-label="Link to this section">#</a></h3>
+<p>Without <code>start-altitude-m</code>, the component needs the ground height below the
+start point. If the scene has no elevation there, set an altitude.</p>
+<h3 id="the-plane-flies-through-buildings">The plane flies through buildings<a class="heading-anchor" href="#the-plane-flies-through-buildings" aria-label="Link to this section">#</a></h3>
+<p>Ground clearance uses the elevation surface only. Buildings, trees, and bridges
+are not obstacles. Raise <code>terrain.minimumClearanceM</code> or fly higher.</p>
+<h3 id="the-horizon-does-not-tilt-in-turns">The horizon does not tilt in turns<a class="heading-anchor" href="#the-horizon-does-not-tilt-in-turns" aria-label="Link to this section">#</a></h3>
+<p>Check that <code>camera-roll-disabled</code> is not set, and look for <code>RenderNode</code> or
+WebGL warnings in the console. Without them, the horizon stays level and the
+flight continues normally.</p>
+<h3 id="buildings-appear-late-after-a-turn">Buildings appear late after a turn<a class="heading-anchor" href="#buildings-appear-late-after-a-turn" aria-label="Link to this section">#</a></h3>
+<p>Turns favor a smooth frame rate over loading, so buildings revealed by a long
+turn can appear a moment later. They catch up in straight flight. In some
+scenes, the first turn after the page loads ends with a short pause; later
+turns do not.</p>
+<h3 id="the-plane-disappears-in-a-large-local-scene">The plane disappears in a large local scene<a class="heading-anchor" href="#the-plane-disappears-in-a-large-local-scene" aria-label="Link to this section">#</a></h3>
+<p>The camera&#39;s near clipping plane can hide the plane. Set
+<code>view.constraints.clipDistance</code> in your app.</p>
+<h3 id="the-aircraft-model-does-not-load">The aircraft model does not load<a class="heading-anchor" href="#the-aircraft-model-does-not-load" aria-label="Link to this section">#</a></h3>
+<p>Open the model URL in the browser to check that it returns the <code>.glb</code> file. A
+model on another domain needs CORS. Check that your build did not change the
+path.</p>
+<h3 id="a-second-flight-component-is-rejected">A second flight component is rejected<a class="heading-anchor" href="#a-second-flight-component-is-rejected" aria-label="Link to this section">#</a></h3>
+<p>Only one flight can run in a view. Call <code>stop()</code> on the first one, or remove it,
+before starting the second.</p>
+<h3 id="the-camera-jumps-back-when-the-flight-stops">The camera jumps back when the flight stops<a class="heading-anchor" href="#the-camera-jumps-back-when-the-flight-stops" aria-label="Link to this section">#</a></h3>
+<p><code>stop()</code> restores the camera from before the flight. To keep the current view,
+call <code>flight.stop({ restoreCamera: false })</code>.</p>
+<h2 id="report-a-problem">Report a problem<a class="heading-anchor" href="#report-a-problem" aria-label="Link to this section">#</a></h2>
+<p>Include this output in your <a href="https://github.com/ceddc/arcgis-flight-component/issues">issue</a>:</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(flight.<span class="hljs-property">status</span>);
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">dir</span>(flight.<span class="hljs-title function_">snapshot</span>(), { <span class="hljs-attr">depth</span>: <span class="hljs-literal">null</span> });
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">dir</span>(flight.<span class="hljs-title function_">debugSnapshot</span>(), { <span class="hljs-attr">depth</span>: <span class="hljs-literal">null</span> });</code></pre></div>
+<p>Also include the SDK version, the browser, your configuration, the error
+message, and, if you can, a small public scene that shows the problem.</p>
+</article>
+        <nav class="pager" aria-label="Previous and next pages"><a class="pager-prev" href="api-reference.html" rel="prev"><span>Previous</span>API reference</a><a class="pager-next" href="development.html" rel="next"><span>Next</span>Development</a></nav>
+        <footer class="page-footer">
+          <span>Source: <code>docs/troubleshooting.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/edit/main/docs/troubleshooting.md">Edit this page on GitHub</a>
+        </footer>
+      </main>
+      <aside class="toc"><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#setup">Setup</a></li><li class="section-link level-3"><a href="#nothing-happens-and-status-stays-idle">Nothing happens and status stays idle</a></li><li class="section-link level-3"><a href="#the-referenced-arcgis-scene-has-no-map">&quot;The referenced ArcGIS scene has no map&quot;</a></li><li class="section-link level-3"><a href="#the-bundler-cannot-resolve-projectoperator-projection-or-meshutils">The bundler cannot resolve projectOperator, projection, or meshUtils</a></li><li class="section-link level-3"><a href="#the-page-loads-the-sdk-twice">The page loads the SDK twice</a></li><li class="section-link level-3"><a href="#import-fails-during-server-side-rendering">Import fails during server-side rendering</a></li><li class="section-link level-3"><a href="#the-error-mentions-promise-withresolvers-or-abortsignal">The error mentions Promise.withResolvers or AbortSignal</a></li><li class="section-link level-2"><a href="#flying">Flying</a></li><li class="section-link level-3"><a href="#the-keys-do-nothing">The keys do nothing</a></li><li class="section-link level-3"><a href="#the-gamepad-does-nothing">The gamepad does nothing</a></li><li class="section-link level-3"><a href="#i-can-39-t-pan-or-zoom-the-map-while-flying">I can't pan or zoom the map while flying</a></li><li class="section-link level-3"><a href="#the-plane-starts-in-the-wrong-place">The plane starts in the wrong place</a></li><li class="section-link level-3"><a href="#the-flight-fails-at-the-start-with-an-elevation-error">The flight fails at the start with an elevation error</a></li><li class="section-link level-3"><a href="#the-plane-flies-through-buildings">The plane flies through buildings</a></li><li class="section-link level-3"><a href="#the-horizon-does-not-tilt-in-turns">The horizon does not tilt in turns</a></li><li class="section-link level-3"><a href="#buildings-appear-late-after-a-turn">Buildings appear late after a turn</a></li><li class="section-link level-3"><a href="#the-plane-disappears-in-a-large-local-scene">The plane disappears in a large local scene</a></li><li class="section-link level-3"><a href="#the-aircraft-model-does-not-load">The aircraft model does not load</a></li><li class="section-link level-3"><a href="#a-second-flight-component-is-rejected">A second flight component is rejected</a></li><li class="section-link level-3"><a href="#the-camera-jumps-back-when-the-flight-stops">The camera jumps back when the flight stops</a></li><li class="section-link level-2"><a href="#report-a-problem">Report a problem</a></li></ul></section></aside>
+    </div>
+  </body>
+</html>

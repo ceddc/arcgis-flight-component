@@ -1,0 +1,861 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The arcgis-plane-navigation element adds a plane you can fly to a 3D scene. Connect it to an arcgis-scene with the reference-element attribute, or to a...">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <title>API reference | ArcGIS Flight Component</title>
+    <link rel="stylesheet" href="doc-assets/docs-ui.css?v=9b251efbdf29">
+    <script type="module" src="doc-assets/docs-ui.js?v=9b251efbdf29"></script>
+  <script data-site-analytics>
+  (() => {
+    // Local previews and copies hosted elsewhere must not send analytics.
+    if (location.origin !== "https://ceddc.github.io"
+      || !location.pathname.startsWith("/arcgis-flight-component/")) return;
+
+    const queue = window._paq = window._paq || [];
+    queue.push(["setTrackerUrl", "https://ceddc.ch/7"]);
+    queue.push(["setSiteId", "2"]);
+    queue.push(["disableCookies"]);
+    queue.push(["trackPageView"]);
+    queue.push(["enableLinkTracking"]);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://ceddc.ch/7";
+    document.head.append(script);
+  })();
+</script>
+</head>
+  <body class="calcite-mode-light" data-page="api-reference">
+    <a class="skip-link" href="#content">Skip to documentation</a>
+    <calcite-navigation class="app-header" scale="s" aria-label="ArcGIS Flight">
+      <calcite-navigation-logo slot="logo" icon="plane" heading="ArcGIS Flight" description="Documentation"></calcite-navigation-logo>
+      <div slot="content-end" class="header-actions">
+        <calcite-button class="menu-button" appearance="transparent" scale="s" icon-start="list" aria-label="Documentation contents" aria-controls="site-nav" aria-expanded="false">Contents</calcite-button>
+      </div>
+      <calcite-navigation slot="navigation-secondary" scale="s" class="site-navigation-bar"><nav slot="content-start" class="site-navigation" aria-label="Documentation, samples, and source"><calcite-button href="./index.html" appearance="transparent" kind="brand" scale="s" label="Documentation" aria-current="page">Docs</calcite-button><calcite-button href="./demos/simple/" appearance="transparent" kind="neutral" scale="s" label="Basic flight demo"><span>Basic flight<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/simple-controls/" appearance="transparent" kind="neutral" scale="s" label="Flight controls demo"><span>Flight controls<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/webscene-selector/" appearance="transparent" kind="neutral" scale="s" label="Scene explorer demo"><span>Scene explorer<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/aircraft/" appearance="transparent" kind="neutral" scale="s" label="Other aircraft demo"><span>Other aircraft<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="./demos/zurich/" appearance="transparent" kind="neutral" scale="s" label="Zurich local scene demo"><span>Zurich local scene<span class="site-navigation-demo"> demo</span></span></calcite-button><calcite-button href="https://github.com/ceddc/arcgis-flight-component" appearance="transparent" kind="neutral" scale="s" label="GitHub repository">GitHub</calcite-button></nav></calcite-navigation>
+    </calcite-navigation>
+    <div class="shell">
+      <aside class="sidebar" id="site-nav">
+        <label class="search-label" for="doc-search">Search documentation</label>
+        <input id="doc-search" type="search" autocomplete="off" placeholder="Search">
+        <div id="search-results" class="search-results" hidden></div>
+        <nav aria-label="Documentation topics"><section class="nav-group"><h2>Start here</h2><ul><li><a href="index.html">Overview</a></li><li><a href="getting-started.html">Get started</a></li><li><a href="samples.html">Samples</a></li></ul></section><section class="nav-group"><h2>Guides</h2><ul><li><a href="configuration-recipes.html">Configure the flight</a></li><li><a href="custom-aircraft.html">Custom aircraft</a></li><li><a href="flight-concepts.html">How it works</a></li><li><a href="sdk-compatibility.html">SDK versions</a></li></ul></section><section class="nav-group"><h2>Reference</h2><ul><li><a href="api-reference.html" aria-current="page">API reference</a><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#properties">Properties</a></li><li class="section-link level-3"><a href="#config">config</a></li><li class="section-link level-3"><a href="#referenceelement">referenceElement</a></li><li class="section-link level-3"><a href="#status">status</a></li><li class="section-link level-3"><a href="#view">view</a></li><li class="section-link level-2"><a href="#attributes">Attributes</a></li><li class="section-link level-2"><a href="#configuration">Configuration</a></li><li class="section-link level-3"><a href="#start">start</a></li><li class="section-link level-3"><a href="#camera">camera</a></li><li class="section-link level-3"><a href="#controls">controls</a></li><li class="section-link level-3"><a href="#terrain">terrain</a></li><li class="section-link level-3"><a href="#ui">ui</a></li><li class="section-link level-3"><a href="#flight">flight</a></li><li class="section-link level-3"><a href="#assets">assets</a></li><li class="section-link level-3"><a href="#powermode-and-autostart">powerMode and autoStart</a></li><li class="section-link level-3"><a href="#invalid-values">Invalid values</a></li><li class="section-link level-3"><a href="#live-updates">Live updates</a></li><li class="section-link level-2"><a href="#methods">Methods</a></li><li class="section-link level-3"><a href="#start-2">start()</a></li><li class="section-link level-3"><a href="#stop">stop()</a></li><li class="section-link level-3"><a href="#setaircraft">setAircraft()</a></li><li class="section-link level-3"><a href="#setcontrolpatch">setControlPatch()</a></li><li class="section-link level-2"><a href="#events">Events</a></li><li class="section-link level-2"><a href="#types">Types</a></li><li class="section-link level-3"><a href="#flightsessionsnapshot">FlightSessionSnapshot</a></li><li class="section-link level-3"><a href="#vehiclestate">VehicleState</a></li><li class="section-link level-2"><a href="#other-exports">Other exports</a></li><li class="section-link level-2"><a href="#editor-support">Editor support</a></li></ul></section></li><li><a href="troubleshooting.html">Troubleshooting</a></li></ul></section><section class="nav-group"><h2>Contribute</h2><ul><li><a href="development.html">Development</a></li></ul></section></nav>
+        <p class="project-version">v0.2.0 / SDK &gt;=4.30 &lt;5.2</p>
+      </aside>
+      <main id="content" class="content" tabindex="-1">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Documentation</a><span aria-hidden="true">/</span><span>API reference</span></nav>
+        <article><h1 id="api-reference">API reference<a class="heading-anchor" href="#api-reference" aria-label="Link to this section">#</a></h1>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;@ceddc/arcgis-flight-component&quot;</span>;</code></pre></div>
+<p>The <code>&lt;arcgis-plane-navigation&gt;</code> element adds a plane you can fly to a 3D scene.
+Connect it to an <code>&lt;arcgis-scene&gt;</code> with the <code>reference-element</code> attribute, or
+to a <code>SceneView</code> with the <code>view</code> property.</p>
+<div class="code-shell"><span class="code-label">HTML</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">arcgis-scene</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;scene&quot;</span> <span class="hljs-attr">basemap</span>=<span class="hljs-string">&quot;satellite&quot;</span> <span class="hljs-attr">ground</span>=<span class="hljs-string">&quot;world-elevation&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-scene</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">arcgis-plane-navigation</span> <span class="hljs-attr">reference-element</span>=<span class="hljs-string">&quot;scene&quot;</span> <span class="hljs-attr">show-controls</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">arcgis-plane-navigation</span>&gt;</span></code></pre></div>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">const</span> flight = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;arcgis-plane-navigation&quot;</span>);
+flight.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;arcgisPlaneNavigationReady&quot;</span>, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;Ready to fly&quot;</span>);
+});</code></pre></div>
+<p>The element and its events are typed for TypeScript: <code>document.querySelector(&quot;arcgis-plane-navigation&quot;)</code>
+returns an <code>ArcgisPlaneNavigationElement</code>.</p>
+<h2 id="properties">Properties<a class="heading-anchor" href="#properties" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Attribute</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#config"><code>config</code></a></td>
+<td></td>
+<td><code>PlaneNavigationConfig</code></td>
+<td>See <a href="#configuration">Configuration</a></td>
+</tr>
+<tr>
+<td><a href="#referenceelement"><code>referenceElement</code></a></td>
+<td><code>reference-element</code></td>
+<td><code>FlightSceneElement | null</code></td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td><a href="#status"><code>status</code></a></td>
+<td><code>status</code></td>
+<td><code>PlaneNavigationStatus</code></td>
+<td><code>&quot;idle&quot;</code></td>
+</tr>
+<tr>
+<td><a href="#view"><code>view</code></a></td>
+<td></td>
+<td><code>SceneView | null</code></td>
+<td><code>null</code></td>
+</tr>
+</tbody></table>
+<h3 id="config">config<a class="heading-anchor" href="#config" aria-label="Link to this section">#</a></h3>
+<p>All flight settings. Assign an object with only the fields you want to change;
+the other fields keep their current values. Reading <code>config</code> returns the full
+configuration, with defaults filled in.</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-property">config</span> = { <span class="hljs-attr">camera</span>: { <span class="hljs-attr">mode</span>: <span class="hljs-string">&quot;cockpit&quot;</span> }, <span class="hljs-attr">powerMode</span>: <span class="hljs-string">&quot;slow&quot;</span> };
+flight.<span class="hljs-property">config</span>.<span class="hljs-property">camera</span>.<span class="hljs-property">fovDeg</span>; <span class="hljs-comment">// 65</span></code></pre></div>
+<p>Assigning <code>config</code> is the same as calling <a href="#methods"><code>updateConfig()</code></a>. See
+<a href="#configuration">Configuration</a> for every field.</p>
+<h3 id="referenceelement">referenceElement<a class="heading-anchor" href="#referenceelement" aria-label="Link to this section">#</a></h3>
+<p>The <code>&lt;arcgis-scene&gt;</code> to fly in. In HTML, set <code>reference-element</code> to the
+scene&#39;s <code>id</code>. Changing it restarts the flight.</p>
+<h3 id="status">status<a class="heading-anchor" href="#status" aria-label="Link to this section">#</a></h3>
+<p>Read-only. The state of the flight, also reflected to the <code>status</code> attribute.</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>idle</code></td>
+<td>No scene connected yet, or the flight was stopped</td>
+</tr>
+<tr>
+<td><code>loading</code></td>
+<td>Waiting for the scene, or loading the aircraft</td>
+</tr>
+<tr>
+<td><code>ready</code></td>
+<td>Loaded and waiting for <code>start()</code>, because <code>autoStart</code> is <code>false</code></td>
+</tr>
+<tr>
+<td><code>running</code></td>
+<td>Flying</td>
+</tr>
+<tr>
+<td><code>paused</code></td>
+<td>Paused with <code>pause()</code>, Esc, or the gamepad Menu button</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>Could not start; see the <a href="#events"><code>arcgisPlaneNavigationError</code></a> event</td>
+</tr>
+</tbody></table>
+<h3 id="view">view<a class="heading-anchor" href="#view" aria-label="Link to this section">#</a></h3>
+<p>A <code>SceneView</code> to fly in. It takes precedence over <code>referenceElement</code>; set it
+back to <code>null</code> to use <code>referenceElement</code> again. Changing it restarts the
+flight. The view must have a visible container. The component never creates or
+destroys the view.</p>
+<h2 id="attributes">Attributes<a class="heading-anchor" href="#attributes" aria-label="Link to this section">#</a></h2>
+<p>These attributes are shortcuts for the most common <a href="#configuration"><code>config</code></a>
+fields. Boolean attributes are on when present, whatever their value:
+<code>keyboard-disabled=&quot;false&quot;</code> still disables the keyboard.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Config field</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>start-longitude</code></td>
+<td><code>start.longitude</code></td>
+<td>Degrees</td>
+</tr>
+<tr>
+<td><code>start-latitude</code></td>
+<td><code>start.latitude</code></td>
+<td>Degrees</td>
+</tr>
+<tr>
+<td><code>start-altitude-m</code></td>
+<td><code>start.altitudeM</code></td>
+<td>Metres</td>
+</tr>
+<tr>
+<td><code>start-heading-deg</code></td>
+<td><code>start.headingDeg</code></td>
+<td>Degrees</td>
+</tr>
+<tr>
+<td><code>start-speed-mps</code></td>
+<td><code>start.speedMps</code></td>
+<td>Metres per second</td>
+</tr>
+<tr>
+<td><code>camera-mode</code></td>
+<td><code>camera.mode</code></td>
+<td><code>chase</code>, <code>cockpit</code></td>
+</tr>
+<tr>
+<td><code>fov-deg</code></td>
+<td><code>camera.fovDeg</code></td>
+<td><code>58</code> to <code>76</code></td>
+</tr>
+<tr>
+<td><code>camera-roll-disabled</code></td>
+<td><code>camera.bankedViewport: false</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>sensitivity</code></td>
+<td><code>controls.sensitivity</code></td>
+<td><code>0.5</code> to <code>2</code></td>
+</tr>
+<tr>
+<td><code>invert-pitch-disabled</code></td>
+<td><code>controls.invertPitch: false</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>keyboard-disabled</code></td>
+<td><code>controls.keyboard: false</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>gamepad-disabled</code></td>
+<td><code>controls.gamepad: false</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>capture-scene-navigation-disabled</code></td>
+<td><code>controls.captureSceneNavigation: false</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>power-mode</code></td>
+<td><code>powerMode</code></td>
+<td><code>slow</code>, <code>normal</code>, <code>turbo</code></td>
+</tr>
+<tr>
+<td><code>auto-start-disabled</code></td>
+<td><code>autoStart: false</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>show-controls</code></td>
+<td><code>ui.enabled: true</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>show-speed</code></td>
+<td><code>ui.showSpeed: true</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>ui-position</code></td>
+<td><code>ui.position</code></td>
+<td>A <a href="#ui">position</a></td>
+</tr>
+<tr>
+<td><code>ui-controls</code></td>
+<td><code>ui.controls</code></td>
+<td><code>power</code>, <code>pause</code>, <code>camera</code>, <code>recover</code>, separated by spaces or commas</td>
+</tr>
+<tr>
+<td><code>joystick</code></td>
+<td><code>ui.joystick</code></td>
+<td><code>auto</code>, <code>always</code>, <code>never</code></td>
+</tr>
+<tr>
+<td><code>joystick-position</code></td>
+<td><code>ui.joystickPosition</code></td>
+<td>A <a href="#ui">position</a></td>
+</tr>
+<tr>
+<td><code>locale</code></td>
+<td><code>ui.locale</code></td>
+<td><code>auto</code>, <code>en</code>, <code>de</code>, <code>fr</code>, <code>it</code>, <code>es</code>, <code>pt</code></td>
+</tr>
+</tbody></table>
+<p>Removing an attribute restores the default. An invalid value sets <code>status</code> to
+<code>error</code>. The aircraft, the terrain settings, and the camera update rate have no
+attributes; set them through <code>config</code>.</p>
+<h2 id="configuration">Configuration<a class="heading-anchor" href="#configuration" aria-label="Link to this section">#</a></h2>
+<p>The <code>config</code> object has these groups. Every field is optional.</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-property">config</span> = {
+  <span class="hljs-attr">start</span>: { <span class="hljs-attr">longitude</span>: <span class="hljs-number">7.71</span>, <span class="hljs-attr">latitude</span>: <span class="hljs-number">46.01</span>, <span class="hljs-attr">altitudeM</span>: <span class="hljs-number">5200</span>, <span class="hljs-attr">headingDeg</span>: <span class="hljs-number">235</span> },
+  <span class="hljs-attr">camera</span>: { <span class="hljs-attr">mode</span>: <span class="hljs-string">&quot;chase&quot;</span>, <span class="hljs-attr">fovDeg</span>: <span class="hljs-number">65</span> },
+  <span class="hljs-attr">controls</span>: { <span class="hljs-attr">sensitivity</span>: <span class="hljs-number">0.8</span> },
+  <span class="hljs-attr">terrain</span>: { <span class="hljs-attr">minimumClearanceM</span>: <span class="hljs-number">2.8</span> },
+  <span class="hljs-attr">ui</span>: { <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">showSpeed</span>: <span class="hljs-literal">true</span> },
+  <span class="hljs-attr">flight</span>: { <span class="hljs-attr">model</span>: <span class="hljs-string">&quot;classic&quot;</span> },
+  <span class="hljs-attr">assets</span>: { <span class="hljs-attr">bodyUrl</span>: <span class="hljs-string">&quot;/models/my-plane.glb&quot;</span> },
+  <span class="hljs-attr">powerMode</span>: <span class="hljs-string">&quot;normal&quot;</span>,
+  <span class="hljs-attr">autoStart</span>: <span class="hljs-literal">true</span>,
+};</code></pre></div>
+<h3 id="start">start<a class="heading-anchor" href="#start" aria-label="Link to this section">#</a></h3>
+<p>Where and how the plane starts. Read again at each start and restart.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>longitude</code></td>
+<td><code>number</code></td>
+<td>Center of the view</td>
+<td>WGS84 degrees. Set together with <code>latitude</code>.</td>
+</tr>
+<tr>
+<td><code>latitude</code></td>
+<td><code>number</code></td>
+<td>Center of the view</td>
+<td>WGS84 degrees, <code>-90</code> to <code>90</code>.</td>
+</tr>
+<tr>
+<td><code>altitudeM</code></td>
+<td><code>number</code></td>
+<td>300 m above the ground</td>
+<td>Absolute altitude in metres.</td>
+</tr>
+<tr>
+<td><code>headingDeg</code></td>
+<td><code>number</code></td>
+<td>Camera heading</td>
+<td>Degrees clockwise from north.</td>
+</tr>
+<tr>
+<td><code>speedMps</code></td>
+<td><code>number</code></td>
+<td>Cruise speed (<code>100</code>)</td>
+<td>Starting speed in metres per second, limited to the aircraft&#39;s speed range.</td>
+</tr>
+</tbody></table>
+<h3 id="camera">camera<a class="heading-anchor" href="#camera" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mode</code></td>
+<td><code>&quot;chase&quot; | &quot;cockpit&quot;</code></td>
+<td><code>&quot;chase&quot;</code></td>
+<td>Behind the plane, or from the plane.</td>
+</tr>
+<tr>
+<td><code>fovDeg</code></td>
+<td><code>number</code></td>
+<td><code>65</code></td>
+<td>Field of view in degrees, <code>58</code> to <code>76</code>.</td>
+</tr>
+<tr>
+<td><code>bankedViewport</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Tilt the horizon in turns.</td>
+</tr>
+<tr>
+<td><code>submissionHz</code></td>
+<td><code>number</code></td>
+<td><code>60</code></td>
+<td>Maximum camera updates per second, <code>30</code> to <code>60</code>. Slow rendering does not lower it.</td>
+</tr>
+</tbody></table>
+<h3 id="controls">controls<a class="heading-anchor" href="#controls" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>keyboard</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Keyboard input.</td>
+</tr>
+<tr>
+<td><code>gamepad</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Gamepad input.</td>
+</tr>
+<tr>
+<td><code>sensitivity</code></td>
+<td><code>number</code></td>
+<td><code>0.8</code></td>
+<td>Steering strength, <code>0.5</code> to <code>2</code>.</td>
+</tr>
+<tr>
+<td><code>invertPitch</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Forward lowers the nose, like a flight stick.</td>
+</tr>
+<tr>
+<td><code>captureSceneNavigation</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Replace the scene&#39;s mouse and touch navigation during the flight. <code>false</code> keeps the normal ArcGIS navigation.</td>
+</tr>
+</tbody></table>
+<h3 id="terrain">terrain<a class="heading-anchor" href="#terrain" aria-label="Link to this section">#</a></h3>
+<p>See <a href="flight-concepts.html#ground-clearance">Ground clearance</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Keep the plane above the ground.</td>
+</tr>
+<tr>
+<td><code>minimumClearanceM</code></td>
+<td><code>number</code></td>
+<td><code>2.8</code></td>
+<td>Lowest height above the ground, <code>0.5</code> to <code>100</code> m.</td>
+</tr>
+<tr>
+<td><code>maximumAglM</code></td>
+<td><code>number</code></td>
+<td><code>50000</code></td>
+<td>Highest height above the ground, <code>100</code> to <code>200000</code> m.</td>
+</tr>
+</tbody></table>
+<h3 id="ui">ui<a class="heading-anchor" href="#ui" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Show the toolbar.</td>
+</tr>
+<tr>
+<td><code>showSpeed</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Show the speed in the toolbar.</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><code>string</code></td>
+<td><code>&quot;bottom-end&quot;</code></td>
+<td>Toolbar position.</td>
+</tr>
+<tr>
+<td><code>controls</code></td>
+<td><code>string[]</code></td>
+<td>All four</td>
+<td>Toolbar buttons, in order: <code>&quot;power&quot;</code>, <code>&quot;pause&quot;</code>, <code>&quot;camera&quot;</code>, <code>&quot;recover&quot;</code>.</td>
+</tr>
+<tr>
+<td><code>joystick</code></td>
+<td><code>&quot;auto&quot; | &quot;always&quot; | &quot;never&quot;</code></td>
+<td><code>&quot;auto&quot;</code></td>
+<td>Touch joystick. <code>auto</code> shows it on touch screens.</td>
+</tr>
+<tr>
+<td><code>joystickPosition</code></td>
+<td><code>string</code></td>
+<td><code>&quot;bottom-left&quot;</code></td>
+<td>Joystick position.</td>
+</tr>
+<tr>
+<td><code>locale</code></td>
+<td><code>string</code></td>
+<td><code>&quot;auto&quot;</code></td>
+<td><code>&quot;en&quot;</code>, <code>&quot;de&quot;</code>, <code>&quot;fr&quot;</code>, <code>&quot;it&quot;</code>, <code>&quot;es&quot;</code>, <code>&quot;pt&quot;</code>, or <code>&quot;auto&quot;</code> to follow the page and browser language.</td>
+</tr>
+</tbody></table>
+<p>Positions are the same as the ArcGIS view UI: <code>top-left</code>, <code>top-right</code>,
+<code>bottom-left</code>, <code>bottom-right</code>, <code>top-start</code>, <code>top-end</code>, <code>bottom-start</code>, and
+<code>bottom-end</code>.</p>
+<h3 id="flight">flight<a class="heading-anchor" href="#flight" aria-label="Link to this section">#</a></h3>
+<p>The flight profile. <code>null</code> (default) uses the original propeller-plane model.</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-property">config</span> = { <span class="hljs-attr">flight</span>: { <span class="hljs-attr">model</span>: <span class="hljs-string">&quot;super-jet&quot;</span>, <span class="hljs-attr">tuning</span>: { <span class="hljs-attr">maximumBankDeg</span>: <span class="hljs-number">45</span> } } };</code></pre></div>
+<p><code>model</code> is <code>&quot;classic&quot;</code>, <code>&quot;super-jet&quot;</code>, <code>&quot;space-jet&quot;</code>, <code>&quot;paraglider&quot;</code>, or <code>&quot;airliner&quot;</code>.
+<code>tuning</code> overrides profile values. Unlike other groups, <code>flight</code> replaces the
+previous value instead of merging. See
+<a href="custom-aircraft.html#pick-a-flight-profile">Custom aircraft</a>.</p>
+<h3 id="assets">assets<a class="heading-anchor" href="#assets" aria-label="Link to this section">#</a></h3>
+<p>The aircraft model files. <code>bodyUrl</code> is required; the others are optional.
+See <a href="custom-aircraft.html#use-your-own-model">Custom aircraft</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bodyUrl</code></td>
+<td><code>string</code></td>
+<td>Bundled plane</td>
+</tr>
+<tr>
+<td><code>propellerUrl</code></td>
+<td><code>string | null</code></td>
+<td>Bundled propeller</td>
+</tr>
+<tr>
+<td><code>boostUrl</code></td>
+<td><code>string | null</code></td>
+<td>Bundled exhaust</td>
+</tr>
+<tr>
+<td><code>propellerAnchorM</code></td>
+<td><code>{ x, y, z }</code></td>
+<td><code>{ x: 0, y: 2.68, z: 0 }</code></td>
+</tr>
+<tr>
+<td><code>visualPitchDeg</code></td>
+<td><code>number</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>preserveFinish</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+</tr>
+</tbody></table>
+<h3 id="powermode-and-autostart">powerMode and autoStart<a class="heading-anchor" href="#powermode-and-autostart" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>powerMode</code></td>
+<td><code>&quot;slow&quot; | &quot;normal&quot; | &quot;turbo&quot;</code></td>
+<td><code>&quot;normal&quot;</code></td>
+<td>Brake, cruise, or accelerate to top speed.</td>
+</tr>
+<tr>
+<td><code>autoStart</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Start flying when the scene is ready. With <code>false</code>, wait for <code>start()</code>.</td>
+</tr>
+</tbody></table>
+<h3 id="invalid-values">Invalid values<a class="heading-anchor" href="#invalid-values" aria-label="Link to this section">#</a></h3>
+<ul>
+<li>Numbers outside their range are clamped. For <code>fovDeg</code>, <code>submissionHz</code>,
+<code>sensitivity</code>, and the terrain distances, <code>0</code> means the default.</li>
+<li>A longitude without a latitude, a latitude outside <code>-90</code> to <code>90</code>, or an empty
+<code>bodyUrl</code> throws an <code>Error</code>.</li>
+<li>An unknown camera or power mode throws a <code>TypeError</code>.</li>
+<li>In <code>config</code>, unknown toolbar buttons are ignored, and an unknown position or
+locale keeps the previous value. In HTML, the same values set <code>status</code> to
+<code>error</code>.</li>
+</ul>
+<h3 id="live-updates">Live updates<a class="heading-anchor" href="#live-updates" aria-label="Link to this section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Applied immediately</th>
+<th>Restart the flight</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>camera.mode</code>, <code>camera.fovDeg</code>, <code>camera.bankedViewport</code></td>
+<td><code>start</code></td>
+</tr>
+<tr>
+<td><code>controls.keyboard</code>, <code>controls.gamepad</code>, <code>controls.sensitivity</code>, <code>controls.invertPitch</code></td>
+<td><code>terrain</code></td>
+</tr>
+<tr>
+<td>All <code>ui</code> fields</td>
+<td><code>flight</code> and <code>assets</code></td>
+</tr>
+<tr>
+<td><code>powerMode</code></td>
+<td><code>camera.submissionHz</code>, <code>controls.captureSceneNavigation</code>, <code>autoStart</code></td>
+</tr>
+</tbody></table>
+<p>A restart stops the flight, restores the camera, loads again, and fires
+<code>arcgisPlaneNavigationReady</code>. The scene is not reloaded.
+<a href="#setaircraft"><code>setAircraft()</code></a> changes <code>flight</code>, <code>assets</code>,
+<code>terrain.minimumClearanceM</code>, and <code>terrain.maximumAglM</code> without a restart.</p>
+<h2 id="methods">Methods<a class="heading-anchor" href="#methods" aria-label="Link to this section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#start"><code>start()</code></a></td>
+<td><code>Promise&lt;void&gt;</code></td>
+<td>Start flying from the start position.</td>
+</tr>
+<tr>
+<td><code>pause()</code></td>
+<td><code>void</code></td>
+<td>Pause the flight.</td>
+</tr>
+<tr>
+<td><code>resume()</code></td>
+<td><code>void</code></td>
+<td>Resume a paused flight.</td>
+</tr>
+<tr>
+<td><a href="#stop"><code>stop(options?)</code></a></td>
+<td><code>void</code></td>
+<td>End the flight and remove the plane.</td>
+</tr>
+<tr>
+<td><code>recover()</code></td>
+<td><code>void</code></td>
+<td>Move back to the last safe position, level the wings, and return to the starting speed.</td>
+</tr>
+<tr>
+<td><code>setCameraMode(mode, instant?)</code></td>
+<td><code>void</code></td>
+<td>Switch to <code>&quot;chase&quot;</code> or <code>&quot;cockpit&quot;</code>. Animated unless <code>instant</code> is <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>setPowerMode(mode)</code></td>
+<td><code>void</code></td>
+<td>Switch to <code>&quot;slow&quot;</code>, <code>&quot;normal&quot;</code>, or <code>&quot;turbo&quot;</code>.</td>
+</tr>
+<tr>
+<td><code>toggleTurbo()</code></td>
+<td><code>boolean</code></td>
+<td>Switch between turbo and normal. Returns <code>true</code> if turbo is now on.</td>
+</tr>
+<tr>
+<td><code>updateConfig(patch)</code></td>
+<td><code>void</code></td>
+<td>Change some <a href="#configuration">configuration</a> fields.</td>
+</tr>
+<tr>
+<td><a href="#setaircraft"><code>setAircraft(patch)</code></a></td>
+<td><code>Promise&lt;boolean&gt;</code></td>
+<td>Change the aircraft without restarting.</td>
+</tr>
+<tr>
+<td><a href="#setcontrolpatch"><code>setControlPatch(patch)</code></a></td>
+<td><code>void</code></td>
+<td>Override the user&#39;s input from code.</td>
+</tr>
+<tr>
+<td><code>clearControlPatch(fields?)</code></td>
+<td><code>void</code></td>
+<td>Remove overrides: the named fields, or all of them.</td>
+</tr>
+<tr>
+<td><code>snapshot()</code></td>
+<td><code>FlightSessionSnapshot | null</code></td>
+<td>The current <a href="#flightsessionsnapshot">flight state</a>, or <code>null</code> when not flying.</td>
+</tr>
+<tr>
+<td><code>debugSnapshot()</code></td>
+<td><code>object | null</code></td>
+<td>Internal diagnostics for bug reports. The shape can change between versions.</td>
+</tr>
+</tbody></table>
+<p><code>pause()</code>, <code>resume()</code>, <code>recover()</code>, and the control patch methods do nothing
+when there is no flight.</p>
+<h3 id="start-2">start()<a class="heading-anchor" href="#start-2" aria-label="Link to this section">#</a></h3>
+<p>Starts the flight from the start position. If the plane is already flying, it
+goes back to the start. You only need <code>start()</code> when <code>autoStart</code> is <code>false</code>, or
+to fly again after <code>stop()</code>.</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">await</span> flight.<span class="hljs-title function_">start</span>();</code></pre></div>
+<p>The promise rejects if no scene is connected, if loading fails (with the same
+error as the <code>arcgisPlaneNavigationError</code> event), or if <code>stop()</code> is called
+first.</p>
+<h3 id="stop">stop()<a class="heading-anchor" href="#stop" aria-label="Link to this section">#</a></h3>
+<p>Ends the flight, removes the plane, and restores the camera and navigation
+settings. <code>status</code> becomes <code>idle</code> and <code>arcgisPlaneNavigationStopped</code> fires.
+Removing the element from the page does the same.</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">stop</span>();                          <span class="hljs-comment">// restore the camera</span>
+flight.<span class="hljs-title function_">stop</span>({ <span class="hljs-attr">restoreCamera</span>: <span class="hljs-literal">false</span> });  <span class="hljs-comment">// keep the current camera</span></code></pre></div>
+<p>Use <code>restoreCamera: false</code> when you are about to replace the map or view, so
+the camera does not jump back first.</p>
+<h3 id="setaircraft">setAircraft()<a class="heading-anchor" href="#setaircraft" aria-label="Link to this section">#</a></h3>
+<p>Loads a new model, flight profile, or ground-clearance setting, and keeps the
+plane where it is.</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">const</span> changed = <span class="hljs-keyword">await</span> flight.<span class="hljs-title function_">setAircraft</span>({
+  <span class="hljs-attr">flight</span>: { <span class="hljs-attr">model</span>: <span class="hljs-string">&quot;super-jet&quot;</span> },
+  <span class="hljs-attr">assets</span>: { <span class="hljs-attr">bodyUrl</span>: <span class="hljs-string">&quot;/models/jet.glb&quot;</span>, <span class="hljs-attr">propellerUrl</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">boostUrl</span>: <span class="hljs-literal">null</span> },
+  <span class="hljs-attr">terrain</span>: { <span class="hljs-attr">maximumAglM</span>: <span class="hljs-number">100000</span> },
+});</code></pre></div>
+<p>Resolves to <code>true</code> when the new aircraft flies. Resolves to <code>false</code> if a newer
+call replaced it or the flight stopped. Before the first flight, it saves the
+settings for the start and resolves to <code>false</code>. Rejects if a model cannot load;
+the previous aircraft keeps flying.</p>
+<p>A new <code>flight.model</code> resets the speed to the profile&#39;s cruise speed and the
+power mode to <code>normal</code>. A new model file alone keeps the current speed. To
+change <code>terrain.enabled</code>, use <code>updateConfig()</code>.</p>
+<h3 id="setcontrolpatch">setControlPatch()<a class="heading-anchor" href="#setcontrolpatch" aria-label="Link to this section">#</a></h3>
+<p>Overrides the keyboard, gamepad, and joystick until you clear it.</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">setControlPatch</span>({ <span class="hljs-attr">bank</span>: <span class="hljs-number">0.4</span>, <span class="hljs-attr">accelerate</span>: <span class="hljs-number">1</span> });
+flight.<span class="hljs-title function_">clearControlPatch</span>([<span class="hljs-string">&quot;bank&quot;</span>]);</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>pitch</code>, <code>bank</code>, <code>yaw</code></td>
+<td><code>-1</code> to <code>1</code></td>
+</tr>
+<tr>
+<td><code>accelerate</code>, <code>brake</code></td>
+<td><code>0</code> to <code>1</code></td>
+</tr>
+<tr>
+<td><code>turboBoost</code>, <code>airbrake</code></td>
+<td><code>boolean</code></td>
+</tr>
+<tr>
+<td><code>respawn</code></td>
+<td><code>true</code> recovers once, like <code>recover()</code></td>
+</tr>
+</tbody></table>
+<h2 id="events">Events<a class="heading-anchor" href="#events" aria-label="Link to this section">#</a></h2>
+<p>All events are <code>CustomEvent</code>s that bubble and cross shadow DOM boundaries.</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th><code>event.detail</code></th>
+<th>Fires when</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>arcgisPlaneNavigationReady</code></td>
+<td><code>{ scene, view, snapshot }</code></td>
+<td>The flight has loaded. Fires again after each restart.</td>
+</tr>
+<tr>
+<td><code>arcgisPlaneNavigationSnapshot</code></td>
+<td><code>{ snapshot }</code></td>
+<td>The state changes, and up to every 50 ms while flying.</td>
+</tr>
+<tr>
+<td><code>arcgisPlaneNavigationError</code></td>
+<td><code>{ error }</code></td>
+<td>The flight could not start. <code>status</code> is <code>error</code>.</td>
+</tr>
+<tr>
+<td><code>arcgisPlaneNavigationStopped</code></td>
+<td><code>{ restoredCamera }</code></td>
+<td><code>stop()</code> was called.</td>
+</tr>
+</tbody></table>
+<p>In the ready event, <code>scene</code> is the <code>&lt;arcgis-scene&gt;</code>, or <code>null</code> when you set
+<code>view</code> directly.</p>
+<div class="code-shell"><span class="code-label">JavaScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs">flight.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;arcgisPlaneNavigationError&quot;</span>, <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(event.<span class="hljs-property">detail</span>.<span class="hljs-property">error</span>);
+});</code></pre></div>
+<h2 id="types">Types<a class="heading-anchor" href="#types" aria-label="Link to this section">#</a></h2>
+<h3 id="flightsessionsnapshot">FlightSessionSnapshot<a class="heading-anchor" href="#flightsessionsnapshot" aria-label="Link to this section">#</a></h3>
+<div class="code-shell"><span class="code-label">TypeScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">FlightSessionSnapshot</span> {
+  <span class="hljs-attr">phase</span>: <span class="hljs-string">&quot;ready&quot;</span> | <span class="hljs-string">&quot;running&quot;</span> | <span class="hljs-string">&quot;paused&quot;</span> | <span class="hljs-string">&quot;stopped&quot;</span>;
+  <span class="hljs-attr">vehicle</span>: <span class="hljs-title class_">VehicleState</span>;           <span class="hljs-comment">// physics state</span>
+  <span class="hljs-attr">renderVehicle</span>: <span class="hljs-title class_">VehicleState</span>;     <span class="hljs-comment">// smoothed state shown on screen</span>
+  <span class="hljs-attr">altitudeMslM</span>: <span class="hljs-built_in">number</span>;            <span class="hljs-comment">// altitude above sea level, metres</span>
+  <span class="hljs-attr">aglM</span>: <span class="hljs-built_in">number</span> | <span class="hljs-literal">null</span>;             <span class="hljs-comment">// height above the ground, or null if unknown</span>
+  <span class="hljs-attr">cameraMode</span>: <span class="hljs-string">&quot;chase&quot;</span> | <span class="hljs-string">&quot;cockpit&quot;</span>;
+  <span class="hljs-attr">powerMode</span>: <span class="hljs-string">&quot;slow&quot;</span> | <span class="hljs-string">&quot;normal&quot;</span> | <span class="hljs-string">&quot;turbo&quot;</span>;
+  <span class="hljs-attr">turboActive</span>: <span class="hljs-built_in">boolean</span>;
+  <span class="hljs-attr">braking</span>: <span class="hljs-built_in">boolean</span>;
+  <span class="hljs-attr">simulationStep</span>: <span class="hljs-built_in">number</span>;          <span class="hljs-comment">// physics steps since the start (60 per second)</span>
+  <span class="hljs-attr">presentedTick</span>: <span class="hljs-built_in">number</span>;           <span class="hljs-comment">// simulation step of the last frame shown</span>
+  <span class="hljs-attr">gamepad</span>: {
+    <span class="hljs-attr">connected</span>: <span class="hljs-built_in">boolean</span>;
+    <span class="hljs-attr">index</span>: <span class="hljs-built_in">number</span> | <span class="hljs-literal">null</span>;
+    <span class="hljs-attr">id</span>: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>;
+    <span class="hljs-attr">mapping</span>: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>;
+  };
+  <span class="hljs-attr">camera</span>: <span class="hljs-title class_">PresentedFlightCameraFrame</span> | <span class="hljs-literal">null</span>;
+}</code></pre></div>
+<p><code>camera</code> holds the current camera position (<code>x</code>, <code>y</code>, <code>z</code>), <code>heading</code>,
+<code>tilt</code>, <code>roll</code>, and field of view (<code>fov</code>).</p>
+<h3 id="vehiclestate">VehicleState<a class="heading-anchor" href="#vehiclestate" aria-label="Link to this section">#</a></h3>
+<div class="code-shell"><span class="code-label">TypeScript</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">VehicleState</span> {
+  <span class="hljs-attr">position</span>: { <span class="hljs-attr">x</span>: <span class="hljs-built_in">number</span>; <span class="hljs-attr">y</span>: <span class="hljs-built_in">number</span>; <span class="hljs-attr">z</span>: <span class="hljs-built_in">number</span> };
+  <span class="hljs-attr">heading</span>: <span class="hljs-built_in">number</span>;        <span class="hljs-comment">// degrees</span>
+  <span class="hljs-attr">pitch</span>: <span class="hljs-built_in">number</span>;          <span class="hljs-comment">// degrees</span>
+  <span class="hljs-attr">bank</span>: <span class="hljs-built_in">number</span>;           <span class="hljs-comment">// degrees</span>
+  <span class="hljs-attr">speed</span>: <span class="hljs-built_in">number</span>;          <span class="hljs-comment">// see Units below</span>
+  <span class="hljs-attr">verticalSpeed</span>: <span class="hljs-built_in">number</span>;  <span class="hljs-comment">// metres per second</span>
+  <span class="hljs-attr">throttle</span>: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">driftAngle</span>: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">launchBoost</span>: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">cornerAssist</span>: <span class="hljs-built_in">number</span>;
+  <span class="hljs-comment">// Paraglider and Space Jet only:</span>
+  <span class="hljs-attr">speedBar</span>?: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">wingBrake</span>?: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">speedBarRate</span>?: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">wingBrakeRate</span>?: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">wingRollRate</span>?: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">wingPitchRate</span>?: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">spaceTurnRate</span>?: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">spacePitchRate</span>?: <span class="hljs-built_in">number</span>;
+}</code></pre></div>
+<p><strong>Units.</strong> <code>position.z</code> is in metres. In local scenes, <code>position.x</code>,
+<code>position.y</code>, and <code>speed</code> are in metres and metres per second. In global
+scenes, they are in Web Mercator units. See <a href="flight-concepts.html#units">Units</a>.</p>
+<h2 id="other-exports">Other exports<a class="heading-anchor" href="#other-exports" aria-label="Link to this section">#</a></h2>
+<p>The package also exports:</p>
+<ul>
+<li><code>ARCGIS_PLANE_NAVIGATION_TAG</code>: the tag name, <code>&quot;arcgis-plane-navigation&quot;</code>.</li>
+<li><code>DEFAULT_PLANE_NAVIGATION_CONFIG</code> and <code>DEFAULT_AIRCRAFT_ASSETS</code>: the defaults (frozen).</li>
+<li><code>AIRCRAFT_FLIGHT_PROFILES</code>: the built-in profiles and their tuning values.</li>
+<li><code>mergePlaneNavigationConfig()</code> and <code>normalizePlaneNavigationConfig()</code>: build a
+full configuration from partial ones.</li>
+<li><code>PLANE_NAVIGATION_UI_CONTROLS</code> and <code>PLANE_NAVIGATION_UI_POSITIONS</code>: the
+accepted toolbar buttons and positions.</li>
+<li>The toolbar translations and locale helpers.</li>
+<li>TypeScript types for the configuration, events, and snapshots.</li>
+</ul>
+<p>Import them from the package root. Internal files are not part of the API.</p>
+<h2 id="editor-support">Editor support<a class="heading-anchor" href="#editor-support" aria-label="Link to this section">#</a></h2>
+<p>The package includes <code>custom-elements.json</code>, which many editors read for HTML
+autocomplete. For VS Code, add this to your project&#39;s <code>.vscode/settings.json</code>
+to get attribute suggestions and descriptions:</p>
+<div class="code-shell"><span class="code-label">JSON</span><button class="copy-button" type="button">Copy</button><pre><code class="hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;html.customData&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;./node_modules/@ceddc/arcgis-flight-component/html-data.json&quot;</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre></div>
+</article>
+        <nav class="pager" aria-label="Previous and next pages"><a class="pager-prev" href="sdk-compatibility.html" rel="prev"><span>Previous</span>SDK versions</a><a class="pager-next" href="troubleshooting.html" rel="next"><span>Next</span>Troubleshooting</a></nav>
+        <footer class="page-footer">
+          <span>Source: <code>docs/api-reference.md</code></span>
+          <a href="https://github.com/ceddc/arcgis-flight-component/edit/main/docs/api-reference.md">Edit this page on GitHub</a>
+        </footer>
+      </main>
+      <aside class="toc"><section class="section-nav"><h2>On this page</h2><ul><li class="section-link level-2"><a href="#properties">Properties</a></li><li class="section-link level-3"><a href="#config">config</a></li><li class="section-link level-3"><a href="#referenceelement">referenceElement</a></li><li class="section-link level-3"><a href="#status">status</a></li><li class="section-link level-3"><a href="#view">view</a></li><li class="section-link level-2"><a href="#attributes">Attributes</a></li><li class="section-link level-2"><a href="#configuration">Configuration</a></li><li class="section-link level-3"><a href="#start">start</a></li><li class="section-link level-3"><a href="#camera">camera</a></li><li class="section-link level-3"><a href="#controls">controls</a></li><li class="section-link level-3"><a href="#terrain">terrain</a></li><li class="section-link level-3"><a href="#ui">ui</a></li><li class="section-link level-3"><a href="#flight">flight</a></li><li class="section-link level-3"><a href="#assets">assets</a></li><li class="section-link level-3"><a href="#powermode-and-autostart">powerMode and autoStart</a></li><li class="section-link level-3"><a href="#invalid-values">Invalid values</a></li><li class="section-link level-3"><a href="#live-updates">Live updates</a></li><li class="section-link level-2"><a href="#methods">Methods</a></li><li class="section-link level-3"><a href="#start-2">start()</a></li><li class="section-link level-3"><a href="#stop">stop()</a></li><li class="section-link level-3"><a href="#setaircraft">setAircraft()</a></li><li class="section-link level-3"><a href="#setcontrolpatch">setControlPatch()</a></li><li class="section-link level-2"><a href="#events">Events</a></li><li class="section-link level-2"><a href="#types">Types</a></li><li class="section-link level-3"><a href="#flightsessionsnapshot">FlightSessionSnapshot</a></li><li class="section-link level-3"><a href="#vehiclestate">VehicleState</a></li><li class="section-link level-2"><a href="#other-exports">Other exports</a></li><li class="section-link level-2"><a href="#editor-support">Editor support</a></li></ul></section></aside>
+    </div>
+  </body>
+</html>

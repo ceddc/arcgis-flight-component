@@ -1,0 +1,1 @@
+import{dt as o}from"./arcgis-scene-C3i20sGt.js";import"./Point2D-CZY2uH7E.js";import"./MultiPathImpl-Bw28m2PY.js";import{b as u}from"./ProjectionTransformation-AtpoXkO-.js";const r=new u;function s(t,n,e){return r.execute(t,n,e,null)}function f(t,n){return r.executeMany(new o(t),n,null).next()}function l(){return r.supportsCurves()}export{l as o,s as r,f as u};
